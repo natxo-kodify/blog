@@ -4,6 +4,7 @@ namespace Kodify\BlogBundle\Tests\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\Author;
+use Kodify\BlogBundle\Entity\Comment;
 use Kodify\BlogBundle\Tests\BaseFunctionalTest;
 
 class PostsControllerTest extends BaseFunctionalTest
@@ -52,6 +53,53 @@ class PostsControllerTest extends BaseFunctionalTest
         $this->assertTextFound($crawler, 'Content0');
         $this->assertTextNotFound($crawler, 'Title1');
         $this->assertTextNotFound($crawler, 'Content1');
+    }
+
+    public function testViewPostWithNoComments()
+    {
+        $this->createPosts(1);
+        $crawler = $this->client->request('GET', '/posts/1');
+        $this->assertTextFound($crawler, "There are no comments.");
+    }
+
+    public function testViewPostWithComments()
+    {
+        $post = $this->getOnePost();
+        $this->writeComment($post, 2);
+        $crawler = $this->client->request('GET', '/posts/1');
+        $this->assertTextFound($crawler, 'Comment0');
+        $this->assertTextFound($crawler, 'Comment1');
+        $this->assertTextNotFound($crawler, 'Comment2');
+    }
+
+    protected function writeComment($post, $count)
+    {
+        $author = new Author();
+        $author->setName('AuthorCommenter');
+        $this->entityManager()->persist($author);
+        $this->entityManager()->flush();
+        for ($i = 0; $i < $count; ++$i) {
+            $comment = new Comment();
+            $comment->setContent('Content' . $i);
+            $comment->setAuthor($author);
+            $comment->setPost($post);
+            $this->entityManager()->persist($comment);
+        }
+    }
+
+    protected function getOnePost()
+    {
+        $author = new Author();
+        $author->setName('Author');
+        $this->entityManager()->persist($author);
+        $this->entityManager()->flush();
+        $post = new Post();
+        $post->setTitle('Title0');
+        $post->setContent('Content0');
+        $post->setAuthor($author);
+        $this->entityManager()->persist($post);
+        $this->entityManager()->flush();
+        return $post;
     }
 
     protected function createPosts($count)
