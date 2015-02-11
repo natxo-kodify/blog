@@ -54,6 +54,13 @@ class PostsControllerTest extends BaseFunctionalTest
         $this->assertTextNotFound($crawler, 'Content1');
     }
 
+    public function testViewPostWithoutComments()
+    {
+        $this->createPosts(1);
+        $crawler = $this->client->request('GET', '/posts/1');
+        $this->assertTextFound($crawler, "There are no comments.");
+    }
+
     protected function createPosts($count)
     {
         $author = new Author();
