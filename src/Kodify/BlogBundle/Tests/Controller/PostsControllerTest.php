@@ -4,6 +4,7 @@ namespace Kodify\BlogBundle\Tests\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\Author;
+use Kodify\BlogBundle\Entity\Comment;
 use Kodify\BlogBundle\Tests\BaseFunctionalTest;
 
 class PostsControllerTest extends BaseFunctionalTest
@@ -50,11 +51,28 @@ class PostsControllerTest extends BaseFunctionalTest
         $crawler = $this->client->request('GET', '/posts/1');
         $this->assertTextFound($crawler, 'Title0');
         $this->assertTextFound($crawler, 'Content0');
-        $this->assertTextNotFound($crawler, 'Title1');
-        $this->assertTextNotFound($crawler, 'Content1');
+        $this->assertTextNotFound($crawler, 'Title2');
+        $this->assertTextNotFound($crawler, 'Content2');
     }
 
-    protected function createPosts($count)
+    public function testViewCommentsSectionWithoutComments()
+    {
+        $this->createPosts(2, false);
+        $crawler = $this->client->request('GET', '/posts/1');
+        $this->assertTextFound($crawler, 'Comments');
+        $this->assertTextFound($crawler, 'No comments here.');
+    }
+
+    public function testViewCommentsSectionWithComments()
+    {
+        $this->createPosts(2, true);
+        $crawler = $this->client->request('GET', '/posts/1');
+        $this->assertTextFound($crawler, 'Comments');
+        $this->assertTextFound($crawler, 'Comment0');
+        $this->assertTextNotFound($crawler, 'No comments here.');
+    }
+
+    protected function createPosts($count, $with_comments = false)
     {
         $author = new Author();
         $author->setName('Author');
@@ -66,6 +84,17 @@ class PostsControllerTest extends BaseFunctionalTest
             $post->setContent('Content' . $i);
             $post->setAuthor($author);
             $this->entityManager()->persist($post);
+
+            if(!$with_comments) {
+                continue;
+            }
+            $comment = new Comment;
+            $comment->setPost($post);
+            $comment->setAuthor($author);
+            $comment->setContent('Comment'.$i);
+            $comment->initializeCreatedAt();
+            $comment->markAsUpdated();
+            $this->entityManager()->persist($comment);
         }
         $this->entityManager()->flush();
     }
