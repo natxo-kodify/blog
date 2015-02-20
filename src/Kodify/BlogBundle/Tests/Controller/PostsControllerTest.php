@@ -5,9 +5,9 @@ namespace Kodify\BlogBundle\Tests\Controller;
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\Author;
 use Kodify\BlogBundle\Entity\Comment;
-use Kodify\BlogBundle\Tests\BaseFunctionalTest;
+use Kodify\BlogBundle\Tests\BaseFunctional;
 
-class PostsControllerTest extends BaseFunctionalTest
+class PostsControllerTest extends BaseFunctional
 {
     public function testIndexNoPosts()
     {

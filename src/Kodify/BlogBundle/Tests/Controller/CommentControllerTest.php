@@ -3,9 +3,9 @@
 namespace Kodify\BlogBundle\Tests\Controller;
 
 use Kodify\BlogBundle\Entity\Comment;
-use Kodify\BlogBundle\Tests\BaseFunctionalTest;
+use Kodify\BlogBundle\Tests\BaseFunctional;
 
-class CommentControllerTest extends BaseFunctionalTest
+class CommentControllerTest extends BaseFunctional
 {
     public function testCreateCommentGetRequest()
     {

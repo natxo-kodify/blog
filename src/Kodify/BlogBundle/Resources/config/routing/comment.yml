@@ -1,30 +1,4 @@
-comment:
-    path:     /
-    defaults: { _controller: "KodifyBlogBundle:Comment:index" }
-
-comment_show:
-    path:     /{id}/show
-    defaults: { _controller: "KodifyBlogBundle:Comment:show" }
-
-comment_new:
-    path:     /new
-    defaults: { _controller: "KodifyBlogBundle:Comment:new" }
-
 comment_create:
     path:     /create
     defaults: { _controller: "KodifyBlogBundle:Comment:create" }
     methods:  POST
-
-comment_edit:
-    path:     /{id}/edit
-    defaults: { _controller: "KodifyBlogBundle:Comment:edit" }
-
-comment_update:
-    path:     /{id}/update
-    defaults: { _controller: "KodifyBlogBundle:Comment:update" }
-    methods:  [POST, PUT]
-
-comment_delete:
-    path:     /{id}/delete
-    defaults: { _controller: "KodifyBlogBundle:Comment:delete" }
-    methods:  [POST, DELETE]

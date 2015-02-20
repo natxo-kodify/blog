@@ -4,7 +4,7 @@ namespace Kodify\BlogBundle\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class BaseFunctionalTest extends WebTestCase
+class BaseFunctional extends WebTestCase
 {
     protected $entityManager;
     protected $client;
