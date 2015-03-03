@@ -17,19 +17,20 @@ class BaseFunctionalTest extends WebTestCase
 
     public function tearDown()
     {
-        $this->cleanDb();
+       $this->cleanDb();
     }
 
     protected function cleanDb()
     {
         $this->clearTableByName('Author');
         $this->clearTableByName('Post');
+        $this->clearTableByName('Comment');
     }
 
     protected function entityManager()
     {
         if ($this->entityManager == null) {
-            $this->entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
+            $this->entityManager = static::createClient()->getContainer()->get('doctrine')->getManager();
         }
 
         return $this->entityManager;

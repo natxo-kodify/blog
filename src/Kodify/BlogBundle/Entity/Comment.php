@@ -4,21 +4,16 @@ namespace Kodify\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Post
+ * Comment
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\PostRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class Post extends AbstractBaseEntity
+class Comment extends AbstractBaseEntity
 {
-	/**
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post")
-     */
-    protected $comments;
 
     /**
      * @var integer
@@ -31,26 +26,23 @@ class Post extends AbstractBaseEntity
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="title", type="text")
      * @Assert\NotBlank()
-     *
+     * @ORM\Column(name="text", type="text")
      */
-    private $title;
+    private $text;
 
     /**
-     * @var string
-     * @Assert\NotBlank()
-     * @ORM\Column(name="content", type="text")
-     */
-    private $content;
-
-    /**
-     * @Assert\NotBlank()
-     * @ORM\ManyToOne(targetEntity="Author", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Author", inversedBy="comments")
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
     protected $author;
+	
+	
+	/**
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
+     * @ORM\JoinColumn(name="postId", referencedColumnName="id")
+     */
+    protected $post;
 
     /**
      * @var \DateTime
@@ -65,11 +57,11 @@ class Post extends AbstractBaseEntity
      * @ORM\Column(name="updatedAt", type="datetime")
      */
     protected $updatedAt;
-
+	
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -77,91 +69,33 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Set title
+     * Set text
      *
-     * @param string $title
-     * @return Post
+     * @param string $text
+     * @return Comment
      */
-    public function setTitle($title)
+    public function setText($text)
     {
-        $this->title = $title;
+        $this->text = $text;
 
         return $this;
     }
 
     /**
-     * Get title
+     * Get text
      *
-     * @return string
+     * @return string 
      */
-    public function getTitle()
+    public function getText()
     {
-        return $this->title;
+        return $this->text;
     }
-
-    /**
-     * Set content
-     *
-     * @param string $content
-     * @return Post
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    /**
-     * Get content
-     *
-     * @return string
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /**
-     * Set author
-     *
-     * @param \Kodify\BlogBundle\Entity\Author $author
-     * @return Post
-     */
-    public function setAuthor(\Kodify\BlogBundle\Entity\Author $author = null)
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
-    /**
-     * Get author
-     *
-     * @return \Kodify\BlogBundle\Entity\Author
-     */
-    public function getAuthor()
-    {
-        return $this->author;
-    }
-    
-    
-    public function __construct()
-    {
-        $this->comments  = new ArrayCollection();
-    }
-	
-	public function __toString()
-    {
-        return $this->title;
-    }
-    
 
     /**
      * Set createdAt
      *
      * @param \DateTime $createdAt
-     * @return Post
+     * @return Comment
      */
     public function setCreatedAt($createdAt)
     {
@@ -184,7 +118,7 @@ class Post extends AbstractBaseEntity
      * Set updatedAt
      *
      * @param \DateTime $updatedAt
-     * @return Post
+     * @return Comment
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -204,36 +138,49 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Add comments
+     * Set author
      *
-     * @param \Kodify\BlogBundle\Entity\Comment $comments
-     * @return Post
+     * @param \Kodify\BlogBundle\Entity\Author $author
+     * @return Comment
      */
-    public function addComment(\Kodify\BlogBundle\Entity\Comment $comments)
+    public function setAuthor(\Kodify\BlogBundle\Entity\Author $author = null)
     {
-        $this->comments[] = $comments;
+        $this->author = $author;
 
         return $this;
     }
 
     /**
-     * Remove comments
+     * Get author
      *
-     * @param \Kodify\BlogBundle\Entity\Comment $comments
+     * @return \Kodify\BlogBundle\Entity\Author 
      */
-    public function removeComment(\Kodify\BlogBundle\Entity\Comment $comments)
+    public function getAuthor()
     {
-        $this->comments->removeElement($comments);
+        return $this->author;
     }
 
     /**
-     * Get comments
+     * Set post
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @param \Kodify\BlogBundle\Entity\Post $post
+     * @return Comment
      */
-    public function getComments()
+    public function setPost(\Kodify\BlogBundle\Entity\Post $post = null)
     {
-        return $this->comments;
+        $this->post = $post;
+
+        return $this;
+    }
+
+    /**
+     * Get post
+     *
+     * @return \Kodify\BlogBundle\Entity\Post 
+     */
+    public function getPost()
+    {
+        return $this->post;
     }
     /**
      * @ORM\PreUpdate
@@ -243,7 +190,7 @@ class Post extends AbstractBaseEntity
         // Add your code here
     }
 
-	/**
+    /**
      * @ORM\PrePersist
      */
     public function initializeCreatedAt()

@@ -10,4 +10,17 @@
             {{ post.content }}
         </div>
     </div>
+     <div class="panel panel-default panel-comments">
+        <div class="panel-heading">comments:</div>
+        <div class="panel-body">
+       	{% if post.comments is empty %}
+          there are no comments
+		 {% else %}
+		 	 {% for comment in post.comments %}
+		        <li><strong>{{ comment.author }}</strong>: <em>{{ comment.text }}</em></li>
+		   {% endfor %}
+		{% endif %}
+        </div>
+    </div>
+    <a href="{{ path('create_comment',{post: post.id}) }}" class="btn btn-primary btn-sm" role="button">create comment</a>
 {% endblock %}

@@ -3,6 +3,7 @@
 {% block content %}
 
     {% for post in posts %}
+    <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
@@ -12,6 +13,10 @@
                 {{ post.content }}
             </div>
         </div>
+     </div>
+        {% if loop.last and loop.index is  odd %}
+        	&nbsp;
+       	{% endif %}
     {% endfor %}
 
 {% endblock %}
