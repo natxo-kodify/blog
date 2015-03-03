@@ -4,6 +4,7 @@ namespace Kodify\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Post
@@ -14,6 +15,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Post extends AbstractBaseEntity
 {
+	/**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post")
+     */
+    protected $comments;
+
     /**
      * @var integer
      *
@@ -45,6 +51,20 @@ class Post extends AbstractBaseEntity
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
     protected $author;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updatedAt", type="datetime")
+     */
+    protected $updatedAt;
 
     /**
      * Get id
@@ -123,5 +143,121 @@ class Post extends AbstractBaseEntity
     public function getAuthor()
     {
         return $this->author;
+    }
+    
+    
+    public function __construct()
+    {
+        $this->comments  = new ArrayCollection();
+    }
+	
+	public function __toString()
+    {
+        return $this->title;
+    }
+    
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return Post
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     * @return Post
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime 
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \Kodify\BlogBundle\Entity\Comment $comments
+     * @return Post
+     */
+    public function addComment(\Kodify\BlogBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \Kodify\BlogBundle\Entity\Comment $comments
+     */
+    public function removeComment(\Kodify\BlogBundle\Entity\Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+    /**
+     * @ORM\PreUpdate
+     */
+    public function markAsUpdated()
+    {
+        // Add your code here
+    }
+
+	/**
+     * @ORM\PrePersist
+     */
+    public function initializeCreatedAt()
+    {
+        // Add your code here
+        $this->createdAt = new \DateTime();
+    }
+	
+	/**
+     * @ORM\PrePersist
+     */
+    public function initializeUpdatedAt()
+    {
+        // Add your code here
+        $this->updatedAt = new \DateTime();
     }
 }

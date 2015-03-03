@@ -1,0 +1,61 @@
+<?php
+
+namespace Kodify\BlogBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * Comment
+ *
+ * @ORM\Table()
+ * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\PostRepository")
+ * @ORM\HasLifecycleCallbacks()
+ */
+class Comment extends AbstractBaseEntity
+{
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     * @Assert\NotBlank()
+     * @ORM\Column(name="text", type="text")
+     */
+    private $text;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Author", inversedBy="comments")
+     * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
+     */
+    protected $author;
+	
+	
+	/**
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
+     * @ORM\JoinColumn(name="postId", referencedColumnName="id")
+     */
+    protected $post;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updatedAt", type="datetime")
+     */
+    protected $updatedAt;
+	
+}

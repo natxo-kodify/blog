@@ -54,6 +54,8 @@ class PostsController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $post = $form->getData();
+			$post->setCreatedAt( new \DateTime('now') );
+			$post->setUpdatedAt( new \DateTime('now') );
             $this->getDoctrine()->getManager()->persist($post);
             $this->getDoctrine()->getManager()->flush();
             $parameters['message'] = 'Post Created!';

@@ -49,7 +49,7 @@ abstract class AbstractBaseEntity
      *
      * @param \DateTime $updatedAt
      */
-    public function setUpdatedAt($updatedAt = null)
+    public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
 
