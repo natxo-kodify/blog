@@ -17,3 +17,16 @@ label {
 .thumbnail img {
     height: 200px;
 }
+
+.panel-table {
+	display: table;
+}
+
+.panel-table .panel-row {
+	display: table-row;
+}
+
+.panel-table .panel-row .panel-cell {
+	width: 50%;
+	display: table-cell;
+}
