@@ -40,11 +40,25 @@ class Post extends AbstractBaseEntity
     private $content;
 
     /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"persist"})
+     * @ORM\OrderBy({"createdAt" = "ASC"})
+     */
+    protected $comments;
+
+    /**
      * @Assert\NotBlank()
      * @ORM\ManyToOne(targetEntity="Author", inversedBy="posts")
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
     protected $author;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -123,5 +137,15 @@ class Post extends AbstractBaseEntity
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

@@ -31,6 +31,7 @@ class PostsController extends Controller
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
+            'comments'    => $currentPost->getComments()
         ];
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);

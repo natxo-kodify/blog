@@ -32,14 +32,14 @@ class Comment extends AbstractBaseEntity
 
     /**
      * @Assert\NotBlank()
-     * @ORM\ManyToOne(targetEntity="Author", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Author", inversedBy="comments")
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
     protected $author;
 
     /**
      * @Assert\NotBlank()
-     * @ORM\ManyToOne(targetEntity="Post", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
      * @ORM\JoinColumn(name="postId", referencedColumnName="id")
      */
     protected $post;
@@ -60,21 +60,21 @@ class Comment extends AbstractBaseEntity
      * @param string $text
      * @return Comment
      */
-    public function setText($title)
+    public function setText($text)
     {
-        $this->title = $title;
+        $this->text = $text;
 
         return $this;
     }
 
     /**
-     * Get title
+     * Get text
      *
      * @return string
      */
     public function getText()
     {
-        return $this->title;
+        return $this->text;
     }
 
     /**
@@ -106,7 +106,7 @@ class Comment extends AbstractBaseEntity
      * @param \Kodify\BlogBundle\Entity\Post $post
      * @return Comment
      */
-    public function setAuthor(\Kodify\BlogBundle\Entity\Post $post = null)
+    public function setPost(\Kodify\BlogBundle\Entity\Post $post = null)
     {
         $this->post = $post;
 
