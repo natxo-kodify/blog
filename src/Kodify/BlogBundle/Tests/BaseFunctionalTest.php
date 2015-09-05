@@ -4,7 +4,7 @@ namespace Kodify\BlogBundle\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class BaseFunctionalTest extends WebTestCase
+abstract class BaseFunctionalTest extends WebTestCase
 {
     protected $entityManager;
     protected $client;
@@ -58,7 +58,7 @@ class BaseFunctionalTest extends WebTestCase
         }
         $this->assertSame(
             $times,
-            $crawler->filter('html:contains("' . $text . '")')->count(),
+            $crawler->filter('html:contains("'.$text.'")')->count(),
             $message
         );
     }
