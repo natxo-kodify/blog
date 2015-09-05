@@ -3,11 +3,17 @@
 {% block content %}
 
     {% for post in posts %}
-        <div class="col-md-6">
+        <div class="col-md-6 col-xs-6">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
-                    <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
+                <div class="panel-heading clearfix">
+                        <div class="row">
+                        <div class="col-md-8">
+                            <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
+                        </div>
+                        <div class="col-md-4">
+                            <span>by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
+                        </div>
+                        </div>
                 </div>
                 <div class="panel-body">
                     {{ post.content }}
