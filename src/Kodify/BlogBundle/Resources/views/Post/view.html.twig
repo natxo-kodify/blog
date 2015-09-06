@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-1 col-xs-12">
                     {% if rating is null %}
                         No ratings
                     {% else %}
@@ -20,10 +20,10 @@
                     {% endif %}
 
                 </div>
-                <div class="col-md-10">
-                    {{ form_start(form) }}
+                <div class="col-md-11 col-xs-12">
+                    {{ form_start(form,{'attr':{'class': 'form-inline'}}) }}
                         {{ form_errors(form.rating) }}
-                        {{ form_widget(form.rating) }}
+                        {{ form_widget(form.rating,{'attr':{'placeholder': 'From 0 to 5','class':'input-sm'}}) }}
                         {{ form_widget(form.rate) }}
                     {{ form_end(form) }}
                 </div>
