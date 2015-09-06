@@ -63,6 +63,16 @@ class PostsControllerTest extends BaseFunctionalTest
 
     public function testPostRate()
     {
+        $this->createPosts(1);
+        $crawler = $this->client->request('GET', '/posts/1');
+        $this->assertTextFound($crawler, 'No ratings');
+        $buttonCrawlerNode = $crawler->selectButton('Rate');
+        $form = $buttonCrawlerNode->form(array('post_rating[rating]' => 5));
+        $crawler = $this->client->submit($form);
+        $this->assertTextFound($crawler, 'Rating: 5');
+        $form = $buttonCrawlerNode->form(array('post_rating[rating]' => 3));
+        $crawler = $this->client->submit($form);
+        $this->assertTextFound($crawler, 'Rating: 4');
     }
 
     public function testOrderByDate()

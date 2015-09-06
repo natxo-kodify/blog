@@ -13,3 +13,7 @@ view_post:
 create_author:
     path:     /authors/create
     defaults: { _controller: KodifyBlogBundle:Authors:create }
+
+ratePost:
+    path:   /posts/{id}/rate
+    defaults: { _controller: KodifyBlogBundle:Posts:ratePost }

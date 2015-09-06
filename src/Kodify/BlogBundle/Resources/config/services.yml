@@ -1,4 +1,8 @@
 services:
+    kodify_blog.post_rater:
+      class: Kodify\BlogBundle\Services\PostRater
+      arguments:
+          - @doctrine.orm.default_entity_manager
 #    kodify_blog.example:
 #        class: Kodify\BlogBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]

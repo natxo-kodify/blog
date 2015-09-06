@@ -12,12 +12,20 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-2">
                     {% if rating is null %}
                         No ratings
                     {% else %}
-                        Rating: {{ rating }}
+                        Rating: {{ rating|number_format }}
                     {% endif %}
+
+                </div>
+                <div class="col-md-10">
+                    {{ form_start(form) }}
+                        {{ form_errors(form.rating) }}
+                        {{ form_widget(form.rating) }}
+                        {{ form_widget(form.rate) }}
+                    {{ form_end(form) }}
                 </div>
             </div>
         </div>
