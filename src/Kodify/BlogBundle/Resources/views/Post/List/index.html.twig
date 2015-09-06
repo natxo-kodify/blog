@@ -2,14 +2,14 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-12">
-            {% if sort == 2 %}
-            <a href="{{ url('sorted_home',{'sort': 1}) }}">Order by date</a>
-            {% else %}
-            <a href="{{ url('sorted_home',{'sort': 2}) }}">Order by rating</a>
-            {% endif %}
+        <div class="pull-right">
+            <ul class="nav nav-pills">
+                <li role="presentation" {% if sort == 1 %}class="active"{% endif %}><a href="{{ url('sorted_home',{'sort': 1}) }}">Order by date</a></li>
+                <li role="presentation" {% if sort == 2 %}class="active"{% endif %}><a href="{{ url('sorted_home',{'sort': 2}) }}">Order by rating</a></li>
+            </ul>
         </div>
     </div>
+    <div class="row top-buffer">
     {% for post in posts %}
         <div class="col-md-6 col-xs-6">
             <div class="panel panel-default">
@@ -29,6 +29,6 @@
             </div>
         </div>
     {% endfor %}
-    <div class="clearfix"></div>
+    </div>
 
 {% endblock %}
