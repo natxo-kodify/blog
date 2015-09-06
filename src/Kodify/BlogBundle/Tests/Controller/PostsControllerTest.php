@@ -4,7 +4,9 @@ namespace Kodify\BlogBundle\Tests\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\Author;
+use Kodify\BlogBundle\Services\PostRater;
 use Kodify\BlogBundle\Tests\BaseFunctionalTest;
+use Symfony\Component\DomCrawler\Crawler;
 
 class PostsControllerTest extends BaseFunctionalTest
 {
@@ -75,20 +77,41 @@ class PostsControllerTest extends BaseFunctionalTest
         $this->assertTextFound($crawler, 'Rating: 4');
     }
 
-    public function testOrderByDate()
-    {
-    }
-
     public function testOrderByRating()
     {
+        $author = $this->createAuthor();
+        for ($i = 0; $i < 3; ++$i) {
+            $post = new Post();
+            $post->setTitle('Title'.$i);
+            $post->setContent('Content'.$i);
+            $post->setAuthor($author);
+            $this->entityManager()->persist($post);
+            $postRater = new PostRater($this->entityManager());
+            $postRater->rate($post, $i);
+        }
+        $this->entityManager()->flush();
+
+        $crawler = $this->client->request('GET', '/');
+
+        $nodeValues = $crawler->filter('.postTitle')->each(function (Crawler $node, $i) {
+            return $node->text();
+        });
+
+        $this->assertEquals(array('Title0', 'Title1', 'Title2'), $nodeValues);
+
+        $link = $crawler->selectLink('Order by rating')->link();
+        $crawler = $this->client->click($link);
+
+        $nodeValues = $crawler->filter('.postTitle')->each(function (Crawler $node, $i) {
+            return $node->text();
+        });
+
+        $this->assertEquals(array('Title2', 'Title1', 'Title0'), $nodeValues);
     }
 
     protected function createPosts($count)
     {
-        $author = new Author();
-        $author->setName('Author');
-        $this->entityManager()->persist($author);
-        $this->entityManager()->flush();
+        $author = $this->createAuthor();
         for ($i = 0; $i < $count; ++$i) {
             $post = new Post();
             $post->setTitle('Title'.$i);
@@ -107,5 +130,18 @@ class PostsControllerTest extends BaseFunctionalTest
             'lessThanLimit' => ['count' => $rand, 'expectedCount' => $rand],
             'moreThanLimit' => ['count' => rand(6, 9), 'expectedCount' => 5],
         ];
+    }
+
+    /**
+     * @return Author
+     */
+    protected function createAuthor()
+    {
+        $author = new Author();
+        $author->setName('Author');
+        $this->entityManager()->persist($author);
+        $this->entityManager()->flush();
+
+        return $author;
     }
 }

@@ -10,11 +10,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PostsController extends Controller
 {
-    public function indexAction()
+    public function indexAction($sort)
     {
-        $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
+        if ($sort == 1) {
+            $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
+        } else {
+            $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->highestRated();
+        }
         $template = 'KodifyBlogBundle:Post:List/empty.html.twig';
-        $parameters = ['breadcrumbs' => ['home' => 'Home']];
+        $parameters = ['breadcrumbs' => ['home' => 'Home'],'sort' => $sort];
         if (count($posts)) {
             $template = 'KodifyBlogBundle:Post:List/index.html.twig';
             $parameters['posts'] = $posts;
