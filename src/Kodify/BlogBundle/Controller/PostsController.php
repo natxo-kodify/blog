@@ -11,11 +11,11 @@ class PostsController extends Controller
 {
     public function indexAction()
     {
-        $posts      = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
-        $template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
+        $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
+        $template = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
         if (count($posts)) {
-            $template            = 'KodifyBlogBundle:Post:List/index.html.twig';
+            $template = 'KodifyBlogBundle:Post:List/index.html.twig';
             $parameters['posts'] = $posts;
         }
 
@@ -25,12 +25,22 @@ class PostsController extends Controller
     public function viewAction($id)
     {
         $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
+
         if (!$currentPost instanceof Post) {
             throw $this->createNotFoundException('Post not found');
         }
+
+        $rating = null;
+        if ($currentPost->hasRatings()) {
+            $rating = $this->getDoctrine()->getRepository('KodifyBlogBundle:PostRating')->getRatingForPost(
+                $currentPost
+            );
+        }
+
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
-            'post'        => $currentPost,
+            'post' => $currentPost,
+            'rating' => $rating,
         ];
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
@@ -38,7 +48,7 @@ class PostsController extends Controller
 
     public function createAction(Request $request)
     {
-        $form       = $this->createForm(
+        $form = $this->createForm(
             new PostType(),
             new Post(),
             [
@@ -47,8 +57,8 @@ class PostsController extends Controller
             ]
         );
         $parameters = [
-            'form'        => $form->createView(),
-            'breadcrumbs' => ['home' => 'Home', 'create_post' => 'Create Post']
+            'form' => $form->createView(),
+            'breadcrumbs' => ['home' => 'Home', 'create_post' => 'Create Post'],
         ];
 
         $form->handleRequest($request);

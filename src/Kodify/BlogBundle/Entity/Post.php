@@ -2,6 +2,7 @@
 
 namespace Kodify\BlogBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -49,6 +50,11 @@ class Post extends AbstractBaseEntity
      * @ORM\OneToMany(targetEntity="PostRating",mappedBy="post")
      */
     protected $ratings;
+
+    public function __construct()
+    {
+        $this->ratings = new ArrayCollection();
+    }
 
     /**
      * Get id.
@@ -130,5 +136,10 @@ class Post extends AbstractBaseEntity
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    public function hasRatings()
+    {
+        return !$this->ratings->isEmpty();
     }
 }

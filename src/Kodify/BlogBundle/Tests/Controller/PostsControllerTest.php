@@ -54,6 +54,25 @@ class PostsControllerTest extends BaseFunctionalTest
         $this->assertTextNotFound($crawler, 'Content1');
     }
 
+    public function testNoRatedPost()
+    {
+        $this->createPosts(1);
+        $crawler = $this->client->request('GET', '/posts/1');
+        $this->assertTextFound($crawler, 'No ratings');
+    }
+
+    public function testPostRate()
+    {
+    }
+
+    public function testOrderByDate()
+    {
+    }
+
+    public function testOrderByRating()
+    {
+    }
+
     protected function createPosts($count)
     {
         $author = new Author();
@@ -62,8 +81,8 @@ class PostsControllerTest extends BaseFunctionalTest
         $this->entityManager()->flush();
         for ($i = 0; $i < $count; ++$i) {
             $post = new Post();
-            $post->setTitle('Title' . $i);
-            $post->setContent('Content' . $i);
+            $post->setTitle('Title'.$i);
+            $post->setContent('Content'.$i);
             $post->setAuthor($author);
             $this->entityManager()->persist($post);
         }
