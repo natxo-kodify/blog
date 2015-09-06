@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Post
+ * Post.
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\PostRepository")
@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Post extends AbstractBaseEntity
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -28,7 +28,6 @@ class Post extends AbstractBaseEntity
      *
      * @ORM\Column(name="title", type="text")
      * @Assert\NotBlank()
-     *
      */
     private $title;
 
@@ -47,9 +46,14 @@ class Post extends AbstractBaseEntity
     protected $author;
 
     /**
-     * Get id
+     * @ORM\OneToMany(targetEntity="PostRating",mappedBy="post")
+     */
+    protected $ratings;
+
+    /**
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -57,9 +61,10 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
+     *
      * @return Post
      */
     public function setTitle($title)
@@ -70,7 +75,7 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -80,9 +85,10 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Set content
+     * Set content.
      *
      * @param string $content
+     *
      * @return Post
      */
     public function setContent($content)
@@ -93,7 +99,7 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Get content
+     * Get content.
      *
      * @return string
      */
@@ -103,9 +109,10 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Set author
+     * Set author.
      *
      * @param \Kodify\BlogBundle\Entity\Author $author
+     *
      * @return Post
      */
     public function setAuthor(\Kodify\BlogBundle\Entity\Author $author = null)
@@ -116,7 +123,7 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Get author
+     * Get author.
      *
      * @return \Kodify\BlogBundle\Entity\Author
      */
