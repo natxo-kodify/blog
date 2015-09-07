@@ -10,16 +10,18 @@ namespace Kodify\BlogBundle\Repository;
  */
 class PostRepository extends AbstractBaseRepository
 {
-    public function highestRated()
+    public function highestRated($limit = null, $offset = 0)
     {
-        $qb = $this->createQueryBuilder('p');
+        $limit = $this->getLimit($limit);
 
-        return $qb
+        return $this->createQueryBuilder('p')
             ->select('p')
             ->addSelect('AVG(r.rating) AS HIDDEN avg_rating')
             ->leftJoin('p.ratings', 'r')
             ->addOrderBy('avg_rating', 'DESC')
             ->groupBy('p.id')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
             ->getQuery()
             ->execute();
     }
