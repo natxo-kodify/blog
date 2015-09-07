@@ -140,9 +140,4 @@ class Post extends AbstractBaseEntity
     {
         return $this->author;
     }
-
-    public function hasRatings()
-    {
-        return !$this->ratings->isEmpty();
-    }
 }
