@@ -11,7 +11,7 @@ namespace Kodify\BlogBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Kodify\BlogBundle\Entity\Post;
 
-class PostRatingRepository extends EntityRepository
+class PostRatingRepository extends EntityRepository implements PostRatingRepositoryInterface
 {
     public function getRatingForPost(Post $post)
     {

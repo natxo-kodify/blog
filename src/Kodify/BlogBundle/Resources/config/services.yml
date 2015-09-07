@@ -3,6 +3,16 @@ services:
       class: Kodify\BlogBundle\Services\PostRater
       arguments:
           - @doctrine.orm.default_entity_manager
+    kodify_blog.post_rating.repository:
+      class: Kodify\BlogBundle\Repository\PostRatingRepository
+      factory_service: doctrine.orm.default_entity_manager
+      factory_method: getRepository
+      arguments:
+          - Kodify\BlogBundle\Entity\PostRating
+    kodify_blog.post_rating.calculator:
+      class: Kodify\BlogBundle\Services\PostRatingCalculator
+      arguments:
+        - @kodify_blog.post_rating.repository
 #    kodify_blog.example:
 #        class: Kodify\BlogBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]

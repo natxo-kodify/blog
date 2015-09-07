@@ -44,15 +44,12 @@ class PostsController extends Controller
                 $data = $form->getData();
 
                 $this->get('kodify_blog.post_rater')->rate($currentPost, $data['rating']);
+
+                return $this->redirect($this->generateUrl('view_post', array('id' => $id)));
             }
         }
 
-        $rating = null;
-        if ($currentPost->hasRatings()) {
-            $rating = $this->getDoctrine()->getRepository('KodifyBlogBundle:PostRating')->getRatingForPost(
-                $currentPost
-            );
-        }
+        $rating = $this->get('kodify_blog.post_rating.calculator')->getRatingForPost($currentPost);
 
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],

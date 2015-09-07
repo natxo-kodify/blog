@@ -12,6 +12,7 @@ abstract class BaseFunctionalTest extends WebTestCase
     public function setUp()
     {
         $this->client = static::createClient();
+        $this->client->followRedirects();
         $this->cleanDb();
     }
 
