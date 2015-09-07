@@ -13,9 +13,9 @@ class PostsController extends Controller
     public function indexAction($sort)
     {
         if ($sort == 1) {
-            $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
+            $posts = $this->get('kodify_blog.post.repository')->latest();
         } else {
-            $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->highestRated();
+            $posts = $this->get('kodify_blog.post.repository')->highestRated();
         }
         $template = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home'],'sort' => $sort];
@@ -29,7 +29,7 @@ class PostsController extends Controller
 
     public function viewAction(Request $request, $id)
     {
-        $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
+        $currentPost = $this->get('kodify_blog.post.repository')->find($id);
 
         if (!$currentPost instanceof Post) {
             throw $this->createNotFoundException('Post not found');

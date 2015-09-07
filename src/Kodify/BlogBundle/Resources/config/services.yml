@@ -9,6 +9,13 @@ services:
       factory_method: getRepository
       arguments:
           - Kodify\BlogBundle\Entity\PostRating
+
+    kodify_blog.post.repository:
+        class: Kodify\BlogBundle\Repository\PostRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - Kodify\BlogBundle\Entity\Post
     kodify_blog.post_rating.calculator:
       class: Kodify\BlogBundle\Services\PostRatingCalculator
       arguments:
