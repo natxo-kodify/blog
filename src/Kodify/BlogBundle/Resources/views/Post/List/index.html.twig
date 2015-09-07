@@ -4,8 +4,8 @@
     <div class="row">
         <div class="pull-right">
             <ul class="nav nav-pills">
-                <li role="presentation" {% if sort == 1 %}class="active"{% endif %}><a href="{{ url('sorted_home',{'sort': 1}) }}">Order by date</a></li>
-                <li role="presentation" {% if sort == 2 %}class="active"{% endif %}><a href="{{ url('sorted_home',{'sort': 2}) }}">Order by rating</a></li>
+                <li role="presentation" {% if sort == constant('Kodify\\BlogBundle\\Entity\\Post::ORDER_DATE') %}class="active"{% endif %}><a href="{{ url('sorted_home',{'sort': 1}) }}">Order by date</a></li>
+                <li role="presentation" {% if sort == constant('Kodify\\BlogBundle\\Entity\\Post::ORDER_RATING') %}class="active"{% endif %}><a href="{{ url('sorted_home',{'sort': 2}) }}">Order by rating</a></li>
             </ul>
         </div>
     </div>
