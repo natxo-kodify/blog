@@ -5,7 +5,7 @@ namespace Kodify\BlogBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Author
+ * Author.
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\AuthorRepository")
@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Author extends AbstractBaseEntity
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -32,10 +32,10 @@ class Author extends AbstractBaseEntity
     /**
      * @ORM\OneToMany(targetEntity="Post", mappedBy="author", cascade={"persist"})
      */
-    protected $videos;
+    protected $posts;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -48,9 +48,9 @@ class Author extends AbstractBaseEntity
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -58,9 +58,10 @@ class Author extends AbstractBaseEntity
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return Author
      */
     public function setName($name)
@@ -71,7 +72,7 @@ class Author extends AbstractBaseEntity
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -81,12 +82,13 @@ class Author extends AbstractBaseEntity
     }
 
     /**
-     * Add videos
+     * Add videos.
      *
      * @param \Kodify\BlogBundle\Entity\Post $videos
+     *
      * @return Author
      */
-    public function addVideo(\Kodify\BlogBundle\Entity\Post $videos)
+    public function addPost(\Kodify\BlogBundle\Entity\Post $videos)
     {
         $this->videos[] = $videos;
 
@@ -94,21 +96,21 @@ class Author extends AbstractBaseEntity
     }
 
     /**
-     * Remove videos
+     * Remove videos.
      *
      * @param \Kodify\BlogBundle\Entity\Post $videos
      */
-    public function removeVideo(\Kodify\BlogBundle\Entity\Post $videos)
+    public function removePost(\Kodify\BlogBundle\Entity\Post $videos)
     {
         $this->videos->removeElement($videos);
     }
 
     /**
-     * Get videos
+     * Get videos.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getVideos()
+    public function getPosts()
     {
         return $this->videos;
     }
