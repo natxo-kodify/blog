@@ -22,10 +22,6 @@ class PostRatingCalculator
 
     public function getRatingForPost(Post $post)
     {
-        if ($post->hasRatings()) {
-            return $this->postRatingRepository->getRatingForPost($post);
-        }
-
-        return;
+        return $this->postRatingRepository->getRatingForPost($post);
     }
 }
