@@ -15,6 +15,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Post extends AbstractBaseEntity
 {
+    const ORDER_DATE = 1;
+
+    const ORDER_RATING = 2;
     /**
      * @var int
      *

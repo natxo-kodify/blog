@@ -12,11 +12,8 @@ class PostsController extends Controller
 {
     public function indexAction($sort)
     {
-        if ($sort == 1) {
-            $posts = $this->get('kodify_blog.post.repository')->latest();
-        } else {
-            $posts = $this->get('kodify_blog.post.repository')->highestRated();
-        }
+        $posts = $this->getPosts($sort);
+
         $template = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home'],'sort' => $sort];
         if (count($posts)) {
@@ -85,5 +82,26 @@ class PostsController extends Controller
         }
 
         return $this->render('KodifyBlogBundle:Default:create.html.twig', $parameters);
+    }
+
+    /**
+     * @param $sort
+     *
+     * @return array|mixed
+     */
+    private function getPosts($sort)
+    {
+        switch ($sort) {
+            case Post::ORDER_RATING:
+                $posts = $this->get('kodify_blog.post.repository')->highestRated();
+                break;
+            case Post::ORDER_DATE:
+            default:
+                $posts = $this->get('kodify_blog.post.repository')->latest();
+
+                return $posts;
+        }
+
+        return $posts;
     }
 }
