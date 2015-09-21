@@ -4,15 +4,26 @@ namespace Kodify\BlogBundle\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Form\Type\PostType;
-use Kodify\BlogBundle\Form\Type\RateType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class PostsController extends Controller
 {
-    public function indexAction()
+    const LATEST = "latest";
+    const RATE = "rated";
+
+    public function indexAction($sort = self::RATE)
     {
-        $posts      = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
+        switch ($sort) {
+            case self::RATE:
+                $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->sortRated();
+                break;
+            default:
+            case self::LATEST:
+                $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
+                break;
+        }
+
         $template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
         if (count($posts)) {
@@ -30,34 +41,10 @@ class PostsController extends Controller
             throw $this->createNotFoundException('Post not found');
         }
 
-        $form = $this->createForm(
-            new RateType(),
-            array(),
-            [
-                'action' => $this->generateUrl('view_post', ["id" => $id]),
-                'method' => 'POST',
-            ]
-        );
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
-            'form' => $form->createView(),
         ];
-        $request = $this->get('request');
-        if ($request->getMethod() == 'POST') {
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                $rate = $form->getData();
-                if ($this->getDoctrine()->getRepository("KodifyBlogBundle:Post")->setRate($currentPost, $rate["stars"])) {
-                    $parameters["message_type"] = "success";
-                    $parameters['message'] = 'Post Rated!';
-                } else {
-                    $parameters["message_type"] = "danger";
-                    $parameters['message'] = 'Please rate your Post Correctly';
-                }
-
-            }
-        }
 
 
 
@@ -88,5 +75,20 @@ class PostsController extends Controller
         }
 
         return $this->render('KodifyBlogBundle:Default:create.html.twig', $parameters);
+    }
+
+    public function rateAction($id, $star)
+    {
+        if ($this->getDoctrine()->getRepository("KodifyBlogBundle:Post")->setRate($id, $star)) {
+            $this->get('session')->getFlashBag()->add('success', 'Post Rated!');
+        } else {
+            $this->get('session')->getFlashBag()->add('danger', 'Please rate your Post Correctly!');
+        }
+
+        $parameters = array(
+            "id" => $id,
+        );
+
+        return $this->redirect($this->generateUrl("view_post", $parameters));
     }
 }

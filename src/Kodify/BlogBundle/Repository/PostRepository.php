@@ -14,23 +14,42 @@ class PostRepository extends AbstractBaseRepository
 {
 
     /**
-     *  Updates Rate's value of a post
+     * Updates Rate Value
      *
-     * @param Post $post
-     * @param int $stars
+     * @param $id post id
+     * @param $star number of stars
+     *
+     * @return bool true if everything is ok, false if it's not
      */
-    public function setRate(Post $post, $stars)
+    public function setRate($id, $star)
     {
-
+        $post = $this->getEntityManager()->getRepository("KodifyBlogBundle:Post")->find($id);
         $rated = false;
-        if (Post::MINRATE <= $stars && Post::MAXRATE >= $stars) {
+        if (Post::MINRATE <= $star && Post::MAXRATE >= $star) {
             $post->setRateClicks($post->getRateClicks() + 1);
-            $post->setRateTotal($post->getRateTotal() + $stars);
+            $post->setRateTotal($post->getRateTotal() + $star);
             $post->setRate(floor($post->getRateTotal() / $post->getRateClicks()));
             $this->getEntityManager()->flush($post);
             $rated = true;
         }
 
         return $rated;
+    }
+
+    /**
+     * Returns posts ordered by Rate
+     *
+     * @param null $limit limit of posts per page
+     * @param int $offset number of post to start with.
+     *
+     * @return array of post objects
+     */
+    public function sortRated($limit = null, $offset = 0)
+    {
+        if (is_null($limit)) {
+            $limit = static::LIST_DEFAULT_LIMIT;
+        }
+
+        return $this->findBy([], ['rate' => 'DESC'], $limit, $offset);
     }
 }

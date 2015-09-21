@@ -28,3 +28,16 @@ label {
 .thumbnail img {
     height: 200px;
 }
+
+.rate-title, .sort-title {
+
+    margin-right: 10px;
+}
+
+.sort-title {
+    margin-top: 10px;
+}
+
+.sort-pills {
+    margin-bottom: 5px;
+}

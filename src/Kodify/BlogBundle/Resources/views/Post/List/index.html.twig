@@ -1,7 +1,9 @@
 {% extends 'KodifyBlogBundle::base.html.twig' %}
 
 {% block content %}
-
+    {% block sort %}
+        {% include 'KodifyBlogBundle::Layout/sort.html.twig' %}
+    {% endblock %}
     {% for order, post in posts %}
         {% if order is even %}
             <div class="row">
