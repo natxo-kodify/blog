@@ -4,6 +4,7 @@ namespace Kodify\BlogBundle\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Form\Type\PostType;
+use Kodify\BlogBundle\Form\Type\RateType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,10 +29,37 @@ class PostsController extends Controller
         if (!$currentPost instanceof Post) {
             throw $this->createNotFoundException('Post not found');
         }
+
+        $form = $this->createForm(
+            new RateType(),
+            array(),
+            [
+                'action' => $this->generateUrl('view_post', ["id" => $id]),
+                'method' => 'POST',
+            ]
+        );
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
+            'form' => $form->createView(),
         ];
+        $request = $this->get('request');
+        if ($request->getMethod() == 'POST') {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $rate = $form->getData();
+                if ($this->getDoctrine()->getRepository("KodifyBlogBundle:Post")->setRate($currentPost, $rate["stars"])) {
+                    $parameters["message_type"] = "success";
+                    $parameters['message'] = 'Post Rated!';
+                } else {
+                    $parameters["message_type"] = "danger";
+                    $parameters['message'] = 'Please rate your Post Correctly';
+                }
+
+            }
+        }
+
+
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
     }

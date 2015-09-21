@@ -1,6 +1,9 @@
 {% extends 'KodifyBlogBundle::base.html.twig' %}
 
 {% block content %}
+    {% if message is defined %}
+        <div class="bg-{{ message_type }}">{{ message }}</div>
+    {% endif %}
     <div class="panel panel-default">
         <div class="panel-heading">
             <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
@@ -9,5 +12,11 @@
         <div class="panel-body">
             {{ post.content }}
         </div>
+        {% if not post.rateClicks %}
+            There are no ratings
+        {% endif %}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
     </div>
 {% endblock %}
