@@ -52,4 +52,34 @@ class PostRepository extends AbstractBaseRepository
 
         return $this->findBy([], ['rate' => 'DESC'], $limit, $offset);
     }
+
+    /**
+     * Search the post adding Author's name filtering
+     *
+     * @param $title
+     * @param $content
+     * @param $author
+     *
+     * @return array
+     */
+    public function searchWithAuthor($title, $content, $author)
+    {
+
+        $query = $this->getEntityManager()->createQuery(
+            "
+            SELECT p
+            FROM KodifyBlogBundle:Post p
+            JOIN  KodifyBlogBundle:Author a
+            WHERE p.title = :title
+            AND p.content = :content
+            AND a.name = :author
+            "
+        )
+            ->setParameter("title", $title)
+            ->setParameter("content", $content)
+            ->setParameter("author", $author);
+
+        return $query->getResult();
+
+    }
 }
