@@ -29,8 +29,12 @@
                     {% endif %}
                     <ul class="stars list-inline pull-right" data-default-stars="{{ post.rate }}">
                         {% for i in 1..5 %}
-                            <li><a href="{{ path('rate_post', {'id':post.id, 'star': i}) }}" data-star="{{ i }}"><i
-                                            class="fa fa-star-o"></i></a></li>
+                            <li>
+                                <a id="star{{ i }}" href="{{ path('rate_post', {'id':post.id, 'star': i}) }}"
+                                   data-star="{{ i }}">
+                                    <i class="fa{% if i <= post.rate %} fa-star{% else %} fa-star-o{% endif %}"></i>
+                                </a>
+                            </li>
                         {% endfor %}
                     </ul>
                     <div class="pull-right rate-title">Rate it!</div>

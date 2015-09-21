@@ -2,11 +2,11 @@
     <div class="col-xs-12 pull-right">
 
         <ul class="nav nav-pills pull-right sort-pills">
-            <li {% if app.request.get('_route') == 'home' %} class="active"{% endif %}><a href="{{ path('home') }}">Latest</a>
+            <li {% if app.request.get('_route') == 'home' %} class="active"{% endif %}>
+                <a href="{{ path('home') }}">order by date</a>
             </li>
-            <li {% if app.request.get('_route') == 'sort' %} class="active"{% endif %}><a
-                        href="{{ path('sort',{sort: "rated"}) }}">Rated</a></li>
+            <li {% if app.request.get('_route') == 'sort' %} class="active"{% endif %}>
+                <a href="{{ path('sort',{sort: "rated"}) }}">order by rating</a></li>
         </ul>
-        <p class="pull-right sort-title">Sort By:</p>
     </div>
 </div>

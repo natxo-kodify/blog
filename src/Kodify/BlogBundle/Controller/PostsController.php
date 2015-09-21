@@ -7,19 +7,36 @@ use Kodify\BlogBundle\Form\Type\PostType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class PostsController
+ * @package Kodify\BlogBundle\Controller
+ */
 class PostsController extends Controller
 {
-    const LATEST = "latest";
-    const RATE = "rated";
+    /**
+     * sort by latest
+     */
+    const SORT_LATEST = "latest";
+    /**
+     * sort by rate
+     */
+    const SORT_RATE = "rated";
 
-    public function indexAction($sort = self::RATE)
+    /**
+     * Lists all posts
+     *
+     * @param string $sort sort type
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function indexAction($sort = self::SORT_RATE)
     {
         switch ($sort) {
-            case self::RATE:
+            case self::SORT_RATE:
                 $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->sortRated();
                 break;
             default:
-            case self::LATEST:
+            case self::SORT_LATEST:
                 $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
                 break;
         }
@@ -34,6 +51,13 @@ class PostsController extends Controller
         return $this->render($template, $parameters);
     }
 
+    /**
+     * Views a post
+     *
+     * @param $id post id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function viewAction($id)
     {
         $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
@@ -51,6 +75,13 @@ class PostsController extends Controller
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
     }
 
+    /**
+     * Creates a post
+     *
+     * @param Request $request request of the form
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function createAction(Request $request)
     {
         $form       = $this->createForm(
@@ -77,6 +108,14 @@ class PostsController extends Controller
         return $this->render('KodifyBlogBundle:Default:create.html.twig', $parameters);
     }
 
+    /**
+     * Rates a post
+     *
+     * @param $id post
+     * @param $star number of stars
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function rateAction($id, $star)
     {
         if ($this->getDoctrine()->getRepository("KodifyBlogBundle:Post")->setRate($id, $star)) {
