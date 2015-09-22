@@ -9,6 +9,7 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 
+use Kodify\BlogBundle\Entity\Author;
 use Kodify\BlogBundle\Entity\Post;
 use PHPUnit_Framework_Assert;
 
@@ -36,14 +37,21 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
      */
     public function theFollowingAuthorsExist(TableNode $table)
     {
+        $this->clearTableByName("Authors");
         $em = $this->getContainer()->get("doctrine")->getManager();
-        $author_names = array();
-        foreach ($table->getHash() as $author) {
-            $author_names[] = $author["name"];
+        $author_names = 0;
+        foreach ($table->getHash() as $author_params) {
+            $author = $em->getRepository("KodifyBlogBundle:Author")->findBy(array("name" => $author_params["name"]));
+            if (null === $author) {
+                $author = new Author();
+                $author->setName($author_params["name"]);
+                $em->persist($author);
+            }
+            $author_names++;
         }
-        $current_authors = $em->getRepository("KodifyBlogBundle:Author")->findBy(array("name" => $author_names));
+        $em->flush();
 
-        PHPUnit_Framework_Assert::assertEquals(count($current_authors), count($author_names));
+        PHPUnit_Framework_Assert::assertEquals(count($table->getHash()), $author_names);
     }
 
     /**
@@ -51,11 +59,26 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
      */
     public function theFollowingPostsExist(TableNode $table)
     {
+        $this->cleanDb();
         $em = $this->getContainer()->get("doctrine")->getManager();
         foreach ($table->getHash() as $post_params) {
             $post = $em->getRepository("KodifyBlogBundle:Post")
                 ->searchWithAuthor($post_params["title"], $post_params["content"], $post_params["author"]);
-            PHPUnit_Framework_Assert::assertNotEquals(null, $post);
+            if (null === $post) {
+                $author = $em->getRepository("KodifyBlogBundle:Author")->findOneBy(array("name" => $post_params["author"]));
+                if (null === $author) {
+                    $author = new Author();
+                    $author->setName($post_params["author"]);
+                    $em->persist($author);
+                    $em->flush();
+                }
+                $post = new Post();
+                $post->setTitle($post_params["title"]);
+                $post->setContent($post_params["content"]);
+                $post->setAuthor($author);
+                $em->persist($post);
+                $em->flush();
+            }
         }
 
     }
@@ -115,7 +138,22 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
         $em = $this->getContainer()->get("doctrine")->getManager();
 
         $post = $em->getRepository("KodifyBlogBundle:Post")->findOneBy(array("title" => $arg1));
-        PHPUnit_Framework_Assert::assertNotEquals(Null, $post, "Arg " . $arg1 . " is null");
+        if (null === $post) {
+            $author = $em->getRepository("KodifyBlogBundle:Author")->findOneBy(array("name" => $arg1));
+            if (null === $author) {
+                $author = new Author();
+                $author->setName($arg1);
+                $em->persist($author);
+                $em->flush();
+            }
+
+            $post = new Post();
+            $post->setTitle($arg1);
+            $post->setContent($arg1);
+            $post->setAuthor($author);
+            $em->persist($post);
+            $em->flush();
+        }
         $post->setRate($arg2);
         $post->setRateClicks(1);
         $post->setRateTotal($arg2);
@@ -218,5 +256,27 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
         $columns = $rows[$row_position]->findAll("css", ".panel-heading a");
 
         PHPUnit_Framework_Assert::assertEquals($columns[$column_position]->getText(), $argument);
+    }
+
+    protected function cleanDb()
+    {
+        $this->clearTableByName('Author');
+        $this->clearTableByName('Post');
+    }
+
+    protected function clearTableByName($tableName)
+    {
+        $connection = $em = $this->getContainer()->get("doctrine")->getConnection();
+        $dbPlatform = $connection->getDatabasePlatform();
+        $connection->beginTransaction();
+        try {
+            $connection->query('SET FOREIGN_KEY_CHECKS=0');
+            $q = $dbPlatform->getTruncateTableSql($tableName);
+            $connection->executeUpdate($q);
+            $connection->query('SET FOREIGN_KEY_CHECKS=1');
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollback();
+        }
     }
 }
