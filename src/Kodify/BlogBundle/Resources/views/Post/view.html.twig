@@ -1,6 +1,7 @@
 {% extends 'KodifyBlogBundle::base.html.twig' %}
 
 {% block content %}
+
     {% for flashMessage in app.session.flashbag.get('success') %}
         <div class="bg-success">
             {{ flashMessage }}
@@ -23,9 +24,8 @@
                     {{ post.content }}
                 </div>
                 <div class="col-xs-12 col-sm-4">
-
                     {% if not post.rateClicks %}
-                        There are no ratings
+                        there are no ratings
                     {% endif %}
                     <ul class="stars list-inline pull-right" data-default-stars="{{ post.rate }}">
                         {% for i in 1..5 %}
@@ -35,6 +35,7 @@
                                     <i class="fa{% if i <= post.rate %} fa-star{% else %} fa-star-o{% endif %}"></i>
                                 </a>
                             </li>
+
                         {% endfor %}
                     </ul>
                     <div class="pull-right rate-title">Rate it!</div>
@@ -43,8 +44,8 @@
 
         </div>
 
-
     </div>
+
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

@@ -6,13 +6,13 @@
     {% endblock %}
     {% for order, post in posts %}
         {% if order is even %}
-            <div class="row">
+            <div class="row posts">
         {% endif %}
             <div class="col-xs-6">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
-                        <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
+                        <span class="pull-right">by: {{ post.author.name }} on: <span class="date">{{ post.createdAt|date("m/d/Y") }}</span></span>
                     </div>
                     <div class="panel-body">
                         {{ post.content }}

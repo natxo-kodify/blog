@@ -79,7 +79,40 @@ class PostRepository extends AbstractBaseRepository
             ->setParameter("content", $content)
             ->setParameter("author", $author);
 
-        return $query->getResult();
-
+        return $query->getOneOrNullResult();
     }
+
+    /**
+     * sort by latest
+     */
+    const SORT_LATEST = "latest";
+    /**
+     * sort by rate
+     */
+    const SORT_RATE = "rated";
+
+    /**
+     * Sort Selector
+     *
+     * @param string $sort sort type
+     * @param null $limit limit of posts
+     * @param int $offset first post to start
+     *
+     * @return array posts
+     */
+    public function sortPostsBy($sort = self::SORT_LATEST, $limit = null, $offset = 0)
+    {
+        switch ($sort) {
+            case self::SORT_RATE:
+                $posts = $this->sortRated($limit, $offset);
+                break;
+            default:
+            case self::SORT_LATEST:
+                $posts = $this->latest($limit, $offset);
+                break;
+        }
+
+        return $posts;
+    }
+
 }

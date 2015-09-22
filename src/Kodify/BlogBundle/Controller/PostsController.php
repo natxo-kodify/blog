@@ -4,6 +4,7 @@ namespace Kodify\BlogBundle\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Form\Type\PostType;
+use Kodify\BlogBundle\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -13,14 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PostsController extends Controller
 {
-    /**
-     * sort by latest
-     */
-    const SORT_LATEST = "latest";
-    /**
-     * sort by rate
-     */
-    const SORT_RATE = "rated";
+
 
     /**
      * Lists all posts
@@ -29,18 +23,10 @@ class PostsController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($sort = self::SORT_RATE)
+    public function indexAction($sort = PostRepository::SORT_LATEST)
     {
-        switch ($sort) {
-            case self::SORT_RATE:
-                $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->sortRated();
-                break;
-            default:
-            case self::SORT_LATEST:
-                $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
-                break;
-        }
 
+        $posts = $this->get("kodify_blog.sort")->sortPostsBy($sort);
         $template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
         if (count($posts)) {
@@ -69,8 +55,6 @@ class PostsController extends Controller
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
         ];
-
-
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
     }

@@ -52,11 +52,9 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
     public function theFollowingPostsExist(TableNode $table)
     {
         $em = $this->getContainer()->get("doctrine")->getManager();
-        foreach ($table->getHash() as $post) {
-            echo "Checking " . $post["title"];
+        foreach ($table->getHash() as $post_params) {
             $post = $em->getRepository("KodifyBlogBundle:Post")
-                ->searchWithAuthor($post["title"], $post["content"], $post["author"]);
-
+                ->searchWithAuthor($post_params["title"], $post_params["content"], $post_params["author"]);
             PHPUnit_Framework_Assert::assertNotEquals(null, $post);
         }
 
@@ -67,7 +65,9 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
      */
     public function iVisitThePageForThePostWithTitle($arg1)
     {
-        $this->visit($arg1);
+        $em = $this->getContainer()->get("doctrine")->getManager();
+        $post = $em->getRepository("KodifyBlogBundle:Post")->findOneBy(array("title" => $arg1));
+        $this->visit("posts/" . $post->getId());
     }
 
     /**
@@ -75,7 +75,7 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
      */
     public function iShouldSeeAMessageSayingThereAreNoRatings()
     {
-        $this->assertPageMatchesText("/there are no ratings/");
+        $this->assertPageContainsText("there are no ratings");
     }
 
     /**
@@ -86,18 +86,17 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
         $this->clickLink("star" . $arg1);
     }
 
+
     /**
      * @Then I should see that the post has a rating of :arg1
      */
     public function iShouldSeeThatThePostHasARatingOf($arg1)
     {
-        $stars_checked = 0;
-        for ($i = Post::MINRATE; $i < Post::MAXRATE; $i++) {
-            if ($this->assertElementContains("star" . $i, '<i class="fa fa-star"></i>')) {
-                $stars_checked++;
-            }
-        }
-        PHPUnit_Framework_Assert::assertEquals($arg1, $stars_checked);
+        $session = $this->getSession();
+        $page = $session->getPage();
+        $stars_checked = $page->findAll("css", ".fa-star");
+
+        PHPUnit_Framework_Assert::assertEquals($arg1, count($stars_checked));
     }
 
     /**
@@ -105,8 +104,7 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
      */
     public function iVisitThePostsListPage()
     {
-        $router = $this->getContainer()->get("router");
-        $this->visit($router->generateUrl("home"));
+        $this->visit("/");
     }
 
     /**
@@ -115,7 +113,9 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
     public function postWithTitleHasAMeanRatingOf($arg1, $arg2)
     {
         $em = $this->getContainer()->get("doctrine")->getManager();
+
         $post = $em->getRepository("KodifyBlogBundle:Post")->findOneBy(array("title" => $arg1));
+        PHPUnit_Framework_Assert::assertNotEquals(Null, $post, "Arg " . $arg1 . " is null");
         $post->setRate($arg2);
         $post->setRateClicks(1);
         $post->setRateTotal($arg2);
@@ -131,7 +131,14 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
     {
         $session = $this->getSession();
         $page = $session->getPage();
-        var_dump($page->find('css', ".panel-heading >"));
+        $higher_position_date = new \DateTime();
+        foreach ($page->findAll('css', ".date") as $date) {
+            $current_position_date = new \DateTime($date->getText());
+            PHPUnit_Framework_Assert::assertTrue($higher_position_date >= $current_position_date,
+                "Current Post is newer than a Higher one");
+
+            $higher_position_date = $current_position_date;
+        }
 
     }
 
@@ -148,7 +155,19 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
      */
     public function postWithTitleIsBeforePostWithTitle($arg1, $arg2)
     {
-
+        $session = $this->getSession();
+        $page = $session->getPage();
+        $titles = $page->findAll("css", ".panel-heading > a");
+        $arg1_pos = 0;
+        $arg2_pos = 0;
+        foreach ($titles as $position => $title) {
+            if ($title->getText() == $arg1) {
+                $arg1_pos = $position;
+            } elseif ($title->getText() == $arg2) {
+                $arg2_pos = $position;
+            }
+        }
+        PHPUnit_Framework_Assert::assertLessThan($arg2_pos, $arg1_pos);
     }
 
     /**
@@ -165,7 +184,7 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
      */
     public function thePostWithTitleIsOnFirstColumnFirstRow($arg1)
     {
-        throw new PendingException();
+        $this->checkPosition(0, 0, $arg1);
     }
 
     /**
@@ -173,7 +192,7 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
      */
     public function thePostWithTitleIsOnTheSecondColumnFirstRow($arg1)
     {
-        throw new PendingException();
+        $this->checkPosition(1, 0, $arg1);
     }
 
     /**
@@ -181,7 +200,23 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
      */
     public function thePostWithTitleIsOnTheFirstColumnSecondRow($arg1)
     {
-        throw new PendingException();
+        $this->checkPosition(0, 1, $arg1);
     }
 
+    /**
+     * Checks the text existence on the two-column's div table
+     *
+     * @param $column_position int of the column to check
+     * @param $row_position int of the row to check
+     * @param $argument string argument
+     */
+    private function checkPosition($column_position, $row_position, $argument)
+    {
+        $session = $this->getSession();
+        $page = $session->getPage();
+        $rows = $page->findAll("css", ".row.posts");
+        $columns = $rows[$row_position]->findAll("css", ".panel-heading a");
+
+        PHPUnit_Framework_Assert::assertEquals($columns[$column_position]->getText(), $argument);
+    }
 }
