@@ -74,3 +74,5 @@ you can use:
 Extra 2: We use a slightly modified version of the Symfony2 Coding standards, feel free 
 to use the coding standards you want, but try to be consistent with the ones you choose. 
 For reference: http://symfony.com/doc/current/contributing/code/standards.html
+
+READY
