@@ -10,4 +10,17 @@
             {{ post.content }}
         </div>
     </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Comments
+            <span class="pull-right"><a class="btn btn-xs btn-primary" href="{{ path('create_comment',{postid: post.id}) }}">Add Comment</a></span>
+        </div>
+        <div class="panel-body">
+            {% include "KodifyBlogBundle:Comment:view.html.twig" %}
+        </div>
+    </div>
+
+
+
 {% endblock %}

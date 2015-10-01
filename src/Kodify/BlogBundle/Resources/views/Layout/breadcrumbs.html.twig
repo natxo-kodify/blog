@@ -1,7 +1,11 @@
 <ol class="breadcrumb">
     {% if  breadcrumbs is defined %}
         {% for path, title in breadcrumbs %}
-            <li{% if loop.last %} class="active"{% endif %}><a href="{{ path(path) }}">{{ title }}</a></li>
+            {% if  path == 'createcomment' %}
+                <li{% if loop.last %} class="active"{% endif %}>{{ title }}</li>
+            {% else %}
+                <li{% if loop.last %} class="active"{% endif %}><a href="{{ path(path) }}">{{ title }}</a></li>
+            {% endif %}
         {% endfor %}
     {% else %}
         <li class="active"><a href="#">No breadcrumbs</a></li>

@@ -25,12 +25,15 @@ class PostsController extends Controller
     public function viewAction($id)
     {
         $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
+        $listComment = $this->getDoctrine()->getRepository('KodifyBlogBundle:Comment')->findByPost($id);
+
         if (!$currentPost instanceof Post) {
             throw $this->createNotFoundException('Post not found');
         }
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
+            'listComment' => $listComment,  
         ];
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
