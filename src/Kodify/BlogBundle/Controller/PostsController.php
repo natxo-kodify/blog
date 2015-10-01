@@ -39,6 +39,30 @@ class PostsController extends Controller
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
     }
 
+    public function rateAction($id, $rate)
+    {
+        $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
+        $listComment = $this->getDoctrine()->getRepository('KodifyBlogBundle:Comment')->findByPost($id);
+
+        if (!$currentPost instanceof Post) {
+            throw $this->createNotFoundException('Post not found');
+        }
+
+        //Calculating the new rate
+        $currentPost->setRate(($rate + $currentPost->getNbrate()*$currentPost->getRate())/($currentPost->getNbrate() + 1)); 
+        $currentPost->setNbrate(($currentPost->getNbrate())+1);
+
+        $this->getDoctrine()->getManager()->persist($currentPost);
+        $this->getDoctrine()->getManager()->flush();
+
+        $parameters = [
+            'breadcrumbs' => ['home' => 'Home'],
+            'post'        => $currentPost,
+            'listComment' => $listComment,  
+        ];
+        return $this->redirect($this->generateUrl( 'view_post',array( 'id' => $id ) ) );
+    }
+
     public function createAction(Request $request)
     {
         $form       = $this->createForm(

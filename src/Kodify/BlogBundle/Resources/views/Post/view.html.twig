@@ -9,6 +9,13 @@
         <div class="panel-body">
             {{ post.content }}
         </div>
+        
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+             {% include "KodifyBlogBundle:Post:rate.html.twig" %}
+        </div>
     </div>
 
     <div class="panel panel-default">
@@ -24,3 +31,4 @@
 
 
 {% endblock %}
+
