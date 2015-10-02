@@ -10,4 +10,25 @@ namespace Kodify\BlogBundle\Repository;
  */
 class PostRepository extends AbstractBaseRepository
 {
+// get all post by descendant order of rate
+    public function SortByRate()
+    {
+        $qb=$this->createQueryBuilder('p');
+        
+        $qb ->orderBy('p.rate','DESC');
+        
+        return $qb ->getQuery()
+                   ->getResult();
+    }
+
+// get all post by descendant order of date of publication
+    public function SortByDate()
+    {
+        $qb=$this->createQueryBuilder('p');
+        
+        $qb ->orderBy('p.createdAt','DESC');
+        
+        return $qb ->getQuery()
+                   ->getResult();
+    }
 }

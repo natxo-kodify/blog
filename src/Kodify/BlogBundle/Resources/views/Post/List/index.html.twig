@@ -1,17 +1,33 @@
 {% extends 'KodifyBlogBundle::base.html.twig' %}
 
 {% block content %}
-
-    {% for post in posts %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
-                <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
+    <div id="sort">
+        {% if  sortby == 0 %}
+            <a href="{{ path('home',{sort:true}) }}" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-star"></span> Sort posts by rate</a>
+        {% else %} 
+            <a href="{{ path('home') }}" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-time"></span> Sort posts by date of publication</a>
+        {% endif %}
+    </div>
+    <div class="row">
+        {% for post in posts %}
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
+                        <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}, rate:
+                            {% if  post.rate == 0 or post.rate == NULL %}
+                                this post has not been rated yet
+                            {% else %} 
+                                {{ post.rate }}
+                            {% endif %} 
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        {{ post.content }}
+                    </div>
+                </div>
             </div>
-            <div class="panel-body">
-                {{ post.content }}
-            </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 
 {% endblock %}

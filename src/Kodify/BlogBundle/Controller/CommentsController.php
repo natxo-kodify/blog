@@ -23,7 +23,7 @@ class CommentsController extends Controller
         $parameters = [
             'form'        => $form->createView(),
             'postid'      => $postid,
-            'breadcrumbs' => ['home' => 'home', 'createcomment' => 'Create Comment']
+            'breadcrumbs' => ['home' => 'Home', 'createcomment' => 'Create Comment']
         ];
 
         $form->handleRequest($request);

@@ -11,14 +11,25 @@ class PostsController extends Controller
 {
     public function indexAction()
     {
-        $posts      = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
+        $sortby = $this->getRequest()->query->get('sort');
+        //if sortby=1, we're sorting the posts by rate; otherwise by date of publication
+        if ($sortby) {
+            $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->SortByRate();
+        }
+        else{
+            $sortby = 0;
+            $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->SortByDate();   
+        }
+
         $template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
         if (count($posts)) {
             $template            = 'KodifyBlogBundle:Post:List/index.html.twig';
-            $parameters['posts'] = $posts;
+            $parameters = ['posts' => $posts,
+                        'sortby'=> $sortby,
+                        'breadcrumbs' => ['home' => 'Home']
+                        ];
         }
-
         return $this->render($template, $parameters);
     }
 
