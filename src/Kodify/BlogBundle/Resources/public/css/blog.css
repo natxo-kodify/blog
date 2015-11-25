@@ -35,6 +35,6 @@ label {
 	width:49%;
 	float:left;
 }
-.panel-list .panel:nth-child(odd) {
+.panel-list .panel:nth-child(even) {
 	float:right;
 }
