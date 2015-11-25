@@ -1,0 +1,8 @@
+default:
+  suites:
+    default:
+      contexts:
+        - FeatureContext:
+            entity_manager:   '@doctrine.orm.entity_manager'
+  extensions:
+    Behat\Symfony2Extension: ~

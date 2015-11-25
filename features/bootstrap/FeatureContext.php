@@ -5,6 +5,9 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use Doctrine\ORM\EntityManager;
+use Kodify\BlogBundle\Entity\Author;
+use Kodify\BlogBundle\Entity\Post;
 
 /**
  * Defines application features from the specific context.
@@ -12,14 +15,17 @@ use Behat\Gherkin\Node\TableNode;
 class FeatureContext implements Context, SnippetAcceptingContext
 {
     /**
-     * Initializes context.
-     *
-     * Every scenario gets its own context instance.
-     * You can also pass arbitrary arguments to the
-     * context constructor through behat.yml.
+     * @var Doctrine\ORM\EntityManager
      */
-    public function __construct()
+    protected $em;
+    protected $author_repository;
+    protected $post_repository;
+
+    public function __construct(EntityManager $entity_manager)
     {
+        $this->em = $entity_manager;
+        $this->author_repository = $this->em->getRepository('Kodify\BlogBundle\Entity\Author');
+        $this->post_repository = $this->em->getRepository('Kodify\BlogBundle\Entity\Post');
     }
 
     /**
@@ -27,7 +33,10 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function theFollowingAuthorsExist(TableNode $table)
     {
-        throw new PendingException();
+        foreach ($table as $row) {
+            $author = new Author($row['name']);
+            $this->em->persist($author);
+        }
     }
 
     /**
@@ -35,7 +44,11 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function theFollowingPostsExist(TableNode $table)
     {
-        throw new PendingException();
+        foreach ($table as $row) {
+            $author = $this->author_repository->findBy(['name' => $row['author']]);
+            $post = new Post($row['title'], $row['content'], $author);
+            $this->em->persist($post);
+        }
     }
 
     /**
@@ -43,7 +56,12 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function theFollowingCommentsExist(TableNode $table)
     {
-        throw new PendingException();
+        foreach ($table as $row) {
+            $author = $this->author_repository->findBy(['name' => $row['author']]);
+            $post = $this->post_repository->findBy(['title' => $row['post title']]);
+            $comment = new Comment($row['text'], $post, $author);
+            $this->em->persist($comment);
+        }
     }
 
     /**
@@ -106,70 +124,6 @@ class FeatureContext implements Context, SnippetAcceptingContext
      * @Then a comment should be created for the post with the provided data
      */
     public function aCommentShouldBeCreatedForThePostWithTheProvidedData()
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Then I should see a message saying there are no ratings
-     */
-    public function iShouldSeeAMessageSayingThereAreNoRatings()
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @When I give the post a rating of :arg1
-     */
-    public function iGiveThePostARatingOf($arg1)
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Then I should see that the post has a rating of :arg1
-     */
-    public function iShouldSeeThatThePostHasARatingOf($arg1)
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Given I visit the posts list page
-     */
-    public function iVisitThePostsListPage()
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Given Post with title :arg1 has a mean rating of :arg2
-     */
-    public function postWithTitleHasAMeanRatingOf($arg1, $arg2)
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Then Posts should be ordered by date
-     */
-    public function postsShouldBeOrderedByDate()
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Then I choose :arg1
-     */
-    public function iChoose($arg1)
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Then Post with title :arg1 is before post with title :arg2
-     */
-    public function postWithTitleIsBeforePostWithTitle($arg1, $arg2)
     {
         throw new PendingException();
     }
