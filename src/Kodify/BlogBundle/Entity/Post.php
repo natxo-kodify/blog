@@ -70,7 +70,7 @@ class Post extends AbstractBaseEntity
 
     public function __toString()
     {
-        return strval($this->id);
+        return $this->title;
     }
 
     /**

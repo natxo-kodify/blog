@@ -10,7 +10,7 @@ class CommentType extends AbstractType
     {
         $builder
             ->add('text')
-            ->add('post', 'hidden', ['data' => $builder->getData()->getPost()])
+            ->add('post')
             ->add('author')
             ->add('save', 'submit', ['attr' => ['class' => 'btn btn-success']]);
     }
