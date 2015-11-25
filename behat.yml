@@ -1,8 +1,7 @@
 default:
   suites:
     default:
-      contexts:
-        - FeatureContext:
-            entity_manager:   '@doctrine.orm.entity_manager'
+      type: symfony_bundle
+      bundle: 'KodifyBlogBundle'
   extensions:
     Behat\Symfony2Extension: ~

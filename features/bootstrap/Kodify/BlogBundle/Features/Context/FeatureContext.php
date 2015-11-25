@@ -1,21 +1,31 @@
 <?php
 
-use Behat\Behat\Tester\Exception\PendingException;
-use Behat\Behat\Context\Context;
-use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
+namespace Kodify\BlogBundle\Features\Context;
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 use Doctrine\ORM\EntityManager;
-use Kodify\BlogBundle\Entity\Author;
+use Behat\Behat\Context\Context;
+use Behat\Gherkin\Node\TableNode;
+use Doctrine\ORM\Tools\SchemaTool;
 use Kodify\BlogBundle\Entity\Post;
+use Behat\Gherkin\Node\PyStringNode;
+use Kodify\BlogBundle\Entity\Author;
 use Kodify\BlogBundle\Entity\Comment;
 use PHPUnit_Framework_Assert as Assert;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Symfony2Extension\Context\KernelDictionary;
 
 /**
  * Defines application features from the specific context.
  */
 class FeatureContext implements Context, SnippetAcceptingContext
 {
+    use KernelDictionary;
+
     /**
      * @var Doctrine\ORM\EntityManager
      */
@@ -26,9 +36,25 @@ class FeatureContext implements Context, SnippetAcceptingContext
     protected $post;
     protected $comment_form_data;
 
-    public function __construct(EntityManager $entity_manager)
+    /**
+     * @param \Behat\Behat\Event\ScenarioEvent|\Behat\Behat\Event\OutlineExampleEvent $event
+     *
+     * @BeforeScenario
+     *
+     * @return null
+     */
+    public function setUpScenario(BeforeScenarioScope $scope)
     {
-        $this->em = $entity_manager;
+        $this->em = $this->getContainer()->get('doctrine')->getManager();
+
+        $metadata = $this->em->getMetadataFactory()->getAllMetadata();
+
+        if (!empty($metadata)) {
+            $tool = new SchemaTool($this->em);
+            $tool->dropSchema($metadata);
+            $tool->createSchema($metadata);
+        }
+
         $this->author_repository = $this->em->getRepository('Kodify\BlogBundle\Entity\Author');
         $this->post_repository = $this->em->getRepository('Kodify\BlogBundle\Entity\Post');
         $this->comment_repository = $this->em->getRepository('Kodify\BlogBundle\Entity\Comment');
@@ -43,6 +69,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
             $author = new Author($row['name']);
             $this->em->persist($author);
         }
+        $this->em->flush();
     }
 
     /**
@@ -55,6 +82,11 @@ class FeatureContext implements Context, SnippetAcceptingContext
             $post = new Post($row['title'], $row['content'], $author);
             $this->em->persist($post);
         }
+        $this->em->flush();
+        $author = $this->author_repository->findOneBy(['id' => 1]);
+        var_dump($author->getName());
+        var_dump($author->getPosts()->count());
+        exit;
     }
 
     /**
@@ -68,6 +100,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
             $comment = new Comment($row['text'], $post, $author);
             $this->em->persist($comment);
         }
+        $this->em->flush();
     }
 
     /**
@@ -92,7 +125,14 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function iShouldSeeACommentsSectionWithComment($num_comments)
     {
-        Assert::assertEquals($this->post->getComments()->count(), $num_comments);
+        $comments = $this->comment_repository->findAll();
+        echo(get_class($this->post->getComments()));
+        foreach ($this->post->getComments() as $comment) {
+            echo ($comment->getText());
+        }
+        echo('Count: '.$this->post->getComments()->first()->getText());
+        exit;
+        Assert::assertEquals($this->post->getComments()->count(), intval($num_comments));
     }
 
     /**
