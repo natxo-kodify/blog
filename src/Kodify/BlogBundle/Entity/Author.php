@@ -45,7 +45,7 @@ class Author extends AbstractBaseEntity
      *
      * @param string $name
      */
-    public function __construct($name)
+    public function __construct($name = null)
     {
         $this->setName($name);
         $this->posts = new ArrayCollection();

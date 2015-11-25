@@ -9,5 +9,20 @@
         <div class="panel-body">
             {{ post.content }}
         </div>
+
+        <div class="panel-footer">
+        	{% if post.getComments().isEmpty() %}
+        		<h4>There are no comments</h4>
+        	{% else %}
+        		<h4>Comments ({{ post.getComments().count() }})</h4>
+
+        		<ul class="list-group">
+        		{% for comment in post.getComments() %}
+        			<li class="list-group-item">{{ comment.author.name }} says: {{ comment.text }}</li>
+        		{% endfor %}
+        		</ul>
+        	{% endif %}
+        	<a href="{{ path('create_comment', {'post_id': post.id }) }}" class="btn btn-primary">Create Comment</a>
+    	</div>
     </div>
 {% endblock %}
