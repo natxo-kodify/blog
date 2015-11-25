@@ -46,6 +46,20 @@ class Comment extends AbstractBaseEntity
      */
     protected $post;
 
+    /**
+     * Constructor
+     *
+     * @param string $text
+     * @param string $post
+     * @param Author $author
+     */
+    public function __construct($text, Post $post, Author $author)
+    {
+        $this->setText($text);
+        $this->setPost($post);
+        $this->setAuthor($author);
+    }
+
 
     public function __toString()
     {

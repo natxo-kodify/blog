@@ -54,9 +54,16 @@ class Post extends AbstractBaseEntity
 
     /**
      * Constructor
+     *
+     * @param string $title
+     * @param string $content
+     * @param Author $author
      */
-    public function __construct()
+    public function __construct($title, $content, Author $author)
     {
+        $this->setTitle($title);
+        $this->setContent($content);
+        $this->setAuthor($author);
         $this->comments = new ArrayCollection();
     }
 

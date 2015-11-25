@@ -83,10 +83,6 @@ class FeatureContext implements Context, SnippetAcceptingContext
             $this->em->persist($post);
         }
         $this->em->flush();
-        $author = $this->author_repository->findOneBy(['id' => 1]);
-        var_dump($author->getName());
-        var_dump($author->getPosts()->count());
-        exit;
     }
 
     /**
@@ -125,13 +121,6 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function iShouldSeeACommentsSectionWithComment($num_comments)
     {
-        $comments = $this->comment_repository->findAll();
-        echo(get_class($this->post->getComments()));
-        foreach ($this->post->getComments() as $comment) {
-            echo ($comment->getText());
-        }
-        echo('Count: '.$this->post->getComments()->first()->getText());
-        exit;
         Assert::assertEquals($this->post->getComments()->count(), intval($num_comments));
     }
 
@@ -166,6 +155,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
                 $author = $this->author_repository->findOneBy(['name' => $this->comment_form_data->author]);
                 $comment = new Comment($this->comment_form_data->text, $this->post, $author);
                 $this->em->persist($comment);
+                $this->em->flush();
                 break;
         }
     }
@@ -175,7 +165,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function iFillTheFormWith($comment_data)
     {
-        $this->comment_form_data = json_decode($comment_data);
+        $this->comment_form_data = json_decode(str_replace("'",'"',$comment_data));
     }
 
     /**
@@ -183,9 +173,10 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function aCommentShouldBeCreatedForThePostWithTheProvidedData()
     {
-        $comment = array_shift($this->comment_repository->findBy([], ['createdAt' => 'DESC'], 1));
+        $comments = $this->comment_repository->findBy([], ['id' => 'DESC'], 1);
+        $comment = array_shift($comments);
         Assert::assertInstanceOf('Kodify\BlogBundle\Entity\Comment', $comment);
         Assert::assertEquals($comment->getText(), $this->comment_form_data->text);
-        Assert::assertEquals($comment->getAuthor()->name, $this->comment_form_data->author);
+        Assert::assertEquals($comment->getAuthor()->getName(), $this->comment_form_data->author);
     }
 }
