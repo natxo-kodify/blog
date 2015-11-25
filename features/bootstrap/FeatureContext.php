@@ -8,6 +8,7 @@ use Behat\Gherkin\Node\TableNode;
 use Doctrine\ORM\EntityManager;
 use Kodify\BlogBundle\Entity\Author;
 use Kodify\BlogBundle\Entity\Post;
+use Kodify\BlogBundle\Entity\Comment;
 use PHPUnit_Framework_Assert as Assert;
 
 /**
@@ -50,7 +51,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
     public function theFollowingPostsExist(TableNode $table)
     {
         foreach ($table as $row) {
-            $author = $this->author_repository->findBy(['name' => $row['author']]);
+            $author = $this->author_repository->findOneBy(['name' => $row['author']]);
             $post = new Post($row['title'], $row['content'], $author);
             $this->em->persist($post);
         }
@@ -62,8 +63,8 @@ class FeatureContext implements Context, SnippetAcceptingContext
     public function theFollowingCommentsExist(TableNode $table)
     {
         foreach ($table as $row) {
-            $post = $this->post_repository->findBy(['title' => $row['post title']]);
-            $author = $this->author_repository->findBy(['name' => $row['author']]);
+            $post = $this->post_repository->findOneBy(['title' => $row['post title']]);
+            $author = $this->author_repository->findOneBy(['name' => $row['author']]);
             $comment = new Comment($row['text'], $post, $author);
             $this->em->persist($comment);
         }
@@ -74,7 +75,8 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function iVisitThePageForThePostWithTitle($title)
     {
-        $this->post = $this->post_repository->findBy(['title' => $title]);
+        $this->post = $this->post_repository->findOneBy(['title' => $title]);
+        Assert::assertInstanceOf('Kodify\BlogBundle\Entity\Post', $this->post);
     }
 
     /**
@@ -82,7 +84,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function iShouldSeeAMessageSayingThereAreNoComments()
     {
-        Assert::assertEquals($this->post->comments->count(), 0);
+        Assert::assertEquals($this->post->getComments()->count(), 0);
     }
 
     /**
@@ -90,7 +92,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function iShouldSeeACommentsSectionWithComment($num_comments)
     {
-        Assert::assertEquals($this->post->comments->count(), $num_comments);
+        Assert::assertEquals($this->post->getComments()->count(), $num_comments);
     }
 
     /**
@@ -98,8 +100,8 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function theCommentISeeSays($text)
     {
-        $comment = $this->post->comments->first;
-        Assert::assertEquals($comment->text, $text);
+        $comment = $this->post->getComments()->first;
+        Assert::assertEquals($comment->getText(), $text);
     }
 
     /**
@@ -107,8 +109,8 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function iDonTSeeTheComment($text)
     {
-        $comment = $this->comment_repository->findBy(['text' => $text]);
-        Assert::assertFalse($this->post->comments->contains($comment));
+        $comment = $this->comment_repository->findOneBy(['text' => $text]);
+        Assert::assertFalse($this->post->getComments()->contains($comment));
     }
 
     /**
@@ -121,7 +123,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
                 // @TODO: Make sure controller exists?
                 break;
             case 'publish':
-                $author = $this->author_repository->findBy(['name' => $this->comment_form_data->author]);
+                $author = $this->author_repository->findOneBy(['name' => $this->comment_form_data->author]);
                 $comment = new Comment($this->comment_form_data->text, $this->post, $author);
                 $this->em->persist($comment);
                 break;
@@ -141,8 +143,9 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function aCommentShouldBeCreatedForThePostWithTheProvidedData()
     {
-        $comment = $this->comment_repository->findBy([], ['createdAt' => 'DESC'], 1);
-        Assert::assertEquals($comment->text, $this->comment_form_data->text);
-        Assert::assertEquals($comment->author->name, $this->comment_form_data->author);
+        $comment = array_shift($this->comment_repository->findBy([], ['createdAt' => 'DESC'], 1));
+        Assert::assertInstanceOf('Kodify\BlogBundle\Entity\Comment', $comment);
+        Assert::assertEquals($comment->getText(), $this->comment_form_data->text);
+        Assert::assertEquals($comment->getAuthor()->name, $this->comment_form_data->author);
     }
 }
