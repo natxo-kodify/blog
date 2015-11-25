@@ -8,6 +8,7 @@ use Behat\Gherkin\Node\TableNode;
 use Doctrine\ORM\EntityManager;
 use Kodify\BlogBundle\Entity\Author;
 use Kodify\BlogBundle\Entity\Post;
+use PHPUnit_Framework_Assert as Assert;
 
 /**
  * Defines application features from the specific context.
@@ -20,12 +21,16 @@ class FeatureContext implements Context, SnippetAcceptingContext
     protected $em;
     protected $author_repository;
     protected $post_repository;
+    protected $comment_repository;
+    protected $post;
+    protected $comment_form_data;
 
     public function __construct(EntityManager $entity_manager)
     {
         $this->em = $entity_manager;
         $this->author_repository = $this->em->getRepository('Kodify\BlogBundle\Entity\Author');
         $this->post_repository = $this->em->getRepository('Kodify\BlogBundle\Entity\Post');
+        $this->comment_repository = $this->em->getRepository('Kodify\BlogBundle\Entity\Comment');
     }
 
     /**
@@ -57,19 +62,19 @@ class FeatureContext implements Context, SnippetAcceptingContext
     public function theFollowingCommentsExist(TableNode $table)
     {
         foreach ($table as $row) {
-            $author = $this->author_repository->findBy(['name' => $row['author']]);
             $post = $this->post_repository->findBy(['title' => $row['post title']]);
+            $author = $this->author_repository->findBy(['name' => $row['author']]);
             $comment = new Comment($row['text'], $post, $author);
             $this->em->persist($comment);
         }
     }
 
     /**
-     * @Given I visit the page for the post with title :arg1
+     * @Given I visit the page for the post with title :title
      */
-    public function iVisitThePageForThePostWithTitle($arg1)
+    public function iVisitThePageForThePostWithTitle($title)
     {
-        throw new PendingException();
+        $this->post = $this->post_repository->findBy(['title' => $title]);
     }
 
     /**
@@ -77,47 +82,58 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function iShouldSeeAMessageSayingThereAreNoComments()
     {
-        throw new PendingException();
+        Assert::assertEquals($this->post->comments->count(), 0);
     }
 
     /**
-     * @Then I should see a comments section with :arg1 comment
+     * @Then I should see a comments section with :num_comments comment
      */
-    public function iShouldSeeACommentsSectionWithComment($arg1)
+    public function iShouldSeeACommentsSectionWithComment($num_comments)
     {
-        throw new PendingException();
+        Assert::assertEquals($this->post->comments->count(), $num_comments);
     }
 
     /**
-     * @Then The comment I see says :arg1
+     * @Then The comment I see says :text
      */
-    public function theCommentISeeSays($arg1)
+    public function theCommentISeeSays($text)
     {
-        throw new PendingException();
+        $comment = $this->post->comments->first;
+        Assert::assertEquals($comment->text, $text);
     }
 
     /**
-     * @Then I don't see the comment :arg1
+     * @Then I don't see the comment :text
      */
-    public function iDonTSeeTheComment($arg1)
+    public function iDonTSeeTheComment($text)
     {
-        throw new PendingException();
+        $comment = $this->comment_repository->findBy(['text' => $text]);
+        Assert::assertFalse($this->post->comments->contains($comment));
     }
 
     /**
-     * @When I click on the button :arg1
+     * @When I click on the button :button_caption
      */
-    public function iClickOnTheButton($arg1)
+    public function iClickOnTheButton($button_caption)
     {
-        throw new PendingException();
+        switch ($button_caption) {
+            case 'create comment':
+                // @TODO: Make sure controller exists?
+                break;
+            case 'publish':
+                $author = $this->author_repository->findBy(['name' => $this->comment_form_data->author]);
+                $comment = new Comment($this->comment_form_data->text, $this->post, $author);
+                $this->em->persist($comment);
+                break;
+        }
     }
 
     /**
-     * @When I fill the form with :arg1
+     * @When I fill the form with :comment_data
      */
-    public function iFillTheFormWith($arg1)
+    public function iFillTheFormWith($comment_data)
     {
-        throw new PendingException();
+        $this->comment_form_data = json_decode($comment_data);
     }
 
     /**
@@ -125,6 +141,8 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function aCommentShouldBeCreatedForThePostWithTheProvidedData()
     {
-        throw new PendingException();
+        $comment = $this->comment_repository->findBy([], ['createdAt' => 'DESC'], 1);
+        Assert::assertEquals($comment->text, $this->comment_form_data->text);
+        Assert::assertEquals($comment->author->name, $this->comment_form_data->author);
     }
 }
