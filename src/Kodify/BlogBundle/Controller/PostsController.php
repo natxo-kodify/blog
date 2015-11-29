@@ -111,7 +111,7 @@ class PostsController extends Controller
 
         $responseData = [
             'message' => 'Rating added successful',
-            'rating' => $post->getCurrentRating(),
+            'rating' => $post->rating(),
         ];
         return new JsonResponse($responseData, 201);
 

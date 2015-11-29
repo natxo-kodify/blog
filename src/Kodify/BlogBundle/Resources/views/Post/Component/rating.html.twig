@@ -1,7 +1,7 @@
 {% if post is defined %}
     <div class="row">
         <div class="col-md-4">
-            <b>Current Rating: <span class="current-rating">{{ post.currentRating ? post.currentRating : "There are no ratings" }}</span></b>
+            <b>Current Rating: <span class="current-rating">{{ post.rating ? post.rating : "There are no ratings" }}</span></b>
         </div>
         <div class="col-md-offset-5 col-md-3">
             <form id="rating-form" action="{{ path('rate_post', {'id': post.id}) }}" class="form-inline">
