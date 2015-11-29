@@ -10,4 +10,30 @@
             {{ post.content }}
         </div>
     </div>
+
+    <section id="comments">
+        <header>
+            <h1>Comments</h1>
+        </header>
+        <ul class="list-unstyled">
+            {% for comment in post.comments %}
+                <li class="comment">
+                    <div>
+                        <span class="comment-author">{{ comment.author.name }}</span>
+                    </div>
+                    <div>
+                        <span class="comment-text">{{ comment.text }}</span>
+                    </div>
+                    <div class="comment-date">
+                        {{ comment.createdAt|date('d/m/Y H:i') }}
+                    </div>
+                </li>
+            {% else %}
+                <li class="no-comments">There are no comments</li>
+            {% endfor %}
+        </ul>
+        <footer>
+            <a href="{{ path('comment_post', {'id': post.id}) }}" class="new-comment btn btn-success">Comment</a>
+        </footer>
+    </section>
 {% endblock %}
