@@ -9,6 +9,9 @@
         <div class="panel-body">
             {{ post.content }}
         </div>
+        <div class="panel-footer">
+            Rating: {{ post.currentRating ?: "There are no ratings" }}
+        </div>
     </div>
 
     <section id="comments">
