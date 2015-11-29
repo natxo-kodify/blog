@@ -4,6 +4,7 @@ namespace Kodify\BlogBundle\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\CommentRepository")
@@ -21,19 +22,20 @@ class Comment extends AbstractBaseEntity
     private $id;
 
     /**
+     * @Assert\NotBlank()
      * @ORM\Column(type="string")
      */
     private $text;
     /**
      * @var Author
-     *
+     * @Assert\NotNull()
      * @ORM\ManyToOne(targetEntity="Kodify\BlogBundle\Entity\Author", inversedBy="comments")
  *     @ORM\JoinColumn(name="author_id", referencedColumnName="id")
      */
     private $author;
     /**
      * @var Post
-     *
+     * @Assert\NotNull()
      * @ORM\ManyToOne(targetEntity="Kodify\BlogBundle\Entity\Post", inversedBy="comments")
      * @ORM\JoinColumn(name="post_id", referencedColumnName="id")
      */
