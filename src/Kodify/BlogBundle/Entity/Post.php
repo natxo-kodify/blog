@@ -211,7 +211,7 @@ class Post extends AbstractBaseEntity
         if($timesRated === 0){
             return 0;
         }
-        
+
         $currentRating = 0;
         /** @var PostRating $rating */
         foreach ($this->ratings as $rating) {
