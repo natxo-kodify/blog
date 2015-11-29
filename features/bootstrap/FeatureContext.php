@@ -52,6 +52,55 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
 
     /**
+     * @Given the following posts ratings exist:
+     */
+    public function theFollowingPostsRatingsExist(TableNode $ratings)
+    {
+        $this->loadRatings($ratings);
+    }
+
+    /**
+     * @Given Post with title :title has a mean rating of :rating
+     */
+    public function postWithTitleHasAMeanRatingOf($title, $rating)
+    {
+        $postRepository = $this->getContainer()->get('kodify.repository.post');
+        /** @var \Kodify\BlogBundle\Entity\Post $post */
+        $post = $postRepository->findOneBy(['title' => $title]);
+
+        if(!$post) {
+            throw new \InvalidArgumentException(sprintf('Not matching post for title %s', $title));
+        }
+
+        PHPUnit::assertEquals($post->getCurrentRating(), $rating);
+    }
+
+    /**
+     * @Then Posts should be ordered by date
+     */
+    public function postsShouldBeOrderedByDate()
+    {
+        $postRepository = $this->getContainer()->get('kodify.repository.post');
+        $posts = $postRepository->latest();
+
+        /** @var \Kodify\BlogBundle\Entity\Post|null $current */
+        $current = null;
+        /** @var \Kodify\BlogBundle\Entity\Post $post */
+        foreach ($posts as $post) {
+            if($current === null) {
+                $current = $post;
+                continue;
+            }
+
+            if($current->getCreatedAt() >= $post->getCreatedAt()){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @Then the post with title :title should have a comment with the text :text
      */
     public function thePostWithTitleShouldHaveACommentWithTheText($title, $text)
@@ -126,6 +175,27 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
             $comment->setPost($post);
             $comment->setText($row['text']);
             $em->persist($comment);
+        }
+        $em->flush();
+    }
+
+    /**
+     * @param TableNode $ratings
+     */
+    private function loadRatings(TableNode $ratings)
+    {
+        $container = $this->getContainer();
+        $em = $container->get('doctrine')->getManager();
+        foreach ($ratings as $row) {
+            $postRepository = $container->get('kodify.repository.post');
+            $post = $postRepository->findOneBy(['title' => $row['post_title']]);
+            if (!$post) {
+                throw new \InvalidArgumentException();
+            }
+            $rating = new \Kodify\BlogBundle\Entity\PostRating();
+            $rating->setPost($post);
+            $rating->setValue($row['rating']);
+            $em->persist($rating);
         }
         $em->flush();
     }
