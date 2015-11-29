@@ -10,4 +10,17 @@
             {{ post.content }}
         </div>
     </div>
+
+    <div class="comments">
+        <ul>
+            {% for comment in post.comments %}
+                <li class="comment">
+                    <div class="comment-author">{{ comment.author.name }}</div>
+                    <div class="comment-text">{{ comment.text }}</div>
+                </li>
+            {% else %}
+                <li class="no-comments">There are no comments</li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}

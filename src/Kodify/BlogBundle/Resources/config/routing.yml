@@ -4,6 +4,9 @@ home:
 authors:
     path:     /authors
     defaults: { _controller: KodifyBlogBundle:Authors:index }
+filter_post:
+    path:     /posts
+    defaults: {_controller: KodifyBlogBundle:Posts:filter }
 create_post:
     path:     /posts/create
     defaults: { _controller: KodifyBlogBundle:Posts:create }
