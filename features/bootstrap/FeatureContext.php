@@ -65,35 +65,13 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
 
     /**
-     * @Then I should see that the post has a rating of :arg1
+     * @When I give the post a rating of :rating
      */
-    public function iShouldSeeThatThePostHasARatingOf($arg1)
+    public function iGiveThePostARatingOf($rating)
     {
-        throw new PendingException();
-    }
-
-    /**
-     * @Given Post with title :arg1 has a mean rating of :arg2
-     */
-    public function postWithTitleHasAMeanRatingOf($arg1, $arg2)
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Then Posts should be ordered by date
-     */
-    public function postsShouldBeOrderedByDate()
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Then Post with title :arg1 is before post with title :arg2
-     */
-    public function postWithTitleIsBeforePostWithTitle($arg1, $arg2)
-    {
-        throw new PendingException();
+        $session = $this->getSession();
+        $element = $session->getPage()->find('css', '[name=rating][value=' . $rating . ']');
+        $element->isChecked();
     }
 
     /**

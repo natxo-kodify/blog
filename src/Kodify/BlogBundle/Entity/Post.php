@@ -218,6 +218,6 @@ class Post extends AbstractBaseEntity
             $currentRating += $rating->getValue();
         }
 
-        return round($currentRating / $timesRated, 1);
+        return floor($currentRating / $timesRated);
     }
 }
