@@ -50,13 +50,13 @@ class Post extends AbstractBaseEntity
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Kodify\BlogBundle\Entity\Comment", mappedBy="post")
+     * @ORM\OneToMany(targetEntity="Kodify\BlogBundle\Entity\Comment", mappedBy="post", cascade={"all"})
      */
     private $comments;
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="Kodify\BlogBundle\Entity\PostRating", mappedBy="post")
+     * @ORM\OneToMany(targetEntity="Kodify\BlogBundle\Entity\PostRating", mappedBy="post", cascade={"all"})
      */
     private $ratings;
 
