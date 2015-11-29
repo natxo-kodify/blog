@@ -33,3 +33,10 @@
 
 .idea/
 *.iml
+
+### Vagrant
+.vagrant/
+Vagrantfile
+
+### Ansible
+ansible/
