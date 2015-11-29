@@ -23,11 +23,20 @@ label {
 }
 
 .comment {
+    position: relative;
     border: 1px solid lightgray;
-    padding: 2px;
+    padding: 2px 120px 2px 2px;
     margin-bottom: 5px;
 }
 
 .comment .comment-author {
     font-weight: bold;
+}
+
+.comment .comment-date {
+    position: absolute;
+    color: lightslategrey;
+    font-style: italic;
+    right: 5px;
+    top: 2px;
 }

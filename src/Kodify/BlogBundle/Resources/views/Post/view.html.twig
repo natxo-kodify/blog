@@ -24,6 +24,9 @@
                     <div>
                         <span class="comment-text">{{ comment.text }}</span>
                     </div>
+                    <div class="comment-date">
+                        {{ comment.createdAt|date('d/m/Y H:i') }}
+                    </div>
                 </li>
             {% else %}
                 <li class="no-comments">There are no comments</li>
