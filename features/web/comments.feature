@@ -29,4 +29,13 @@ Feature: Comments
     And I should see "nice!!" in the ".comment-text" element
     And I should not see "Is that a song?" in the ".comment-text" element
 
-  
+  Scenario: Create a comment
+    Given I am on "/posts?title=once"
+    And I should not see ".comment"
+    When I follow "Comment"
+    And I select "someone" from "comment[author]"
+    And I fill in "comment[text]" with "Judy Garland was great!"
+    And I press "Publish"
+    Then the post with title "once" should have a comment with the text "Judy Garland was great!"
+    Then I should see 1 ".comment" elements
+    Then I should see "Judy Garland was great!" in the ".comment-text" element

@@ -5,6 +5,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Kodify\BlogBundle\Entity\Comment;
+use PHPUnit_Framework_Assert as PHPUnit;
 
 /**
  * Defines application features from the specific context.
@@ -47,6 +48,19 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     public function theFollowingCommentsExist(TableNode $comments)
     {
         $this->loadComments($comments);
+    }
+
+    /**
+     * @Then the post with title :title should have a comment with the text :text
+     */
+    public function thePostWithTitleShouldHaveACommentWithTheText($title, $text)
+    {
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $commentRepository = $em->getRepository('KodifyBlogBundle:Comment');
+        $comment = $commentRepository->findOneBy(['text' => $text]);
+        $postRepository = $em->getRepository('KodifyBlogBundle:Post');
+        $post = $postRepository->findOneBy(['title' => $title]);
+        PHPUnit::assertTrue($post->getComments()->contains($comment));
     }
 
     /**
