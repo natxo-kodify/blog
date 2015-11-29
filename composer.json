@@ -20,7 +20,14 @@
         "incenteev/composer-parameter-handler": "~2.0"
     },
     "require-dev": {
-        "sensio/generator-bundle": "~2.3"
+        "sensio/generator-bundle": "~2.3",
+        "behat/behat": "^3.0",
+        "behat/symfony2-extension": "^2.1",
+        "behat/mink-extension": "^2.1",
+        "behat/mink-goutte-driver": "^1.2",
+        "phpunit/phpunit": "^4.8",
+        "doctrine/doctrine-fixtures-bundle": "^2.3",
+        "doctrine/migrations": "^1.1"
     },
     "scripts": {
         "post-root-package-install": [
