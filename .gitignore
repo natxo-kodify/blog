@@ -30,7 +30,11 @@
 /web/*
 /web/bundles/
 /web/uploads/
+!web/app*
 
+app/data/
+
+### Jetbrains IDE
 .idea/
 *.iml
 
