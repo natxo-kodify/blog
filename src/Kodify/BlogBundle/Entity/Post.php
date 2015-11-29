@@ -204,4 +204,20 @@ class Post extends AbstractBaseEntity
 
         return $this;
     }
+
+    public function getCurrentRating()
+    {
+        $timesRated = $this->ratings->count();
+        if($timesRated === 0){
+            return 0;
+        }
+        
+        $currentRating = 0;
+        /** @var PostRating $rating */
+        foreach ($this->ratings as $rating) {
+            $currentRating += $rating->getValue();
+        }
+
+        return round($currentRating / $timesRated, 1);
+    }
 }
