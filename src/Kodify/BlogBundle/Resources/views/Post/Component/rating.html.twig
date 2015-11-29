@@ -1,7 +1,7 @@
 {% if post is defined %}
     <div class="row">
         <div class="col-md-4">
-            <b>Current Rating: <span class="current-rating">{{ post.rating ? post.rating : "There are no ratings" }}</span></b>
+            <b>Rating: <span class="post-rating">{{ post.rating ? post.rating : "There are no ratings" }}</span></b>
         </div>
         <div class="col-md-offset-5 col-md-3">
             <form id="rating-form" action="{{ path('rate_post', {'id': post.id}) }}" class="form-inline">
@@ -35,7 +35,7 @@
 
                 var url = $('#rating-form').attr('action');
                 $.getJSON(url, {rating: rating}).done(function (data) {
-                    $('.current-rating').html(data.rating);
+                    $('.post-rating').html(data.rating);
                     console.log(data);
                 });
             });
