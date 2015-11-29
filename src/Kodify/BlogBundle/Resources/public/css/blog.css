@@ -17,3 +17,17 @@ label {
 .thumbnail img {
     height: 200px;
 }
+
+#comments h1 {
+    font-size: 1.500em;
+}
+
+.comment {
+    border: 1px solid lightgray;
+    padding: 2px;
+    margin-bottom: 5px;
+}
+
+.comment .comment-author {
+    font-weight: bold;
+}
