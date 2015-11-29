@@ -2,6 +2,7 @@
 
 namespace Kodify\BlogBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,16 +31,23 @@ class Author extends AbstractBaseEntity
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="author", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Kodify\BlogBundle\Entity\Post", mappedBy="author")
      */
-    protected $posts;
+    private $posts;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Kodify\BlogBundle\Entity\Comment", mappedBy="author")
+     */
+    private $comments;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->posts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->posts = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function __toString()
@@ -81,35 +89,64 @@ class Author extends AbstractBaseEntity
     }
 
     /**
-     * Add post
-     *
-     * @param \Kodify\BlogBundle\Entity\Post $post
-     * @return Author
-     */
-    public function addVideo(\Kodify\BlogBundle\Entity\Post $post)
-    {
-        $this->posts[] = $post;
-
-        return $this;
-    }
-
-    /**
-     * Remove post
-     *
-     * @param \Kodify\BlogBundle\Entity\Post $post
-     */
-    public function removeVideo(\Kodify\BlogBundle\Entity\Post $post)
-    {
-        $this->posts->removeElement($post);
-    }
-
-    /**
-     * Get post
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return mixed
      */
     public function getPosts()
     {
         return $this->posts;
     }
+
+    /**
+     * @param Post $post
+     * @return $this
+     */
+    public function addPost(Post $post)
+    {
+        $this->posts->add($post);
+
+        return $this;
+    }
+
+    /**
+     * @param Post $post
+     * @return $this
+     */
+    public function removePost(Post $post)
+    {
+        $this->posts->removeElement($post);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param Comment $comment
+     * @return $this
+     */
+    public function addComment(Comment $comment)
+    {
+        $this->comments->add($comment);
+
+        return $this;
+    }
+
+    /**
+     * @param Comment $comment
+     * @return $this
+     */
+    public function removeComment(Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+
+        return $this;
+    }
+
+
 }
