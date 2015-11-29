@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="post_rating")
+ * @ORM\HasLifecycleCallbacks()
  */
 class PostRating
 {
@@ -84,12 +85,12 @@ class PostRating
     }
 
     /**
-     * @param \DateTimeInterface $createdAt
+     * @ORM\PrePersist()
      * @return PostRating
      */
-    public function setCreatedAt(\DateTimeInterface $createdAt)
+    public function setCreatedAt()
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = new \DateTime();
 
         return $this;
     }
