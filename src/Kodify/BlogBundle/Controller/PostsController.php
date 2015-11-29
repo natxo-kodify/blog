@@ -37,6 +37,7 @@ class PostsController extends Controller
         }
 
         $parameters = [
+            'breadcrumbs' => ['home' => 'Home'],
             'post' => $post,
         ];
         return $this->render('KodifyBlogBundle:Post:view.html.twig', $parameters);
