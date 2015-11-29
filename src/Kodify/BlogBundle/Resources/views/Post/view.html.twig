@@ -10,29 +10,7 @@
             {{ post.content }}
         </div>
         <div class="panel-footer">
-            Rating: {{ post.currentRating ?: "There are no ratings" }}
-            <form id="rating-form" action="{{ path('rate_post', {'id': post.id}) }}" class="form-inline">
-                <div class="form-group">
-                    <label for="rating-one">1</label>
-                    <input type="radio" name="rating" value="1" id="rating-one" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="rating-two">2</label>
-                    <input type="radio" name="rating" value="2" id="rating-two" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="rating-three">3</label>
-                    <input type="radio" name="rating" value="3" id="rating-three" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="rating-four">4</label>
-                    <input type="radio" name="rating" value="4" id="rating-four" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="rating-five">5</label>
-                    <input type="radio" name="rating" value="5" id="rating-five" class="form-control">
-                </div>
-            </form>
+            {% include 'KodifyBlogBundle:Post:Component/rating.html.twig' %}
         </div>
     </div>
 

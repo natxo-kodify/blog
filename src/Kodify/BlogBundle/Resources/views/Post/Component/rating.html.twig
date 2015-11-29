@@ -1,0 +1,44 @@
+{% if post is defined %}
+    <div class="row">
+        <div class="col-md-4">
+            <b>Current Rating: <span class="current-rating">{{ post.currentRating ? post.currentRating : "There are no ratings" }}</span></b>
+        </div>
+        <div class="col-md-offset-5 col-md-3">
+            <form id="rating-form" action="{{ path('rate_post', {'id': post.id}) }}" class="form-inline">
+                <div class="form-group">
+                    <label for="rating-one">1</label>
+                    <input type="radio" name="rating" value="1" id="rating-one" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="rating-two">2</label>
+                    <input type="radio" name="rating" value="2" id="rating-two" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="rating-three">3</label>
+                    <input type="radio" name="rating" value="3" id="rating-three" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="rating-four">4</label>
+                    <input type="radio" name="rating" value="4" id="rating-four" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="rating-five">5</label>
+                    <input type="radio" name="rating" value="5" id="rating-five" class="form-control">
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#rating-form').find('input:radio').on('click', function (e) {
+                var rating = $(this).val();
+
+                var url = $('#rating-form').attr('action');
+                $.getJSON(url, {rating: rating}).done(function (data) {
+                    $('.current-rating').html(data.rating);
+                    console.log(data);
+                });
+            });
+        });
+    </script>
+{% endif %}
