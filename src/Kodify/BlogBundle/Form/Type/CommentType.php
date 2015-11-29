@@ -16,9 +16,10 @@ class CommentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('author', 'entity', ['class' => 'Kodify\BlogBundle\Entity\Author'])
+        $builder
+            ->add('author', 'entity', ['class' => 'Kodify\BlogBundle\Entity\Author'])
             ->add('text', 'text')
-            ->add('save', 'submit', ['attr' => ['class' => 'btn btn-success', 'value' => 'Publish']]);
+            ->add('publish', 'submit', ['attr' => ['class' => 'btn btn-success', 'value' => 'Publish']]);
     }
 
     /**
