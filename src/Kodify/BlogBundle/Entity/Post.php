@@ -54,9 +54,16 @@ class Post extends AbstractBaseEntity
      */
     private $comments;
 
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Kodify\BlogBundle\Entity\PostRating", mappedBy="post")
+     */
+    private $ratings;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
 
     /**
@@ -164,6 +171,36 @@ class Post extends AbstractBaseEntity
     public function removeComment(Comment $comment)
     {
         $this->comments->removeElement($comment);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRatings()
+    {
+        return $this->ratings;
+    }
+
+    /**
+     * @param PostRating $rating
+     * @return $this
+     */
+    public function addRating(PostRating $rating)
+    {
+        $this->ratings->add($rating);
+
+        return $this;
+    }
+
+    /**
+     * @param PostRating $rating
+     * @return $this
+     */
+    public function removeRating(PostRating $rating)
+    {
+        $this->ratings->removeElement($rating);
 
         return $this;
     }
