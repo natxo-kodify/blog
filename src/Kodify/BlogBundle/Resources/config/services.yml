@@ -10,3 +10,9 @@ services:
         factory_service: doctrine.orm.default_entity_manager
         factory_method: getRepository
         arguments: ['KodifyBlogBundle:Author']
+
+    kodify.repository.comment:
+        class: Kodify\BlogBundle\Repository\CommentRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments: ['KodifyBlogBundle:Comment']
