@@ -1,5 +1,6 @@
 <?php
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\TableNode;
@@ -61,6 +62,38 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
         $postRepository = $em->getRepository('KodifyBlogBundle:Post');
         $post = $postRepository->findOneBy(['title' => $title]);
         PHPUnit::assertTrue($post->getComments()->contains($comment));
+    }
+
+    /**
+     * @Then I should see that the post has a rating of :arg1
+     */
+    public function iShouldSeeThatThePostHasARatingOf($arg1)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Given Post with title :arg1 has a mean rating of :arg2
+     */
+    public function postWithTitleHasAMeanRatingOf($arg1, $arg2)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Then Posts should be ordered by date
+     */
+    public function postsShouldBeOrderedByDate()
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Then Post with title :arg1 is before post with title :arg2
+     */
+    public function postWithTitleIsBeforePostWithTitle($arg1, $arg2)
+    {
+        throw new PendingException();
     }
 
     /**
