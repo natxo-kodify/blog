@@ -2,28 +2,22 @@
 
 namespace Kodify\BlogBundle\Model\Handler;
 
+use Doctrine\ORM\ORMInvalidArgumentException;
+
 
 class CreateAuthorHandlerTest extends \PHPUnit_Framework_TestCase
 {
 
-    /**
-     * @var CreateAuthorHandler
-     */
-    private $handler;
-
-    public function setUp()
-    {
-        $authorRepositoryMock = $this->getMockBuilder('Kodify\BlogBundle\Repository\AuthorRepository')->disableOriginalConstructor()->getMock();
-
-        $this->handler = new CreateAuthorHandler($authorRepositoryMock);
-    }
-
     public function testCreateAnAuthor()
     {
+
+        $authorRepositoryMock = $this->getMockBuilder('Kodify\BlogBundle\Repository\AuthorRepository')->disableOriginalConstructor()->getMock();
+        $handler = new CreateAuthorHandler($authorRepositoryMock);
+
         $createAuthorCommandMock = $this->getMockBuilder('Kodify\BlogBundle\Model\Command\CreateAuthorCommand')->getMock();
         $createAuthorCommandMock->expects($this->any())->method('getName')->willReturn('TestAuthor');
 
-        $this->handler->handle($createAuthorCommandMock);
+        $handler->handle($createAuthorCommandMock);
     }
 
 }
