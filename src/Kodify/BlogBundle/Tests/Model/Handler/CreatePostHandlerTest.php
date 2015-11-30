@@ -13,7 +13,7 @@ class CreatePostHandlerTest extends \PHPUnit_Framework_TestCase
 
         $handler = new CreatePostHandler($postRepositoryMock);
 
-        $authorMock = $this->getMockBuilder('\Kodify\BlogBundle\Entity\Auhtor')
+        $authorMock = $this->getMockBuilder('\Kodify\BlogBundle\Entity\Author')
             ->disableOriginalConstructor()
             ->getMock();
 

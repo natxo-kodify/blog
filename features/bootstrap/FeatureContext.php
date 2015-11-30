@@ -162,8 +162,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     {
         $em = $this->getContainer()->get('doctrine')->getManager();
         foreach ($authors as $row) {
-            $author = new \Kodify\BlogBundle\Entity\Author();
-            $author->setName($row['name']);
+            $author = new \Kodify\BlogBundle\Entity\Author($row['name']);
             $em->persist($author);
         }
         $em->flush();
@@ -180,10 +179,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
 
         foreach ($posts as $row) {
             $author = $authorRepository->findOneBy(['name' => $row['author']]);
-            $post = new  \Kodify\BlogBundle\Entity\Post();
-            $post->setAuthor($author);
-            $post->setContent($row['content']);
-            $post->setTitle($row['title']);
+            $post = new  \Kodify\BlogBundle\Entity\Post($author, $row['title'], $row['content']);
             $em->persist($post);
         }
         $em->flush();
