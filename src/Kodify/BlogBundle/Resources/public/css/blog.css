@@ -52,3 +52,10 @@ label {
 .order-menu {
     margin-bottom: 10px;
 }
+
+.post-panel {
+    display: inline-block;
+    margin: 1.1% auto;
+    padding: 0;
+    width: 49%;
+}
