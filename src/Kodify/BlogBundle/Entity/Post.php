@@ -50,13 +50,26 @@ class Post extends AbstractBaseEntity
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Kodify\BlogBundle\Entity\Comment", mappedBy="post")
+     * @ORM\OneToMany(targetEntity="Kodify\BlogBundle\Entity\Comment", mappedBy="post", cascade={"all"})
      */
     private $comments;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Kodify\BlogBundle\Entity\PostRating", mappedBy="post", cascade={"all"})
+     */
+    private $ratings;
+
+    /**
+     * @var integer
+     * @ORM\Column(name="currentRating", type="integer", options={"default"=0})
+     */
+    private $currentRating = 0;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
 
     /**
@@ -152,6 +165,7 @@ class Post extends AbstractBaseEntity
      */
     public function addComment(Comment $comment)
     {
+        $comment->setPost($this);
         $this->comments->add($comment);
 
         return $this;
@@ -166,5 +180,65 @@ class Post extends AbstractBaseEntity
         $this->comments->removeElement($comment);
 
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRatings()
+    {
+        return $this->ratings;
+    }
+
+    /**
+     * @param PostRating $rating
+     * @return $this
+     */
+    public function addRating(PostRating $rating)
+    {
+        $rating->setPost($this);
+        $this->ratings->add($rating);
+
+        $this->updateRating();
+
+        return $this;
+    }
+
+    /**
+     * @param PostRating $rating
+     * @return $this
+     */
+    public function removeRating(PostRating $rating)
+    {
+        $this->ratings->removeElement($rating);
+
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function rating()
+    {
+        return $this->currentRating;
+    }
+
+    /**
+     * @return integer
+     */
+    private function updateRating()
+    {
+        $timesRated = $this->ratings->count();
+        if($timesRated === 0){
+            return 0;
+        }
+
+        $currentRating = 0;
+        /** @var PostRating $rating */
+        foreach ($this->ratings as $rating) {
+            $currentRating += $rating->getValue();
+        }
+
+        $this->currentRating = floor($currentRating / $timesRated);
     }
 }

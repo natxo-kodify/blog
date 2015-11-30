@@ -51,6 +51,37 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
 
     /**
+     * @Given the following posts ratings exist:
+     */
+    public function theFollowingPostsRatingsExist(TableNode $ratings)
+    {
+        $this->loadRatings($ratings);
+    }
+
+    /**
+     * @When I give the post a rating of :rating
+     */
+    public function iGiveThePostARatingOf($rating)
+    {
+        $session = $this->getSession();
+        $dom = $session->getPage();
+        $selectNode = $dom->find('css', '[name=rating]');
+        $selectNode->selectOption($rating);
+    }
+
+    /**
+     * @Then I should see :rating in post rating
+     */
+    public function iShouldSeeInPostRating($rating)
+    {
+        $session = $this->getSession();
+        $dom = $session->getPage();
+        $ratingNode = $dom->find('css', '.post-rating');
+        PHPUnit::assertEquals($rating, $ratingNode->getText());
+    }
+
+
+    /**
      * @Then the post with title :title should have a comment with the text :text
      */
     public function thePostWithTitleShouldHaveACommentWithTheText($title, $text)
@@ -61,6 +92,74 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
         $postRepository = $em->getRepository('KodifyBlogBundle:Post');
         $post = $postRepository->findOneBy(['title' => $title]);
         PHPUnit::assertTrue($post->getComments()->contains($comment));
+    }
+
+    /**
+     * @Given Post with title :title has a mean rating of :rating
+     */
+    public function postWithTitleHasAMeanRatingOf($title, $rating)
+    {
+        $session = $this->getSession();
+        $dom = $session->getPage();
+        $postPanelNodes = $dom->findAll('css', '.post-panel');
+
+        /** @var \Behat\Mink\Element\NodeElement $title */
+        foreach ($postPanelNodes as $panelNode) {
+            $titleNode = $panelNode->find('css', '.post-title');
+            if($titleNode->getText() != $title){
+                continue;
+            }
+            $ratingNode = $panelNode->find('css', '.post-rating');
+            PHPUnit::assertEquals($ratingNode->getText(), $rating);
+        }
+        return false;
+    }
+
+    /**
+     * @Then Posts should be ordered by date
+     */
+    public function postsShouldBeOrderedByDate()
+    {
+        $session = $this->getSession();
+        $dom = $session->getPage();
+        $postPanelNodes = $dom->findAll('css', '.post-panel');
+
+        $previousPostDate = null;
+        /** @var \Behat\Mink\Element\NodeElement $title */
+        foreach ($postPanelNodes as $panelNode) {
+            $dateNode = $panelNode->find('css', '.post-date');
+            if($previousPostDate === null) {
+                $previousPostDate = new \DateTime($dateNode->getText());
+                continue;
+            }
+            $currentPostDate = new \DateTime($dateNode->getText());
+            if($previousPostDate < $currentPostDate){
+                throw new \Exception('Incorrect order posts order');
+            }
+        }
+    }
+
+    /**
+     * @Then Post with title :afterTitle is after post with title :beforeTitle
+     */
+    public function postWithTitleIsAfterPostWithTitle($afterTitle, $beforeTitle)
+    {
+        $session = $this->getSession();
+        $dom = $session->getPage();
+        $postPanelNodes = $dom->findAll('css', '.post-panel');
+
+        $isBeforeFind = false;
+        /** @var \Behat\Mink\Element\NodeElement $panelNode */
+        foreach ($postPanelNodes as $panelNode) {
+            $titleNode = $panelNode->find('css', '.post-title');
+            if($titleNode->getText() == $beforeTitle){
+                $isBeforeFind = true;
+                continue;
+            }
+            if(!$isBeforeFind && $titleNode->getText() == $afterTitle) {
+                throw new \Exception('Incorrect order posts order');
+            }
+        }
     }
 
     /**
@@ -115,6 +214,28 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
             $comment->setPost($post);
             $comment->setText($row['text']);
             $em->persist($comment);
+        }
+        $em->flush();
+    }
+
+    /**
+     * @param TableNode $ratings
+     */
+    private function loadRatings(TableNode $ratings)
+    {
+        $container = $this->getContainer();
+        $em = $container->get('doctrine')->getManager();
+        foreach ($ratings as $row) {
+            $postRepository = $container->get('kodify.repository.post');
+            /** @var \Kodify\BlogBundle\Entity\Post $post */
+            $post = $postRepository->findOneBy(['title' => $row['post_title']]);
+            if (!$post) {
+                throw new \InvalidArgumentException();
+            }
+            $rating = new \Kodify\BlogBundle\Entity\PostRating();
+            $rating->setValue($row['rating']);
+            $post->addRating($rating);
+            $em->persist($post);
         }
         $em->flush();
     }

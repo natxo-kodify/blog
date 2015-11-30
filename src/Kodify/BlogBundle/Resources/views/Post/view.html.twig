@@ -9,6 +9,9 @@
         <div class="panel-body">
             {{ post.content }}
         </div>
+        <div class="panel-footer">
+            {% include 'KodifyBlogBundle:Post:Component/rating.html.twig' %}
+        </div>
     </div>
 
     <section id="comments">

@@ -3,17 +3,27 @@
 namespace Kodify\BlogBundle\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
+use Kodify\BlogBundle\Entity\PostRating;
 use Kodify\BlogBundle\Form\Type\PostType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PostsController extends Controller
 {
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $posts      = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
+        $postRepository = $this->get('kodify.repository.post');
+        switch($request->query->get('order')){
+            case 'rating':
+                $posts = $postRepository->bestRated();
+                break;
+            default:
+                $posts = $postRepository->latest();
+        }
+
         $template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
         if (count($posts)) {
@@ -81,5 +91,37 @@ class PostsController extends Controller
         }
 
         return $this->render('KodifyBlogBundle:Default:create.html.twig', $parameters);
+    }
+
+    public function rateAction(Request $request)
+    {
+        $postId = $request->get('id');
+        $postRepository = $this->get('kodify.repository.post');
+
+        /** @var Post|null $post */
+        $post = $postRepository->find($postId);
+
+        $responseData = ['message' => 'Post not found'];
+
+        if(!$post){
+            return new JsonResponse($responseData, 404);
+        }
+
+        $userRating = $request->get('rating');
+        $postRating = new PostRating();
+        $postRating->setPost($post);
+        $postRating->setValue($userRating);
+
+        $post->addRating($postRating);
+        $em = $this->get('doctrine')->getManager();
+        $em->persist($post);
+        $em->flush();
+
+        $responseData = [
+            'message' => 'Rating added successful',
+            'rating' => $post->rating(),
+        ];
+        return new JsonResponse($responseData, 201);
+
     }
 }

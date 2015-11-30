@@ -19,3 +19,6 @@ create_author:
 comment_post:
     path:     /posts/{id}/comment
     defaults: { _controller: KodifyBlogBundle:Comment:create }
+rate_post:
+    path:     /posts/{id}/rate
+    defaults: { _controller: KodifyBlogBundle:Posts:rate }

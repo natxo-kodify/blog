@@ -100,17 +100,6 @@ class Author extends AbstractBaseEntity
      * @param Post $post
      * @return $this
      */
-    public function addPost(Post $post)
-    {
-        $this->posts->add($post);
-
-        return $this;
-    }
-
-    /**
-     * @param Post $post
-     * @return $this
-     */
     public function removePost(Post $post)
     {
         $this->posts->removeElement($post);
@@ -124,17 +113,6 @@ class Author extends AbstractBaseEntity
     public function getComments()
     {
         return $this->comments;
-    }
-
-    /**
-     * @param Comment $comment
-     * @return $this
-     */
-    public function addComment(Comment $comment)
-    {
-        $this->comments->add($comment);
-
-        return $this;
     }
 
     /**
