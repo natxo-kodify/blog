@@ -16,3 +16,10 @@ services:
         factory_service: doctrine.orm.default_entity_manager
         factory_method: getRepository
         arguments: ['KodifyBlogBundle:Comment']
+
+    kodify.command_hadler.creaate_user:
+        class: Kodify\BlogBundle\Model\Handler\CreateAuthorHandler
+        arguments:
+            - @kodify.repository.author
+        tags:
+            - { name: tactician.handler, command: Kodify\BlogBundle\Model\Command\CreateAuthorCommand }
