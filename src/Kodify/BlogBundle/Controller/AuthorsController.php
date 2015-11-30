@@ -12,7 +12,7 @@ class AuthorsController extends Controller
 {
     public function indexAction()
     {
-        $authors = $this->getDoctrine()->getRepository('KodifyBlogBundle:Author')->latest();
+        $authors =  $this->get('kodify.repository.author')->latest();
         $template = 'KodifyBlogBundle:Author:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home', 'authors' => 'Authors']];
         if (count($authors)) {
@@ -41,8 +41,8 @@ class AuthorsController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $author = $form->getData();
-            $this->getDoctrine()->getManager()->persist($author);
-            $this->getDoctrine()->getManager()->flush();
+            $this->get('doctrine')->getManager()->persist($author);
+            $this->get('doctrine')->getManager()->flush();
             $parameters['message'] = 'Author Created!';
         }
 

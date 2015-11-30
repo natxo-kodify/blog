@@ -57,9 +57,10 @@ class PostsController extends Controller
 
     public function createAction(Request $request)
     {
+        $post = new Post();
         $form = $this->createForm(
             new PostType(),
-            new Post(),
+            $post,
             [
                 'action' => $this->generateUrl('create_post'),
                 'method' => 'POST',
@@ -72,9 +73,8 @@ class PostsController extends Controller
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $post = $form->getData();
-            $this->getDoctrine()->getManager()->persist($post);
-            $this->getDoctrine()->getManager()->flush();
+            $this->get('doctrine')->getManager()->persist($post);
+            $this->get('doctrine')->getManager()->flush();
             $parameters['message'] = 'Post Created!';
         }
 
