@@ -2,11 +2,16 @@
 
 namespace Kodify\Test;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class BaseFunctionalTest extends WebTestCase
 {
+    /** @var  ObjectManager */
     protected $entityManager;
+    /** @var  Client */
     protected $client;
 
     public function setUp()
@@ -71,5 +76,9 @@ class BaseFunctionalTest extends WebTestCase
         }
 
         return $this->assertTextFound($crawler, $text, 0, $message);
+    }
+
+    protected function trimNotPrintableChars($string){
+        return preg_replace( '/[^[:print:]]/', '',$string);
     }
 }
