@@ -44,15 +44,11 @@ class Author extends AbstractBaseEntity
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct($name)
     {
+        $this->name = $name;
         $this->posts = new ArrayCollection();
         $this->comments = new ArrayCollection();
-    }
-
-    public function __toString()
-    {
-        return $this->name;
     }
 
     /**
@@ -63,19 +59,6 @@ class Author extends AbstractBaseEntity
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return Author
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     /**
@@ -124,6 +107,11 @@ class Author extends AbstractBaseEntity
         $this->comments->removeElement($comment);
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 
 
