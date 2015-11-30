@@ -14,7 +14,6 @@ class CommentController extends Controller
 
     public function createAction(Request $request)
     {
-
         $postRepository = $this->get('kodify.repository.post');
         $postId = $request->get('id');
         $post = $postRepository->find($postId);
