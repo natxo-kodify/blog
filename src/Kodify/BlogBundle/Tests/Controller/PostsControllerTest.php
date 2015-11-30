@@ -62,8 +62,7 @@ class PostsControllerTest extends BaseFunctionalTest
 
     protected function createPosts($count)
     {
-        $author = new Author();
-        $author->setName('Author');
+        $author = $this->createAuthor();
         $this->entityManager()->persist($author);
         $this->entityManager()->flush();
         for ($i = 0; $i < $count; ++$i) {
@@ -74,6 +73,16 @@ class PostsControllerTest extends BaseFunctionalTest
             $this->entityManager()->persist($post);
         }
         $this->entityManager()->flush();
+    }
+
+    /**
+     * @return Author
+     */
+    protected function createAuthor()
+    {
+        $author = new Author('Author');
+
+        return $author;
     }
 
     public function countDataProvider()

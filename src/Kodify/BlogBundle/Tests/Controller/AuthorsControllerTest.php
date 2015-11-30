@@ -42,8 +42,7 @@ class AuthorsControllerTest extends BaseFunctionalTest
     protected function createAuthors($count)
     {
         for ($i = 0; $i < $count; ++$i) {
-            $author = new Author();
-            $author->setName("Name{$i}");
+            $author = new Author("Name{$i}");
             $this->entityManager()->persist($author);
         }
         $this->entityManager()->flush();

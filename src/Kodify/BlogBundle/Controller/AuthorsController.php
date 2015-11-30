@@ -2,8 +2,8 @@
 
 namespace Kodify\BlogBundle\Controller;
 
-use Kodify\BlogBundle\Entity\Author;
 use Kodify\BlogBundle\Form\Type\AuthorType;
+use Kodify\BlogBundle\Model\Command\CreateAuthorCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -25,9 +25,10 @@ class AuthorsController extends Controller
 
     public function createAction(Request $request)
     {
+        $createUserCommand = new CreateAuthorCommand();
         $form = $this->createForm(
             new AuthorType(),
-            new Author(),
+            $createUserCommand,
             [
                 'action' => $this->generateUrl('create_author'),
                 'method' => 'POST',
@@ -40,9 +41,8 @@ class AuthorsController extends Controller
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $author = $form->getData();
-            $this->get('doctrine')->getManager()->persist($author);
-            $this->get('doctrine')->getManager()->flush();
+            $commandBus = $this->get('tactician.commandbus');
+            $commandBus->handle($createUserCommand);
             $parameters['message'] = 'Author Created!';
         }
 
