@@ -10,7 +10,6 @@ class CreateAuthorHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateAnAuthor()
     {
-
         $authorRepositoryMock = $this->getMockBuilder('Kodify\BlogBundle\Repository\AuthorRepository')->disableOriginalConstructor()->getMock();
         $handler = new CreateAuthorHandler($authorRepositoryMock);
 
