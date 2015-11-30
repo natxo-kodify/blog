@@ -17,7 +17,7 @@ services:
         factory_method: getRepository
         arguments: ['KodifyBlogBundle:Comment']
 
-    kodify.command_hadler.creaate_user:
+    kodify.command_hadler.create_user:
         class: Kodify\BlogBundle\Model\Handler\CreateAuthorHandler
         arguments:
             - @kodify.repository.author
