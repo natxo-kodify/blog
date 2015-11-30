@@ -1,14 +1,23 @@
 {% extends 'KodifyBlogBundle::base.html.twig' %}
 
 {% block content %}
-
+    <div class="order-menu">
+        <a href="{{ path('home', {'order': 'date'}) }}" class="order-button btn">Order by date</a>
+        <a href="{{ path('home', {'order': 'rating'}) }}" class="order-button btn">Order by rating</a>
+    </div>
     {% for post in posts %}
-        <div class="panel panel-default">
+        <div class="panel panel-default post-panel">
             <div class="panel-heading">
-                <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
-                <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
+                <a href="{{ path('view_post',{id: post.id}) }}" class="post-title">{{ post.title }}</a>
+                <div class="pull-right">
+                    <span>Rating: <span class="post-rating">{{ post.rating }}</span>&nbsp;</span>
+                    <span class="pull-right">
+                        by: <span class="post-author">{{ post.author.name }}&nbsp;</span>
+                        on: <span class="post-date">{{ post.createdAt|date("m/d/Y") }}</span>
+                    </span>
+                </div>
             </div>
-            <div class="panel-body">
+            <div class="panel-body post-content">
                 {{ post.content }}
             </div>
         </div>
