@@ -34,18 +34,17 @@ class AuthorsController extends Controller
                 'method' => 'POST',
             ]
         );
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $this->get('tactician.commandbus')->handle($createUserCommand);
+            $parameters['message'] = 'Author Created!';
+        }
+
         $parameters = [
             'form' => $form->createView(),
             'breadcrumbs' => ['home' => 'Home', 'create_author' => 'Create Author'],
         ];
-
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            $commandBus = $this->get('tactician.commandbus');
-            $commandBus->handle($createUserCommand);
-            $parameters['message'] = 'Author Created!';
-        }
-
         return $this->render('KodifyBlogBundle:Default:create.html.twig', $parameters);
     }
 }
