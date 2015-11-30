@@ -8,7 +8,6 @@ use Kodify\BlogBundle\Form\Type\PostType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PostsController extends Controller
@@ -16,18 +15,17 @@ class PostsController extends Controller
     public function indexAction(Request $request)
     {
         $postRepository = $this->get('kodify.repository.post');
-        switch($request->query->get('order')){
-            case 'rating':
-                $posts = $postRepository->bestRated();
-                break;
-            default:
-                $posts = $postRepository->latest();
+
+        if($request->query->get('order') == 'rating') {
+            $posts = $postRepository->bestRated();
+        } else {
+            $posts = $postRepository->latest();
         }
 
-        $template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
+        $template = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
         if (count($posts)) {
-            $template            = 'KodifyBlogBundle:Post:List/index.html.twig';
+            $template = 'KodifyBlogBundle:Post:List/index.html.twig';
             $parameters['posts'] = $posts;
         }
 
@@ -37,12 +35,12 @@ class PostsController extends Controller
     public function filterAction(Request $request)
     {
         $title = $request->query->get('title');
-        if(!$title){
+        if (!$title) {
             $this->redirectToRoute('home');
         }
 
         $post = $this->get('kodify.repository.post')->findOneBy(['title' => $title]);
-        if(!$post){
+        if (!$post) {
             throw new NotFoundHttpException('Post not found');
         }
 
@@ -50,6 +48,7 @@ class PostsController extends Controller
             'breadcrumbs' => ['home' => 'Home'],
             'post' => $post,
         ];
+
         return $this->render('KodifyBlogBundle:Post:view.html.twig', $parameters);
     }
 
@@ -61,7 +60,7 @@ class PostsController extends Controller
         }
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
-            'post'        => $currentPost,
+            'post' => $currentPost,
         ];
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
@@ -69,7 +68,7 @@ class PostsController extends Controller
 
     public function createAction(Request $request)
     {
-        $form       = $this->createForm(
+        $form = $this->createForm(
             new PostType(),
             new Post(),
             [
@@ -78,8 +77,8 @@ class PostsController extends Controller
             ]
         );
         $parameters = [
-            'form'        => $form->createView(),
-            'breadcrumbs' => ['home' => 'Home', 'create_post' => 'Create Post']
+            'form' => $form->createView(),
+            'breadcrumbs' => ['home' => 'Home', 'create_post' => 'Create Post'],
         ];
 
         $form->handleRequest($request);
@@ -103,7 +102,7 @@ class PostsController extends Controller
 
         $responseData = ['message' => 'Post not found'];
 
-        if(!$post){
+        if (!$post) {
             return new JsonResponse($responseData, 404);
         }
 
@@ -121,6 +120,7 @@ class PostsController extends Controller
             'message' => 'Rating added successful',
             'rating' => $post->rating(),
         ];
+
         return new JsonResponse($responseData, 201);
 
     }
