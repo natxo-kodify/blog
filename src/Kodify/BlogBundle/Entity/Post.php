@@ -66,7 +66,7 @@ class Post extends AbstractBaseEntity
      */
     private $currentRating = 0;
 
-    public function __construct(Auhtor $author, $title, $content)
+    public function __construct(Author $author, $title, $content)
     {
         $this->author = $author;
         $this->title = $title;
