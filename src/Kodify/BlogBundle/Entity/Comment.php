@@ -30,7 +30,7 @@ class Comment extends AbstractBaseEntity
      * @var Author
      * @Assert\NotNull()
      * @ORM\ManyToOne(targetEntity="Kodify\BlogBundle\Entity\Author", inversedBy="comments")
- *     @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
      */
     private $author;
     /**

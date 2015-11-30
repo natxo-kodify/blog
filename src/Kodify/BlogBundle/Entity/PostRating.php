@@ -22,7 +22,7 @@ class PostRating
     /**
      * @var Post
      * @ORM\ManyToOne(targetEntity="Kodify\BlogBundle\Entity\Post", inversedBy="ratings")
- *     @ORM\JoinColumn(name="post_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="post_id", referencedColumnName="id")
      */
     private $post;
 

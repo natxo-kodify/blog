@@ -12,11 +12,11 @@ class AuthorsController extends Controller
 {
     public function indexAction()
     {
-        $authors    = $this->getDoctrine()->getRepository('KodifyBlogBundle:Author')->latest();
-        $template   = 'KodifyBlogBundle:Author:List/empty.html.twig';
+        $authors = $this->getDoctrine()->getRepository('KodifyBlogBundle:Author')->latest();
+        $template = 'KodifyBlogBundle:Author:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home', 'authors' => 'Authors']];
         if (count($authors)) {
-            $template              = 'KodifyBlogBundle:Author:List/index.html.twig';
+            $template = 'KodifyBlogBundle:Author:List/index.html.twig';
             $parameters['authors'] = $authors;
         }
 
@@ -25,7 +25,7 @@ class AuthorsController extends Controller
 
     public function createAction(Request $request)
     {
-        $form       = $this->createForm(
+        $form = $this->createForm(
             new AuthorType(),
             new Author(),
             [
@@ -34,8 +34,8 @@ class AuthorsController extends Controller
             ]
         );
         $parameters = [
-            'form'        => $form->createView(),
-            'breadcrumbs' => ['home' => 'Home', 'create_author' => 'Create Author']
+            'form' => $form->createView(),
+            'breadcrumbs' => ['home' => 'Home', 'create_author' => 'Create Author'],
         ];
 
         $form->handleRequest($request);

@@ -15,7 +15,7 @@ class PostsController extends Controller
     {
         $postRepository = $this->get('kodify.repository.post');
 
-        if($request->query->get('order') == 'rating') {
+        if ($request->query->get('order') == 'rating') {
             $posts = $postRepository->bestRated();
         } else {
             $posts = $postRepository->latest();

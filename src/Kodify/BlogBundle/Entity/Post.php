@@ -229,7 +229,7 @@ class Post extends AbstractBaseEntity
     private function updateRating()
     {
         $timesRated = $this->ratings->count();
-        if($timesRated === 0){
+        if ($timesRated === 0) {
             return 0;
         }
 
