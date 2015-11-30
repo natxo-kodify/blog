@@ -4,6 +4,7 @@ namespace Kodify\BlogBundle\Model\Handler;
 
 use Kodify\BlogBundle\Entity\Author;
 use Kodify\BlogBundle\Model\Command\CreateAuthorCommand;
+use Kodify\BlogBundle\Model\Handler\Exception\CommandHandlerException;
 use Kodify\BlogBundle\Repository\AuthorRepository;
 
 class CreateAuthorHandler

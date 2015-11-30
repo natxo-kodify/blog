@@ -1,12 +1,12 @@
 <?php
 
-namespace Kodify\BlogBundle\Tests\Model\Command;
+namespace Kodify\BlogBundle\Model\Command;
 
-
-use Kodify\BlogBundle\Model\Command\CreateAuthorCommand;
 
 class CreateAuthorCommandTest extends \PHPUnit_Framework_TestCase
 {
+
+    private $createAuthorCommand;
 
     public function testInitialization()
     {
