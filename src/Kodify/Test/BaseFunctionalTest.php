@@ -1,6 +1,6 @@
 <?php
 
-namespace Kodify\BlogBundle\Tests;
+namespace Kodify\Test;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

@@ -2,9 +2,9 @@
 
 namespace Kodify\BlogBundle\Tests\Controller;
 
-use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\Author;
-use Kodify\BlogBundle\Tests\BaseFunctionalTest;
+use Kodify\BlogBundle\Entity\Post;
+use Kodify\Test\BaseFunctionalTest;
 
 class PostsControllerTest extends BaseFunctionalTest
 {

@@ -3,7 +3,7 @@
 namespace Kodify\BlogBundle\Tests\Controller;
 
 use Kodify\BlogBundle\Entity\Author;
-use Kodify\BlogBundle\Tests\BaseFunctionalTest;
+use Kodify\Test\BaseFunctionalTest;
 
 class AuthorsControllerTest extends BaseFunctionalTest
 {
