@@ -50,17 +50,6 @@ class Comment extends AbstractBaseEntity
     }
 
     /**
-     * @param mixed $id
-     * @return Comment
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
      * @return mixed
      */
     public function getText()
