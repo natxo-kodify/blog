@@ -66,8 +66,11 @@ class Post extends AbstractBaseEntity
      */
     private $currentRating = 0;
 
-    public function __construct()
+    public function __construct(Auhtor $author, $title, $content)
     {
+        $this->author = $author;
+        $this->title = $title;
+        $this->content = $content;
         $this->comments = new ArrayCollection();
         $this->ratings = new ArrayCollection();
     }
@@ -83,19 +86,6 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Set title
-     *
-     * @param string $title
-     * @return Post
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
      * Get title
      *
      * @return string
@@ -106,19 +96,6 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Set content
-     *
-     * @param string $content
-     * @return Post
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    /**
      * Get content
      *
      * @return string
@@ -126,19 +103,6 @@ class Post extends AbstractBaseEntity
     public function getContent()
     {
         return $this->content;
-    }
-
-    /**
-     * Set author
-     *
-     * @param \Kodify\BlogBundle\Entity\Author $author
-     * @return Post
-     */
-    public function setAuthor(\Kodify\BlogBundle\Entity\Author $author = null)
-    {
-        $this->author = $author;
-
-        return $this;
     }
 
     /**
