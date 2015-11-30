@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: adrianr
- * Date: 30/11/15
- * Time: 17:55
- */
 
 namespace Kodify\BlogBundle\Tests\Model\Command;
 
