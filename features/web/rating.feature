@@ -22,11 +22,11 @@ Feature: Comments
       | land       | 3      |
 
   Scenario: No ratings on a post page
-    Given I am on "/posts?title=way"
+    Given I am on "/posts/way"
     Then I should see "There are no ratings"
 
   Scenario: Rate a post
-    Given I am on "/posts?title=way"
+    Given I am on "/posts/way"
     When  I give the post a rating of "5"
     And   I give the post a rating of "3"
 #    Then  I should see "4" in post rating

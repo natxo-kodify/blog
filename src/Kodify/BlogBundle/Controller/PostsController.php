@@ -8,7 +8,6 @@ use Kodify\BlogBundle\Form\Type\PostType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PostsController extends Controller
 {
@@ -32,32 +31,18 @@ class PostsController extends Controller
         return $this->render($template, $parameters);
     }
 
-    public function filterAction(Request $request)
+    public function viewAction(Request $request, $id)
     {
-        $title = $request->query->get('title');
-        if (!$title) {
-            $this->redirectToRoute('home');
+        if (0 !== (integer)$id) {
+            $currentPost = $this->get('kodify.repository.post')->find($id);
+        } else {
+            $currentPost = $this->get('kodify.repository.post')->findOneBy(['title' => $id]);
         }
 
-        $post = $this->get('kodify.repository.post')->findOneBy(['title' => $title]);
-        if (!$post) {
-            throw new NotFoundHttpException('Post not found');
-        }
-
-        $parameters = [
-            'breadcrumbs' => ['home' => 'Home'],
-            'post' => $post,
-        ];
-
-        return $this->render('KodifyBlogBundle:Post:view.html.twig', $parameters);
-    }
-
-    public function viewAction($id)
-    {
-        $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
         if (!$currentPost instanceof Post) {
             throw $this->createNotFoundException('Post not found');
         }
+
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
             'post' => $currentPost,

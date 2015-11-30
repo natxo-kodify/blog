@@ -20,17 +20,17 @@ Feature: Comments
       | Is that a song?   | land       | rainbow |
 
   Scenario: No comments on a post page
-    Given I am on "/posts?title=once"
+    Given I am on "/posts/once"
     Then I should see "There are no comments"
 
   Scenario: See comments on a post page
-    Given I am on "/posts?title=way"
+    Given I am on "/posts/way"
     Then I should see 1 ".comment" elements
     And I should see "nice!!" in the ".comment-text" element
     And I should not see "Is that a song?" in the ".comment-text" element
 
   Scenario: Create a comment
-    Given I am on "/posts?title=once"
+    Given I am on "/posts/once"
     And I should not see ".comment"
     When I follow "Comment"
     And I select "someone" from "comment[author]"
