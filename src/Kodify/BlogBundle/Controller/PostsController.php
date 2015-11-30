@@ -5,6 +5,7 @@ namespace Kodify\BlogBundle\Controller;
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\PostRating;
 use Kodify\BlogBundle\Form\Type\PostType;
+use Kodify\BlogBundle\Model\Command\CreatePostCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,27 +58,27 @@ class PostsController extends Controller
 
     public function createAction(Request $request)
     {
-        $post = new Post();
+        $createPostCommand = new CreatePostCommand();
         $form = $this->createForm(
             new PostType(),
-            $post,
+            $createPostCommand,
             [
                 'action' => $this->generateUrl('create_post'),
                 'method' => 'POST',
             ]
         );
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $this->get('tactician.commandbus')->handle($createPostCommand);
+            $this->get('session')->getFlashBag()->add('success', 'Post created');
+            $this->redirectToRoute('home');
+        }
+
         $parameters = [
             'form' => $form->createView(),
             'breadcrumbs' => ['home' => 'Home', 'create_post' => 'Create Post'],
         ];
-
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            $this->get('doctrine')->getManager()->persist($post);
-            $this->get('doctrine')->getManager()->flush();
-            $parameters['message'] = 'Post Created!';
-        }
-
         return $this->render('KodifyBlogBundle:Default:create.html.twig', $parameters);
     }
 
