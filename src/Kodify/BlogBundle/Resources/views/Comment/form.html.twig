@@ -1,0 +1,10 @@
+{{ form_start(form) }}
+    <div class="form-group">
+        {{ form_widget(form.author, {'attr': {'class': 'form-control'}}) }}
+        <span class="form-error">{{ form_errors(form.author) }}</span>
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.text, {'attr': {'class': 'form-control'}}) }}
+        <span class="form-error">{{ form_errors(form.text) }}</span>
+    </div>
+{{ form_end(form) }}

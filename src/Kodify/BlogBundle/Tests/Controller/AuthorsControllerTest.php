@@ -3,7 +3,7 @@
 namespace Kodify\BlogBundle\Tests\Controller;
 
 use Kodify\BlogBundle\Entity\Author;
-use Kodify\BlogBundle\Tests\BaseFunctionalTest;
+use Kodify\Test\BaseFunctionalTest;
 
 class AuthorsControllerTest extends BaseFunctionalTest
 {
@@ -42,8 +42,7 @@ class AuthorsControllerTest extends BaseFunctionalTest
     protected function createAuthors($count)
     {
         for ($i = 0; $i < $count; ++$i) {
-            $author = new Author();
-            $author->setName("Name{$i}");
+            $author = new Author("Name{$i}");
             $this->entityManager()->persist($author);
         }
         $this->entityManager()->flush();

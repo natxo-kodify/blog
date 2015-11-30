@@ -1,4 +1,32 @@
 services:
-#    kodify_blog.example:
-#        class: Kodify\BlogBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    kodify.repository.post:
+        class: Kodify\BlogBundle\Repository\PostRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments: ['KodifyBlogBundle:Post']
+
+    kodify.repository.author:
+        class: Kodify\BlogBundle\Repository\AuthorRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments: ['KodifyBlogBundle:Author']
+
+    kodify.repository.comment:
+        class: Kodify\BlogBundle\Repository\CommentRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments: ['KodifyBlogBundle:Comment']
+
+    kodify.command_hadler.create_user:
+        class: Kodify\BlogBundle\Model\Handler\CreateAuthorHandler
+        arguments:
+            - @kodify.repository.author
+        tags:
+            - { name: tactician.handler, command: Kodify\BlogBundle\Model\Command\CreateAuthorCommand }
+
+    kodify.command_hadler.create_post:
+        class: Kodify\BlogBundle\Model\Handler\CreatePostHandler
+        arguments:
+            - @kodify.repository.post
+        tags:
+            - { name: tactician.handler, command: Kodify\BlogBundle\Model\Command\CreatePostCommand }

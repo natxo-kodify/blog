@@ -24,6 +24,7 @@ abstract class AbstractBaseEntity
      * Set createdAt
      *
      * @param \DateTime $createdAt
+     * @return $this
      */
     public function setCreatedAt($createdAt)
     {
@@ -48,6 +49,7 @@ abstract class AbstractBaseEntity
      * Set updatedAt
      *
      * @param \DateTime $updatedAt
+     * @return $this
      */
     public function setUpdatedAt($updatedAt = null)
     {

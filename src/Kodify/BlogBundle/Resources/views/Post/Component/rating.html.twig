@@ -1,0 +1,30 @@
+{% if post is defined %}
+    <div class="row">
+        <div class="col-md-4">
+            <b><i class="glyphicon glyphicon-star"></i> <span class="post-rating">{{ post.rating ? post.rating : "There are no ratings" }}</span></b>
+        </div>
+        <div class="pull-right">
+            <span>Rate with </span>
+            <a href="{{ path('rate_post', {'id': post.id, 'rating': 1}) }}" class="btn-sm btn-default rating-value">1</a>
+            <a href="{{ path('rate_post', {'id': post.id, 'rating': 2}) }}" class="btn-sm btn-default rating-value">2</a>
+            <a href="{{ path('rate_post', {'id': post.id, 'rating': 3}) }}" class="btn-sm btn-default rating-value">3</a>
+            <a href="{{ path('rate_post', {'id': post.id, 'rating': 4}) }}" class="btn-sm btn-default rating-value">4</a>
+            <a href="{{ path('rate_post', {'id': post.id, 'rating': 5}) }}" class="btn-sm btn-default rating-value">5</a>
+            <span> Starts</span>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.rating-value').on('click', function (e) {
+                e.preventDefault();
+
+                var url = $(this).attr('href');
+                $.getJSON(url, {}, function (data) {
+                    $('.post-rating').html(data.rating);
+                });
+
+                return false;
+            });
+        });
+    </script>
+{% endif %}

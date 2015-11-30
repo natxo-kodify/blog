@@ -10,4 +10,14 @@ namespace Kodify\BlogBundle\Repository;
  */
 class PostRepository extends AbstractBaseRepository
 {
+
+    public function bestRated($limit = null, $offset = 0)
+    {
+        if (is_null($limit)) {
+            $limit = static::LIST_DEFAULT_LIMIT;
+        }
+
+        return $this->findBy([], ['currentRating' => 'DESC'], $limit, $offset);
+    }
+
 }

@@ -1,0 +1,18 @@
+default:
+    suites:
+        default:
+            contexts:
+                - FeatureContext: ~
+                - \Behat\MinkExtension\Context\MinkContext: ~
+
+    extensions:
+        Behat\Symfony2Extension: ~
+        Behat\MinkExtension:
+            base_url: http://kodiblog.vb/app_test.php
+            sessions:
+                default:
+                    symfony2: ~
+
+paths:
+    features: features
+    bootstrap: %behat.paths.features%/bootstrap

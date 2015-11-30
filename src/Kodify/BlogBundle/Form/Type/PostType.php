@@ -3,6 +3,7 @@ namespace Kodify\BlogBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class PostType extends AbstractType
 {
@@ -11,8 +12,17 @@ class PostType extends AbstractType
         $builder
             ->add('title')
             ->add('content')
-            ->add('author')
+            ->add('author', 'entity', [
+                'class' => 'Kodify\BlogBundle\Entity\Author'
+            ])
             ->add('save', 'submit', ['attr' => ['class' => 'btn btn-success']]);
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+           'data_class' => '\Kodify\BlogBundle\Model\Command\CreatePostCommand'
+        ]);
     }
 
     public function getName()

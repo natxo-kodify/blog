@@ -2,6 +2,7 @@
 
 namespace Kodify\BlogBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -44,7 +45,35 @@ class Post extends AbstractBaseEntity
      * @ORM\ManyToOne(targetEntity="Author", inversedBy="posts")
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
-    protected $author;
+    private $author;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Kodify\BlogBundle\Entity\Comment", mappedBy="post", cascade={"all"})
+     */
+    private $comments;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Kodify\BlogBundle\Entity\PostRating", mappedBy="post", cascade={"all"})
+     */
+    private $ratings;
+
+    /**
+     * @var integer
+     * @ORM\Column(name="currentRating", type="integer", options={"default"=0})
+     */
+    private $currentRating = 0;
+
+    public function __construct(Author $author, $title, $content)
+    {
+        $this->author = $author;
+        $this->title = $title;
+        $this->content = $content;
+        $this->comments = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -54,19 +83,6 @@ class Post extends AbstractBaseEntity
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set title
-     *
-     * @param string $title
-     * @return Post
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
     }
 
     /**
@@ -80,19 +96,6 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Set content
-     *
-     * @param string $content
-     * @return Post
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    /**
      * Get content
      *
      * @return string
@@ -103,19 +106,6 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Set author
-     *
-     * @param \Kodify\BlogBundle\Entity\Author $author
-     * @return Post
-     */
-    public function setAuthor(\Kodify\BlogBundle\Entity\Author $author = null)
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
-    /**
      * Get author
      *
      * @return \Kodify\BlogBundle\Entity\Author
@@ -123,5 +113,96 @@ class Post extends AbstractBaseEntity
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param Comment $comment
+     * @return $this
+     */
+    public function addComment(Comment $comment)
+    {
+        $comment->setPost($this);
+        $this->comments->add($comment);
+
+        return $this;
+    }
+
+    /**
+     * @param Comment $comment
+     * @return $this
+     */
+    public function removeComment(Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRatings()
+    {
+        return $this->ratings;
+    }
+
+    /**
+     * @param PostRating $rating
+     * @return $this
+     */
+    public function addRating(PostRating $rating)
+    {
+        $rating->setPost($this);
+        $this->ratings->add($rating);
+
+        $this->updateRating();
+
+        return $this;
+    }
+
+    /**
+     * @param PostRating $rating
+     * @return $this
+     */
+    public function removeRating(PostRating $rating)
+    {
+        $this->ratings->removeElement($rating);
+
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function rating()
+    {
+        return $this->currentRating;
+    }
+
+    /**
+     * @return integer
+     */
+    private function updateRating()
+    {
+        $timesRated = $this->ratings->count();
+        if ($timesRated === 0) {
+            return 0;
+        }
+
+        $currentRating = 0;
+        /** @var PostRating $rating */
+        foreach ($this->ratings as $rating) {
+            $currentRating += $rating->getValue();
+        }
+
+        $this->currentRating = floor($currentRating / $timesRated);
     }
 }

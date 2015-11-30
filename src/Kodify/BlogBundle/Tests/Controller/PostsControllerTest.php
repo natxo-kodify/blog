@@ -2,9 +2,10 @@
 
 namespace Kodify\BlogBundle\Tests\Controller;
 
-use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\Author;
-use Kodify\BlogBundle\Tests\BaseFunctionalTest;
+use Kodify\BlogBundle\Entity\Post;
+use Kodify\Test\BaseFunctionalTest;
+use Symfony\Component\DomCrawler\Crawler;
 
 class PostsControllerTest extends BaseFunctionalTest
 {
@@ -27,9 +28,14 @@ class PostsControllerTest extends BaseFunctionalTest
             'Empty list found, it should have posts'
         );
 
-        $this->assertSame(
+        $authorNodes = $crawler->filter('.post-author')->reduce(function(Crawler $node, $i){
+            $nodeText = $this->trimNotPrintableChars($node->text());
+            return "Author" === $nodeText;
+        });
+
+        $this->assertCount(
             $countToCheck,
-            substr_count($crawler->html(), 'by: Author'),
+            $authorNodes,
             "We should find $countToCheck messages from the author"
         );
         for ($i = 0; $i < $countToCheck; ++$i) {
@@ -56,18 +62,25 @@ class PostsControllerTest extends BaseFunctionalTest
 
     protected function createPosts($count)
     {
-        $author = new Author();
-        $author->setName('Author');
-        $this->entityManager()->persist($author);
-        $this->entityManager()->flush();
+        $author = $this->createAuthor();
+
         for ($i = 0; $i < $count; ++$i) {
-            $post = new Post();
-            $post->setTitle('Title' . $i);
-            $post->setContent('Content' . $i);
-            $post->setAuthor($author);
+            $post = new Post($author, 'Title'.$i, 'Content'.$i);
             $this->entityManager()->persist($post);
         }
+
         $this->entityManager()->flush();
+    }
+
+    /**
+     * @return Author
+     */
+    protected function createAuthor()
+    {
+        $author = new Author('Author');
+        $this->entityManager()->persist($author);
+        $this->entityManager()->flush();
+        return $author;
     }
 
     public function countDataProvider()
