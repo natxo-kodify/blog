@@ -23,3 +23,10 @@ services:
             - @kodify.repository.author
         tags:
             - { name: tactician.handler, command: Kodify\BlogBundle\Model\Command\CreateAuthorCommand }
+
+    kodify.command_hadler.create_post:
+        class: Kodify\BlogBundle\Model\Handler\CreatePostHandler
+        arguments:
+            - @kodify.repository.post
+        tags:
+            - { name: tactician.handler, command: Kodify\BlogBundle\Model\Command\CreatePostCommand }
