@@ -18,7 +18,7 @@ Feature: Comments
 
     And the following posts ratings exist:
       | post_title | rating |
-      | way        | 3      |
+      | once        | 3      |
       | land       | 4      |
 
   Scenario: No ratings on a post page
@@ -29,13 +29,13 @@ Feature: Comments
     Given I am on "/posts?title=way"
     When  I give the post a rating of "5"
     And   I give the post a rating of "3"
-    And   I go to "/posts?title=way"
-#    Then  I should see "4" in the "span.current-rating" element
+    And   I am on "/posts?title=way"
+    Then  I should see "4" in post rating
 
   Scenario: Order at posts list
     Given I am on the homepage
     And   Post with title "land" has a mean rating of "4"
-    And   Post with title "way" has a mean rating of "3"
+    And   Post with title "once" has a mean rating of "3"
     Then  Posts should be ordered by date
     And   I press "Order by rating"
     Then  Post with title "land" is before post with title "way"
