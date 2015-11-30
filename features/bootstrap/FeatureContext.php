@@ -17,6 +17,7 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
 
     /**
      * @BeforeScenario
+     * @AfterScenario
      */
     public function resetDatabase()
     {
