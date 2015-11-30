@@ -15,7 +15,7 @@ class CreatePostCommand
 {
     /**
      * @var Author
-     * @Assert\Type('\Kodify\BlogBundle\Entity\Author')
+     * @Assert\Type("\Kodify\BlogBundle\Entity\Author")
      */
     private $author;
     /**
