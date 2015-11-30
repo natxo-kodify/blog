@@ -22,8 +22,9 @@ class BaseFunctionalTest extends WebTestCase
 
     protected function cleanDb()
     {
-        $this->clearTableByName('Author');
-        $this->clearTableByName('Post');
+        $em = $this->entityManager();
+        $purger = new \Doctrine\Common\DataFixtures\Purger\ORMPurger($em);
+        $purger->purge();
     }
 
     protected function entityManager()
