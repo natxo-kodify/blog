@@ -27,9 +27,10 @@ Feature: Comments
 
   Scenario: Rate a post
     Given I am on "/posts/way"
+#   The next three should be run with selenium or zombie
     When  I give the post a rating of "5"
     And   I give the post a rating of "3"
-#    Then  I should see "4" in post rating
+    Then  I should see "4" in the ".post-rating" element
 
   Scenario: Order at posts list
     Given I am on the homepage

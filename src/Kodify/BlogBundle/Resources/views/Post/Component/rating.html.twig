@@ -1,43 +1,29 @@
 {% if post is defined %}
     <div class="row">
         <div class="col-md-4">
-            <b>Rating: <span class="post-rating">{{ post.rating ? post.rating : "There are no ratings" }}</span></b>
+            <b><i class="glyphicon glyphicon-star"></i> <span class="post-rating">{{ post.rating ? post.rating : "There are no ratings" }}</span></b>
         </div>
-        <div class="col-md-offset-5 col-md-3">
-            <form id="rating-form" action="{{ path('rate_post', {'id': post.id}) }}" class="form-inline">
-                <div class="form-group">
-                    <label for="rating-one">1</label>
-                    <input type="radio" name="rating" value="1" id="rating-one" class="rating-value form-control">
-                </div>
-                <div class="form-group">
-                    <label for="rating-two">2</label>
-                    <input type="radio" name="rating" value="2" id="rating-two" class="rating-value form-control">
-                </div>
-                <div class="form-group">
-                    <label for="rating-three">3</label>
-                    <input type="radio" name="rating" value="3" id="rating-three" class="rating-value form-control">
-                </div>
-                <div class="form-group">
-                    <label for="rating-four">4</label>
-                    <input type="radio" name="rating" value="4" id="rating-four" class="rating-value form-control">
-                </div>
-                <div class="form-group">
-                    <label for="rating-five">5</label>
-                    <input type="radio" name="rating" value="5" id="rating-five" class="rating-value form-control">
-                </div>
-            </form>
+        <div class="pull-right">
+            <span>Rate with </span>
+            <a href="{{ path('rate_post', {'id': post.id, 'rating': 1}) }}" class="btn-sm btn-default rating-value">1</a>
+            <a href="{{ path('rate_post', {'id': post.id, 'rating': 2}) }}" class="btn-sm btn-default rating-value">2</a>
+            <a href="{{ path('rate_post', {'id': post.id, 'rating': 3}) }}" class="btn-sm btn-default rating-value">3</a>
+            <a href="{{ path('rate_post', {'id': post.id, 'rating': 4}) }}" class="btn-sm btn-default rating-value">4</a>
+            <a href="{{ path('rate_post', {'id': post.id, 'rating': 5}) }}" class="btn-sm btn-default rating-value">5</a>
+            <span> Starts</span>
         </div>
     </div>
     <script>
         $(document).ready(function () {
-            $('#rating-form').find('input:radio').on('click', function (e) {
-                var rating = $(this).val();
+            $('.rating-value').on('click', function (e) {
+                e.preventDefault();
 
-                var url = $('#rating-form').attr('action');
-                $.getJSON(url, {rating: rating}).done(function (data) {
+                var url = $(this).attr('href');
+                $.getJSON(url, {}, function (data) {
                     $('.post-rating').html(data.rating);
-                    console.log(data);
                 });
+
+                return false;
             });
         });
     </script>

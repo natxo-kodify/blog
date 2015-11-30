@@ -65,21 +65,13 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     {
         $session = $this->getSession();
         $dom = $session->getPage();
-        $selectNode = $dom->find('css', '[name=rating]');
-        $selectNode->selectOption($rating);
+        $ratingButtonNode = $dom->findAll('css', '.rating-value');
+        foreach ($ratingButtonNode as $node) {
+            if ((integer)$node->getText() === (integer)$rating) {
+                $node->click();
+            }
+        }
     }
-
-    /**
-     * @Then I should see :rating in post rating
-     */
-    public function iShouldSeeInPostRating($rating)
-    {
-        $session = $this->getSession();
-        $dom = $session->getPage();
-        $ratingNode = $dom->find('css', '.post-rating');
-        PHPUnit::assertEquals($rating, $ratingNode->getText());
-    }
-
 
     /**
      * @Then the post with title :title should have a comment with the text :text
