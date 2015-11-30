@@ -38,7 +38,8 @@ class AuthorsController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $this->get('tactician.commandbus')->handle($createUserCommand);
-            $parameters['message'] = 'Author Created!';
+            $this->get('session')->getFlashBag()->add('success', 'Author created!');
+            return $this->redirectToRoute('authors');
         }
 
         $parameters = [

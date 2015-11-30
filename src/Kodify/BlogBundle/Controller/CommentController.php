@@ -37,6 +37,7 @@ class CommentController extends Controller
 
             $postId = $comment->getPost()->getId();
 
+            $this->get('session')->getFlashBag()->add('success', 'Comment created!');
             return $this->redirectToRoute('view_post', ['id' => $postId]);
         }
 
