@@ -60,6 +60,12 @@ class Post extends AbstractBaseEntity
      */
     private $ratings;
 
+    /**
+     * @var integer
+     * @ORM\Column(name="currentRating", type="integer", options={"default"=0})
+     */
+    private $currentRating = 0;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -159,6 +165,7 @@ class Post extends AbstractBaseEntity
      */
     public function addComment(Comment $comment)
     {
+        $comment->setPost($this);
         $this->comments->add($comment);
 
         return $this;
@@ -189,7 +196,10 @@ class Post extends AbstractBaseEntity
      */
     public function addRating(PostRating $rating)
     {
+        $rating->setPost($this);
         $this->ratings->add($rating);
+
+        $this->updateRating();
 
         return $this;
     }
@@ -205,7 +215,18 @@ class Post extends AbstractBaseEntity
         return $this;
     }
 
+    /**
+     * @return integer
+     */
     public function rating()
+    {
+        return $this->currentRating;
+    }
+
+    /**
+     * @return integer
+     */
+    private function updateRating()
     {
         $timesRated = $this->ratings->count();
         if($timesRated === 0){
@@ -218,6 +239,6 @@ class Post extends AbstractBaseEntity
             $currentRating += $rating->getValue();
         }
 
-        return floor($currentRating / $timesRated);
+        $this->currentRating = floor($currentRating / $timesRated);
     }
 }
