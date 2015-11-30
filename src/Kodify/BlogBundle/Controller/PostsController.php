@@ -13,9 +13,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PostsController extends Controller
 {
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $posts      = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
+        $postRepository = $this->get('kodify.repository.post');
+        switch($request->query->get('order')){
+            case 'rating':
+                $posts = $postRepository->bestRated();
+                break;
+            default:
+                $posts = $postRepository->latest();
+        }
+
         $template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
         if (count($posts)) {

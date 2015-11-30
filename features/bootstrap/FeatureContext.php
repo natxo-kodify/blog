@@ -1,6 +1,5 @@
 <?php
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\TableNode;
@@ -60,45 +59,27 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
 
     /**
-     * @Given Post with title :title has a mean rating of :rating
+     * @When I give the post a rating of :rating
      */
-    public function postWithTitleHasAMeanRatingOf($title, $rating)
+    public function iGiveThePostARatingOf($rating)
     {
-        $postRepository = $this->getContainer()->get('kodify.repository.post');
-        /** @var \Kodify\BlogBundle\Entity\Post $post */
-        $post = $postRepository->findOneBy(['title' => $title]);
-
-        if(!$post) {
-            throw new \InvalidArgumentException(sprintf('Not matching post for title %s', $title));
-        }
-
-        PHPUnit::assertEquals($post->getCurrentRating(), $rating);
+        $session = $this->getSession();
+        $dom = $session->getPage();
+        $selectNode = $dom->find('css', '[name=rating]');
+        $selectNode->selectOption($rating);
     }
 
     /**
-     * @Then Posts should be ordered by date
+     * @Then I should see :rating in post rating
      */
-    public function postsShouldBeOrderedByDate()
+    public function iShouldSeeInPostRating($rating)
     {
-        $postRepository = $this->getContainer()->get('kodify.repository.post');
-        $posts = $postRepository->latest();
-
-        /** @var \Kodify\BlogBundle\Entity\Post|null $current */
-        $current = null;
-        /** @var \Kodify\BlogBundle\Entity\Post $post */
-        foreach ($posts as $post) {
-            if($current === null) {
-                $current = $post;
-                continue;
-            }
-
-            if($current->getCreatedAt() >= $post->getCreatedAt()){
-                return false;
-            }
-        }
-
-        return true;
+        $session = $this->getSession();
+        $dom = $session->getPage();
+        $ratingNode = $dom->find('css', '.post-rating');
+        PHPUnit::assertEquals($rating, $ratingNode->getText());
     }
+
 
     /**
      * @Then the post with title :title should have a comment with the text :text
@@ -114,13 +95,71 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
     }
 
     /**
-     * @When I give the post a rating of :rating
+     * @Given Post with title :title has a mean rating of :rating
      */
-    public function iGiveThePostARatingOf($rating)
+    public function postWithTitleHasAMeanRatingOf($title, $rating)
     {
         $session = $this->getSession();
-        $element = $session->getPage()->find('css', '[name=rating][value=' . $rating . ']');
-        $element->isChecked();
+        $dom = $session->getPage();
+        $postPanelNodes = $dom->findAll('css', '.post-panel');
+
+        /** @var \Behat\Mink\Element\NodeElement $title */
+        foreach ($postPanelNodes as $panelNode) {
+            $titleNode = $panelNode->find('css', '.post-title');
+            if($titleNode->getText() != $title){
+                continue;
+            }
+            $ratingNode = $panelNode->find('css', '.post-rating');
+            PHPUnit::assertEquals($ratingNode->getText(), $rating);
+        }
+        return false;
+    }
+
+    /**
+     * @Then Posts should be ordered by date
+     */
+    public function postsShouldBeOrderedByDate()
+    {
+        $session = $this->getSession();
+        $dom = $session->getPage();
+        $postPanelNodes = $dom->findAll('css', '.post-panel');
+
+        $previousPostDate = null;
+        /** @var \Behat\Mink\Element\NodeElement $title */
+        foreach ($postPanelNodes as $panelNode) {
+            $dateNode = $panelNode->find('css', '.post-date');
+            if($previousPostDate === null) {
+                $previousPostDate = new \DateTime($dateNode->getText());
+                continue;
+            }
+            $currentPostDate = new \DateTime($dateNode->getText());
+            if($previousPostDate < $currentPostDate){
+                throw new \Exception('Incorrect order posts order');
+            }
+        }
+    }
+
+    /**
+     * @Then Post with title :afterTitle is after post with title :beforeTitle
+     */
+    public function postWithTitleIsAfterPostWithTitle($afterTitle, $beforeTitle)
+    {
+        $session = $this->getSession();
+        $dom = $session->getPage();
+        $postPanelNodes = $dom->findAll('css', '.post-panel');
+
+        $isBeforeFind = false;
+        /** @var \Behat\Mink\Element\NodeElement $panelNode */
+        foreach ($postPanelNodes as $panelNode) {
+            $titleNode = $panelNode->find('css', '.post-title');
+            if($titleNode->getText() == $beforeTitle){
+                $isBeforeFind = true;
+                continue;
+            }
+            if(!$isBeforeFind && $titleNode->getText() == $afterTitle) {
+                throw new \Exception('Incorrect order posts order');
+            }
+        }
     }
 
     /**
@@ -188,14 +227,15 @@ class FeatureContext extends RawMinkContext implements Context, SnippetAccepting
         $em = $container->get('doctrine')->getManager();
         foreach ($ratings as $row) {
             $postRepository = $container->get('kodify.repository.post');
+            /** @var \Kodify\BlogBundle\Entity\Post $post */
             $post = $postRepository->findOneBy(['title' => $row['post_title']]);
             if (!$post) {
                 throw new \InvalidArgumentException();
             }
             $rating = new \Kodify\BlogBundle\Entity\PostRating();
-            $rating->setPost($post);
             $rating->setValue($row['rating']);
-            $em->persist($rating);
+            $post->addRating($rating);
+            $em->persist($post);
         }
         $em->flush();
     }

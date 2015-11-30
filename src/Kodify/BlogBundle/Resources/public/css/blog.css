@@ -48,3 +48,7 @@ label {
     width: auto;
     vertical-align: middle;
 }
+
+.order-menu {
+    margin-bottom: 10px;
+}
