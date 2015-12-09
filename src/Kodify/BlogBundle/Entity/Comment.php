@@ -30,13 +30,6 @@ class Comment
     private $text;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="postTitle", type="text")
-     */
-    private $postTitle;
-
-    /**
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Author", inversedBy="comments")
@@ -44,6 +37,13 @@ class Comment
      */
     private $author;
 
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
+     * @ORM\JoinColumn(name="postId", referencedColumnName="id")
+     */
+    private $post;
 
     /**
      * Get id
@@ -79,32 +79,9 @@ class Comment
     }
 
     /**
-     * Set postTitle
-     *
-     * @param string $postTitle
-     * @return Comment
-     */
-    public function setPostTitle($postTitle)
-    {
-        $this->postTitle = $postTitle;
-
-        return $this;
-    }
-
-    /**
-     * Get postTitle
-     *
-     * @return string 
-     */
-    public function getPostTitle()
-    {
-        return $this->postTitle;
-    }
-
-    /**
      * Set author
      *
-     * @param integer $author
+     * @param \Kodify\BlogBundle\Entity\Author $author
      * @return Comment
      */
     public function setAuthor($author)
@@ -122,5 +99,28 @@ class Comment
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * Set post
+     *
+     * @param \Kodify\BlogBundle\Entity\Post $post
+     * @return Comment
+     */
+    public function setPost(\Kodify\BlogBundle\Entity\Post $post = null)
+    {
+        $this->post = $post;
+
+        return $this;
+    }
+
+    /**
+     * Get post
+     *
+     * @return \Kodify\BlogBundle\Entity\Post 
+     */
+    public function getPost()
+    {
+        return $this->post;
     }
 }

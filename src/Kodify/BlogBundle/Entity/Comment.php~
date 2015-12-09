@@ -30,19 +30,20 @@ class Comment
     private $text;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="post title", type="text")
+     * @ORM\ManyToOne(targetEntity="Author", inversedBy="comments")
+     * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
-    private $postTitle;
+    private $author;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="author", type="integer")
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
+     * @ORM\JoinColumn(name="postId", referencedColumnName="id")
      */
-    private $author;
-
+    private $post;
 
     /**
      * Get id
