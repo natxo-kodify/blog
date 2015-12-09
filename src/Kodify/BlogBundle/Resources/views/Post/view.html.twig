@@ -11,11 +11,18 @@
         </div>
         <div class="panel-footer">
             {% if (comments) %}
+                <ul>
                 {% for comment in comments %}
+                    <li><b>{{ comment.text }}</b> - Commented by: <b>{{ comment.author.name }}</b></li>
                 {% endfor %}
+                </ul>
             {% else %}
                 {{ 'There are no comments for this post. Create some!' }}
             {% endif %}
+            <hr>
+            <div>
+                <a href="{{ path('create_post_comment',{id: post.id}) }}">Create a comment</a>
+            </div>
         </div>
     </div>
 {% endblock %}
