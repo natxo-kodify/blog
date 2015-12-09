@@ -20,7 +20,7 @@ abstract class AbstractBaseRepository extends EntityRepository
             $limit = static::LIST_DEFAULT_LIMIT;
         }
 
-        return $this->findBy([], ['createdAt' => 'DESC'], $limit, $offset);
+        return $this->findBy([], [], $limit, $offset);
     }
 
 

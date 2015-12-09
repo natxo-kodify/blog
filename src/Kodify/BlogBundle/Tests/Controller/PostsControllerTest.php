@@ -65,7 +65,7 @@ class PostsControllerTest extends BaseFunctionalTest
 
     public function testViewPostWithComments()
     {
-        $this->createPostsWithComments(2, 1);
+        $this->createComments(2, 1);
         $crawler = $this->client->request('GET', '/post/1');
         $this->assertTextNotFound($crawler, 'There are no comments for this post. Create some!');
         $this->assertTextFound($crawler, 'Commented by:');

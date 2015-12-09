@@ -6,7 +6,7 @@
         <div class="panel panel-default col-md-6">
             <div class="panel-heading">
                 <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
-                <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
+                <span class="pull-right">by: {{ post.author.name }}</span>
             </div>
             <div class="panel-body">
                 {{ post.content }}
