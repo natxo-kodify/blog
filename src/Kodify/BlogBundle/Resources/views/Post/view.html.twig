@@ -4,10 +4,25 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
-            <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
+            <span class="pull-right">by: {{ post.author.name }}</span>
         </div>
         <div class="panel-body">
             {{ post.content }}
+        </div>
+        <div class="panel-footer">
+            {% if (comments) %}
+                <ul>
+                {% for comment in comments %}
+                    <li><b>{{ comment.text }}</b> - Commented by: <b>{{ comment.author.name }}</b></li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                {{ 'There are no comments for this post. Create some!' }}
+            {% endif %}
+            <hr>
+            <div>
+                <a href="{{ path('create_post_comment', {post: post.id}) }}">Create a comment</a>
+            </div>
         </div>
     </div>
 {% endblock %}
