@@ -10,7 +10,7 @@ Feature: Comments
       | over             |
       | rainbow          |
     
-    And the following posts exist:
+    And the following posts exist: 
       | title     | content      | author  |
       | way       | up high      | someone |
       | land      | I heard of   | over    |

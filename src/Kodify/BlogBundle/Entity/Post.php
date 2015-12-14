@@ -41,10 +41,15 @@ class Post extends AbstractBaseEntity
 
     /**
      * @Assert\NotBlank()
-     * @ORM\ManyToOne(targetEntity="Author", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Author")
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
     protected $author;
+    
+    /**
+     * @var int
+     */
+    private $rating;
 
     /**
      * Get id
@@ -77,6 +82,29 @@ class Post extends AbstractBaseEntity
     public function getTitle()
     {
         return $this->title;
+    }
+    
+    /**
+     * Set rating
+     *
+     * @param int $rating
+     * @return Post
+     */
+    public function setRating($rating)
+    {
+    	$this->rating = $rating;
+    
+    	return $this;
+    }
+    
+    /**
+     * Get rating
+     *
+     * @return int
+     */
+    public function getRating()
+    {
+    	return $this->rating;
     }
 
     /**

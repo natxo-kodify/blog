@@ -1,17 +1,31 @@
 {% extends 'KodifyBlogBundle::base.html.twig' %}
 
 {% block content %}
-
+    <div class="row">
+   		<div class="col-xs-12">
+		<p>order by: <a href="{{ app.request.getBaseURL() }}?rating=1">rating</a> | <a href="{{ app.request.getBaseURL() }}">date</a></p>
+		</div>
+	</div>
+    <div class="row">
+	{% set x = 0 %}
     {% for post in posts %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
-                <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
-            </div>
-            <div class="panel-body">
-                {{ post.content }}
-            </div>
+    	<div class="col-md-6 col-sm-6 col-xs-12">
+	        <div class="panel panel-default">
+	            <div class="panel-heading">
+	                <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
+	                <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
+	                <span class="pull-right ratings">rating: <span class="rating_num">{% if post.rating == 0 %}there are no ratings{% else %}{{ post.rating }}{% endif %}</span> | </span>
+	            </div>
+	            <div class="panel-body">
+	                {{ post.content }}
+	            </div>
+	        </div>
         </div>
+        {% if (x+1)%2 == 0 %}
+	</div>
+	<div class="row">
+        {% endif %}
+        {% set x = x + 1 %} 
     {% endfor %}
-
+	</div>
 {% endblock %}
