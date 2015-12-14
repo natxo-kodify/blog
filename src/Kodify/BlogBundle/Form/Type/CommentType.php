@@ -9,7 +9,6 @@ class CommentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('author')
             ->add('text')
             ->add('create comment', 'submit', ['attr' => ['class' => 'btn btn-success']]);
     }

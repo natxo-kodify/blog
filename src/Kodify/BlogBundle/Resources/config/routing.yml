@@ -10,6 +10,9 @@ create_post:
 view_post:
     path:     /posts/{id}
     defaults: { _controller: KodifyBlogBundle:Posts:view }
+rate_post:
+    path:     /rate_post
+    defaults: { _controller: KodifyBlogBundle:Rating:create }
 create_author:
     path:     /authors/create
     defaults: { _controller: KodifyBlogBundle:Authors:create }
@@ -19,3 +22,11 @@ create_comment:
     requirements:
         _method:  POST
         postId: \d+
+login:
+    path:     /login
+    defaults: { _controller: KodifyBlogBundle:Security:login }
+login_check:
+    path:     /security/login_check
+    defaults: { _controller: KodifyBlogBundle:Security:loginCheck }
+    requirements:
+        _method:  POST

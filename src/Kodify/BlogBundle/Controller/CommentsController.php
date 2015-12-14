@@ -12,20 +12,19 @@ class CommentsController extends Controller
 
     public function createAction(Request $request)
     {
-        $post = $this->getPost($request->query->get('postId'));
-
+        $post = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($request->query->get('postId'));
+        $user = $this->get('security.context')->getToken()->getUser();
+        $author = $this->getDoctrine()->getRepository('KodifyBlogBundle:Author')->findOneByName($user->getUsername());
         $comment  = new Comment();
         $comment->setPost($post);
+        $comment->setAuthor($author);
         $request = $this->getRequest();
-        $form    = $this->createForm(new CommentType(), $comment);
+        $form = $this->createForm(new CommentType(), $comment);
         $form->bind($request);
-
         if ($form->isValid()) {
-
         	$em = $this->getDoctrine()->getManager();
         	$em->persist($comment);
-        	$em->flush();
-        	
+        	$em->flush();        	
             return $this->redirect($this->generateUrl('view_post', array('id' => $comment->getPost()->getId())));
         } else {
         	die($form->getErrorsAsString());
@@ -33,15 +32,4 @@ class CommentsController extends Controller
 
     }
 
-    protected function getPost($postId)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $post = $em->getRepository('KodifyBlogBundle:Post')->find($postId);
-
-        if (!$post) {
-            throw $this->createNotFoundException('Unable to find Post.');
-        }
-
-        return $post;
-    }
 }

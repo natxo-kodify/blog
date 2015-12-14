@@ -1,14 +1,17 @@
 {# src/Kodify/BlogBundle/Resources/views/Comment/List/index.html.twig #}
 
 {% if comments|length > 0 %}
-    {% for comment in comments %}
-    	<div class="col-xs-12">
-	        <div class="comment-box">
-	        	{{ comment.text }}
-				<span class="pull-right">by: {{ comment.author.name }} on: {{ comment.createdAt|date("m/d/Y") }}</span>
-			</div>
-        </div>
-    {% endfor %}
-	{% else %}
-	<div class="alert alert-warning" role="alert">there are no comments</div>
+    <div class="row">
+	    {% for comment in comments %}
+	    	<div class="col-xs-12">
+		        <div class="comment-box">
+		        	{{ comment.text }}
+					<span class="pull-right">by: {{ comment.author.name }} on: {{ comment.createdAt|date("m/d/Y") }}</span>
+				</div>
+	        	<hr>
+	        </div>
+	    {% endfor %}
+		{% else %}
+		<div class="alert alert-warning" role="alert">there are no comments</div>
+	</div>
 {% endif %}

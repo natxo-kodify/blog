@@ -6,13 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Comment
+ * Rating
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\CommentRepository")
+ * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\RatingRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class Comment extends AbstractBaseEntity
+class Rating extends AbstractBaseEntity
 {
     /**
      * @var integer
@@ -22,14 +22,6 @@ class Comment extends AbstractBaseEntity
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @var string
-     * 
-     * @Assert\NotBlank()
-     * @ORM\Column(name="text", type="text")
-     */
-    private $text;
 
     /**
      * @Assert\NotBlank()
@@ -44,6 +36,14 @@ class Comment extends AbstractBaseEntity
      * @ORM\JoinColumn(name="postId", referencedColumnName="id")
      */
     protected $post;
+    
+    /**
+     * @var int
+     *
+     * @Assert\NotBlank()
+     * @ORM\Column(name="rating", type="integer")
+     */
+    private $rating;
 
     /**
      * Get id
@@ -54,28 +54,29 @@ class Comment extends AbstractBaseEntity
     {
         return $this->id;
     }
+    
 
     /**
-     * Set text
+     * Set Rating
      *
-     * @param string $text
-     * @return Comment
+     * @param int $rating
+     * @return Rating
      */
-    public function setText($text)
+    public function setRating($rating)
     {
-        $this->text = $text;
-
-        return $this;
+    	$this->rating = $rating;
+    
+    	return $this;
     }
-
+    
     /**
-     * Get text
+     * Get Rating
      *
-     * @return string
+     * @return int
      */
-    public function getText()
+    public function getRating()
     {
-        return $this->text;
+    	return $this->rating;
     }
     
     /**

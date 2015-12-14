@@ -10,4 +10,19 @@ namespace Kodify\BlogBundle\Repository;
  */
 class PostRepository extends AbstractBaseRepository
 {
+	public function getPostsOrderBy()
+	{
+		$sSQL = "SELECT post.*, SUM(rating) as rating FROM post
+		LEFT JOIN rating ON post.id = rating.postId
+		GROUP BY post.id
+		ORDER BY rating DESC";
+		$_posts = $this->getEntityManager()->getConnection()->executeQuery($sSQL)->fetchAll();
+		$posts = array();
+		if(!empty($_posts)){
+			foreach($_posts as $post){
+				array_push($posts, $this->find($post['id']));
+			}
+		}
+		return $posts;
+	}
 }

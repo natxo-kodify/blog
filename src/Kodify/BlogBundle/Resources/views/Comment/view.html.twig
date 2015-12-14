@@ -1,8 +1,10 @@
 {% extends 'KodifyBlogBundle::base.html.twig' %}
 
 {% block text %}
-	<div class="col-xs-12">
-		{{ comment.text }}
-		<span class="pull-right">by: {{ comment.author.name }} on: {{ comment.createdAt|date("m/d/Y") }}</span>
+    <div class="row">
+		<div class="col-xs-12">
+			{{ comment.text }}
+			<span class="pull-right">by: {{ comment.author.name }} on: {{ comment.createdAt|date("m/d/Y") }}</span>
+	    </div>
     </div>
 {% endblock %}

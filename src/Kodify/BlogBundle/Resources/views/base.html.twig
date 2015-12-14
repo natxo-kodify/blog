@@ -14,6 +14,11 @@
             <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
             {% endstylesheets %}
             <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.min.css" rel="stylesheet">
+            {% javascripts
+			    'bundles/kodifyblog/js/app.js'
+			    output='bundles/kodifyblog/js/compiled/app.js' %}
+			    <script src="{{ asset_url }}"></script>
+			{% endjavascripts %}
         {% endblock head_style %}
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
@@ -26,9 +31,7 @@
     {% block breadcrumbs %}
         {% include 'KodifyBlogBundle::Layout/breadcrumbs.html.twig' %}
     {% endblock %}
-    <div class="row">
     {% block content %}{% endblock %}
-    </div>
 </div>
 {% block javascripts %}
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
