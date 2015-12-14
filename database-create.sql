@@ -53,6 +53,20 @@ CREATE TABLE IF NOT EXISTS `post` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
+
+
+-- Dumping structure for table symfony.rating
+CREATE TABLE IF NOT EXISTS `rating` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `authorId` int(10) unsigned NOT NULL,
+  `postId` int(10) unsigned NOT NULL,
+  `rating` tinyint(3) unsigned NOT NULL,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
