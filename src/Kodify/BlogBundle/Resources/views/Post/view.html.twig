@@ -23,6 +23,6 @@
     </div>
 
     <div class="add-comments">
-        <a href="{{ path('create_comment') }}">Add Comment</a>
+        <a href="{{ path('create_comment',{'post_id': post.id}) }}">Add Comment</a>
     </div>
 {% endblock %}
