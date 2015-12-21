@@ -13,9 +13,15 @@ class CommentController extends Controller
 {
     public function createAction($postId, Request $request)
     {
+        $post = $this->getDoctrine()
+            ->getRepository('KodifyBlogBundle:Post')
+            ->find($postId);
+        $comment = new Comment();
+        $comment->setPost($post);
+
         $form = $this->createForm(
             new CommentType(),
-            new Comment(),
+            $comment,
             [
                 'action' => $this->generateUrl('create_comment', array('postId' => $postId)),
                 'method' => 'POST',
@@ -32,8 +38,8 @@ class CommentController extends Controller
             $this->getDoctrine()->getManager()->persist($comment);
             $this->getDoctrine()->getManager()->flush();
             $parameters['message'] = 'Comment Created!';
-        } else {
-            $parameters['message'] = 'Error creating the comment!';
+        } elseif ($form->isSubmitted()) {
+            $parameters['message'] = 'Error creating the comment! ';
         }
 
         return $this->render('KodifyBlogBundle:Default:create.html.twig', $parameters);
