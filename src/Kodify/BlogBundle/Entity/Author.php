@@ -35,11 +35,17 @@ class Author extends AbstractBaseEntity
     protected $videos;
 
     /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="author", cascade={"persist"})
+     */
+    protected $comments;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->videos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function __toString()
@@ -111,5 +117,15 @@ class Author extends AbstractBaseEntity
     public function getVideos()
     {
         return $this->videos;
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }
