@@ -28,9 +28,11 @@ class PostsController extends Controller
         if (!$currentPost instanceof Post) {
             throw $this->createNotFoundException('Post not found');
         }
+        $commentsForPost = $currentPost->getComments();
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
+            'comments'    => $commentsForPost,
         ];
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
