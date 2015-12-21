@@ -41,7 +41,7 @@ class Post extends AbstractBaseEntity
 
     /**
      * @Assert\NotBlank()
-     * @ORM\ManyToOne(targetEntity="Author", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Author", inversedBy="videos")
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
     protected $author;
@@ -169,5 +169,10 @@ class Post extends AbstractBaseEntity
     public function getComments()
     {
         return $this->comments;
+    }
+
+    public function __toString()
+    {
+        return $this->title;
     }
 }
