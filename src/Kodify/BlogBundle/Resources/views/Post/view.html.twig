@@ -10,4 +10,13 @@
             {{ post.content }}
         </div>
     </div>
+
+    <div class="comments">
+        {% for comment in comments %}
+            <span class="comment">by: {{ comment.text|escape }}</span>
+            <span class="pull-right comment-author">by: {{ comment.author.name }}</span>
+        {% else %}
+            There are no comments!
+        {% endfor %}
+    </div>
 {% endblock %}
