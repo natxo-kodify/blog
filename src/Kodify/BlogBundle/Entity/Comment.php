@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Entity\CommentRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Comment extends AbstractBaseEntity
 {
