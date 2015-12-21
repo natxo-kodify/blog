@@ -2,8 +2,6 @@
 
 namespace Kodify\BlogBundle\Tests\Controller;
 
-use Kodify\BlogBundle\Entity\Post;
-use Kodify\BlogBundle\Entity\Author;
 use Kodify\BlogBundle\Tests\BaseFunctionalTest;
 
 class PostsControllerTest extends BaseFunctionalTest
@@ -44,7 +42,7 @@ class PostsControllerTest extends BaseFunctionalTest
         $this->assertTextFound($crawler, 'Post not found', 1);
     }
 
-    public function testViewPost()
+    public function testViewPostWithoutComments()
     {
         $this->createPosts(2);
         $crawler = $this->client->request('GET', '/posts/1');
@@ -52,22 +50,16 @@ class PostsControllerTest extends BaseFunctionalTest
         $this->assertTextFound($crawler, 'Content0');
         $this->assertTextNotFound($crawler, 'Title1');
         $this->assertTextNotFound($crawler, 'Content1');
+        $this->assertTextFound($crawler, 'There are no comments!');
     }
 
-    protected function createPosts($count)
+    public function testViewPostWithComments()
     {
-        $author = new Author();
-        $author->setName('Author');
-        $this->entityManager()->persist($author);
-        $this->entityManager()->flush();
-        for ($i = 0; $i < $count; ++$i) {
-            $post = new Post();
-            $post->setTitle('Title' . $i);
-            $post->setContent('Content' . $i);
-            $post->setAuthor($author);
-            $this->entityManager()->persist($post);
-        }
-        $this->entityManager()->flush();
+        $post = $this->createPosts(1)[0];
+        $this->addCommentToPost($post, 1);
+        $crawler = $this->client->request('GET', '/posts/' . $post->getId());
+        $this->assertTextNotFound($crawler, 'There are no comments!', $crawler->html());
+        $this->assertEquals(count($crawler->filter('div.comment')), 1);
     }
 
     public function countDataProvider()

@@ -10,4 +10,19 @@
             {{ post.content }}
         </div>
     </div>
+
+    <div class="comments">
+        {% for comment in comments %}
+            <div class="comment">
+                <span class="comment">comment: {{ comment.text|escape }}</span>
+                <span class="pull-right comment-author">by: {{ comment.author.name }}</span>
+            </div>
+        {% else %}
+            There are no comments!
+        {% endfor %}
+    </div>
+
+    <div class="add-comments">
+        <a href="{{ path('create_comment',{'postId': post.id}) }}">Add Comment</a>
+    </div>
 {% endblock %}
