@@ -17,3 +17,8 @@ label {
 .thumbnail img {
     height: 200px;
 }
+
+.list-post {
+    width: 50%;
+    float: left;
+}
