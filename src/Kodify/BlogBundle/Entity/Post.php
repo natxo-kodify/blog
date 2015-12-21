@@ -47,7 +47,7 @@ class Post extends AbstractBaseEntity
     protected $author;
 
     /**
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="comment")
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post")
      */
     protected $comments;
 
