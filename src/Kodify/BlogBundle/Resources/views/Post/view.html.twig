@@ -13,8 +13,10 @@
 
     <div class="comments">
         {% for comment in comments %}
-            <span class="comment">by: {{ comment.text|escape }}</span>
-            <span class="pull-right comment-author">by: {{ comment.author.name }}</span>
+            <div class="comment">
+                <span class="comment">comment: {{ comment.text|escape }}</span>
+                <span class="pull-right comment-author">by: {{ comment.author.name }}</span>
+            </div>
         {% else %}
             There are no comments!
         {% endfor %}
