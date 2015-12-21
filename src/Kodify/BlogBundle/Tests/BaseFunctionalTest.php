@@ -2,6 +2,9 @@
 
 namespace Kodify\BlogBundle\Tests;
 
+use Kodify\BlogBundle\Entity\Post;
+use Kodify\BlogBundle\Entity\Author;
+use Kodify\BlogBundle\Entity\Comment;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class BaseFunctionalTest extends WebTestCase
@@ -72,4 +75,43 @@ class BaseFunctionalTest extends WebTestCase
 
         return $this->assertTextFound($crawler, $text, 0, $message);
     }
+
+    protected function createPosts($count)
+    {
+        $author = new Author();
+        $author->setName('Author');
+        $this->entityManager()->persist($author);
+        $this->entityManager()->flush();
+        $posts = [];
+        for ($i = 0; $i < $count; ++$i) {
+            $post = new Post();
+            $post->setTitle('Title' . $i);
+            $post->setContent('Content' . $i);
+            $post->setAuthor($author);
+            $this->entityManager()->persist($post);
+            $posts[] = $post;
+        }
+        $this->entityManager()->flush();
+
+        return $posts;
+    }
+
+    protected function addCommentToPost($post, $count)
+    {
+        $author = new Author();
+        $author->setName('Author');
+        $this->entityManager()->persist($author);
+        $this->entityManager()->flush();
+        for ($i = 0; $i < $count; ++$i) {
+            $comment = new Comment();
+            $comment->setText('Comment ' . $i);
+            $comment->setPost($post);
+            $comment->setAuthor($author);
+            $this->entityManager()->persist($comment);
+            $this->entityManager()->refresh($post);
+        }
+        $this->entityManager()->flush();
+    }
+
+
 }

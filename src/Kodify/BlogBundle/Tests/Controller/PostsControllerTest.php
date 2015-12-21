@@ -2,9 +2,6 @@
 
 namespace Kodify\BlogBundle\Tests\Controller;
 
-use Kodify\BlogBundle\Entity\Post;
-use Kodify\BlogBundle\Entity\Author;
-use Kodify\BlogBundle\Entity\Comment;
 use Kodify\BlogBundle\Tests\BaseFunctionalTest;
 
 class PostsControllerTest extends BaseFunctionalTest
@@ -63,43 +60,6 @@ class PostsControllerTest extends BaseFunctionalTest
         $crawler = $this->client->request('GET', '/posts/' . $post->getId());
         $this->assertTextNotFound($crawler, 'There are no comments!', $crawler->html());
         $this->assertEquals(count($crawler->filter('div.comment')), 1);
-    }
-
-    protected function createPosts($count)
-    {
-        $author = new Author();
-        $author->setName('Author');
-        $this->entityManager()->persist($author);
-        $this->entityManager()->flush();
-        $posts = [];
-        for ($i = 0; $i < $count; ++$i) {
-            $post = new Post();
-            $post->setTitle('Title' . $i);
-            $post->setContent('Content' . $i);
-            $post->setAuthor($author);
-            $this->entityManager()->persist($post);
-            $posts[] = $post;
-        }
-        $this->entityManager()->flush();
-
-        return $posts;
-    }
-
-    protected function addCommentToPost($post, $count)
-    {
-        $author = new Author();
-        $author->setName('Author');
-        $this->entityManager()->persist($author);
-        $this->entityManager()->flush();
-        for ($i = 0; $i < $count; ++$i) {
-            $comment = new Comment();
-            $comment->setText('Comment ' . $i);
-            $comment->setPost($post);
-            $comment->setAuthor($author);
-            $this->entityManager()->persist($comment);
-            $this->entityManager()->refresh($post);
-        }
-        $this->entityManager()->flush();
     }
 
     public function countDataProvider()
