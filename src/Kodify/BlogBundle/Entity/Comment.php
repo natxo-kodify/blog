@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Entity\CommentRepository")
  */
-class Comment
+class Comment extends AbstractBaseEntity
 {
     /**
      * @var integer
