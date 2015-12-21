@@ -4,6 +4,7 @@ namespace Kodify\BlogBundle\Tests\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\Author;
+use Kodify\BlogBundle\Entity\Comment;
 use Kodify\BlogBundle\Tests\BaseFunctionalTest;
 
 class PostsControllerTest extends BaseFunctionalTest
@@ -44,7 +45,7 @@ class PostsControllerTest extends BaseFunctionalTest
         $this->assertTextFound($crawler, 'Post not found', 1);
     }
 
-    public function testViewPost()
+    public function testViewPostWithoutComments()
     {
         $this->createPosts(2);
         $crawler = $this->client->request('GET', '/posts/1');

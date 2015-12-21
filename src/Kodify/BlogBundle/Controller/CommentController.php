@@ -28,8 +28,8 @@ class CommentController extends Controller
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $post = $form->getData();
-            $this->getDoctrine()->getManager()->persist($post);
+            $comment = $form->getData();
+            $this->getDoctrine()->getManager()->persist($comment);
             $this->getDoctrine()->getManager()->flush();
             $parameters['message'] = 'Comment Created!';
         } else {
