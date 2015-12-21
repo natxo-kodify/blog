@@ -12,7 +12,6 @@ class CommentTypeTest extends TypeTestCase
         $formData = array(
             'text' => 'test',
             'author' => 1,
-            'post' => 2,
         );
         $type     = new CommentType();
         $form     = $this->factory->create($type);
@@ -22,7 +21,6 @@ class CommentTypeTest extends TypeTestCase
         $form->submit($formData);
         $this->assertTrue($form->isSynchronized());
         $this->assertEquals($formData, $form->getData());
-        var_dump($form->getData());
 
         $view     = $form->createView();
         $children = $view->children;
