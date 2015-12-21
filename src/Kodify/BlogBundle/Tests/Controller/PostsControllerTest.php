@@ -53,6 +53,7 @@ class PostsControllerTest extends BaseFunctionalTest
         $this->assertTextFound($crawler, 'Content0');
         $this->assertTextNotFound($crawler, 'Title1');
         $this->assertTextNotFound($crawler, 'Content1');
+        $this->assertTextFound($crawler, 'There are no comments!');
     }
 
     protected function createPosts($count)
