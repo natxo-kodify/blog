@@ -47,6 +47,19 @@ class Post extends AbstractBaseEntity
     protected $author;
 
     /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="comment")
+     */
+    protected $comments;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -123,5 +136,38 @@ class Post extends AbstractBaseEntity
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \Kodify\BlogBundle\Entity\Video $comment
+     * @return Comment
+     */
+    public function addComment(\Kodify\BlogBundle\Entity\Video $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \Kodify\BlogBundle\Entity\Video $comment
+     */
+    public function removeComment(\Kodify\BlogBundle\Entity\Video $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }
