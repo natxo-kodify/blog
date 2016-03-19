@@ -10,4 +10,14 @@
             {{ post.content }}
         </div>
     </div>
+    {% for comment in comments %}
+    	<div class="panel panel-default">
+    		<div class="panel-heading">
+    			Comment by {{ comment.author.name }}
+    		</div>
+    		<div class="panel-body">
+				{{ comment.text }}
+        	</div>
+        </div>
+    {% endfor %}
 {% endblock %}

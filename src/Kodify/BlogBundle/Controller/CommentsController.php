@@ -10,16 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CommentsController extends Controller
 {
-    public function indexAction()
-    {
-        $comments   = $this->getDoctrine()->getRepository('KodifyBlogBundle:Comment')->latest();
-        $template   = 'KodifyBlogBundle:Comment:List/empty.html.twig';
-        $parameters = ['breadcrumbs' => ['home' => 'Home', 'comments' => 'Comments']];
-        if (count($comments)) {
-            $template               = 'KodifyBlogBundle:Comment:List/index.html.twig';
-            $parameters['comments'] = $comments;
-        }
-    }
 
     public function createAction(Request $request)
     {
