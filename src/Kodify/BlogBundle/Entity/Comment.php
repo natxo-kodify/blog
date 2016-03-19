@@ -40,6 +40,13 @@ class Comment extends AbstractBaseEntity
 	protected $author;
 
 	/**
+	 * @Assert\NotBlank()
+	 * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
+	 * @ORM\JoinColumn(name="postId", referencedColumnName="id")
+	 */
+	protected $post;
+
+	/**
 	 * Get id
 	 *
 	 * @return integer
@@ -93,5 +100,28 @@ class Comment extends AbstractBaseEntity
 	public function getAuthor()
 	{
 	    return $this->author;
+	}
+
+	/**
+	 * Set post
+	 *
+	 * @param \Kodify\BlogBundle\Entity\Post $post
+	 * @return Comment
+	 */
+	public function setPost(\Kodify\BlogBundle\Entity\Post $post = null)
+	{
+	    $this->post = $post;
+
+	    return $this;
+	}
+
+	/**
+	 * Get post
+	 *
+	 * @return \Kodify\BlogBundle\Entity\Post
+	 */
+	public function getPost()
+	{
+	    return $this->post;
 	}
 }
