@@ -5,7 +5,7 @@ namespace Kodify\BlogBundle\Controller;
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Form\Type\PostType;
 use Kodify\BlogBundle\Entity\Comment;
-use Kodify\BlogBundle\Form\Type\CommentType;
+use Kodify\BlogBundle\Form\Type\PostCommentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -24,18 +24,40 @@ class PostsController extends Controller
         return $this->render($template, $parameters);
     }
 
-    public function viewAction($id)
+    public function viewAction($id, Request $request)
     {
         $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
-        $comments = $this->getDoctrine()->getRepository('KodifyBlogBundle:Comment')->findBy(array('post' => $id));
         if (!$currentPost instanceof Post) {
             throw $this->createNotFoundException('Post not found');
         }
+
+        $formComment = new Comment();
+        $formComment->setPost($currentPost);
+        $form = $this->createForm(
+            new PostCommentType(),
+            $formComment,
+            [
+                'action' => $this->generateUrl('view_post', array('id' => $id)),
+                'method' => 'POST',
+            ]
+        );
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
-            'comments'    => $comments
+            'form'        => $form->createView()
         ];
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $comment = $form->getData();
+            $this->getDoctrine()->getManager()->persist($comment);
+            $this->getDoctrine()->getManager()->flush();
+            $parameters['message'] = 'Comment Created!';
+        }
+
+        //Get comments after form handling to avoid missing the new ones
+        $comments = $this->getDoctrine()->getRepository('KodifyBlogBundle:Comment')->findBy(array('post' => $id));
+        $parameters['comments'] = $comments;
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
     }

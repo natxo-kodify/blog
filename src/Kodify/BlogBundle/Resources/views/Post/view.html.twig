@@ -20,4 +20,7 @@
         	</div>
         </div>
     {% endfor %}
+    {% block form %}
+    {% include 'KodifyBlogBundle::Post/create.html.twig' %}
+    {% endblock %}
 {% endblock %}
