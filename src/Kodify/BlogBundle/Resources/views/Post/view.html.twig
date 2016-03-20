@@ -19,6 +19,7 @@
     	<div class="panel panel-default">
     		<div class="panel-heading">
     			Comment by {{ comment.author.name }}
+                <span class="pull-right">{{ comment.createdAt|date("m/d/Y")}} at {{ comment.createdAt|date("h:m")}}</span>
     		</div>
     		<div class="panel-body">
 				{{ comment.text }}
