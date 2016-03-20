@@ -14,10 +14,12 @@
         	<ul class="list-group">
         		{% for comment in post.comments %}
         			<li class="list-group-item">
-        				<h3></h3><strong>{{ comment.author.name }}</strong> wrote on {{ comment.createdAt|date("m/d/Y") }}:</h3>
-        				<div>
-        				{{ comment.content }}
-        				</div>
+        				<div><strong>{{ comment.author.name }}</strong> wrote on {{ comment.createdAt|date("m/d/Y") }}:</div>
+        				<div>{{ comment.content }}</div>
+        			</li>
+        		{% else %}
+        			<li class="list-group-item">
+        				There are no comments yet. Be the first to write one!
         			</li>
         		{% endfor %}
         	</ul>

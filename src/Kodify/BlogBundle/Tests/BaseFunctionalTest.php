@@ -17,13 +17,14 @@ class BaseFunctionalTest extends WebTestCase
 
     public function tearDown()
     {
-        $this->cleanDb();
+        //$this->cleanDb();
     }
 
     protected function cleanDb()
     {
         $this->clearTableByName('Author');
         $this->clearTableByName('Post');
+        $this->clearTableByName('Comment');
     }
 
     protected function entityManager()

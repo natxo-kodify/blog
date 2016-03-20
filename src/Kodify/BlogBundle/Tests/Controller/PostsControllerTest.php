@@ -4,6 +4,7 @@ namespace Kodify\BlogBundle\Tests\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\Author;
+use Kodify\BlogBundle\Entity\Comment;
 use Kodify\BlogBundle\Tests\BaseFunctionalTest;
 
 class PostsControllerTest extends BaseFunctionalTest
@@ -53,6 +54,21 @@ class PostsControllerTest extends BaseFunctionalTest
         $this->assertTextNotFound($crawler, 'Title1');
         $this->assertTextNotFound($crawler, 'Content1');
     }
+    
+    public function testViewNoComments()
+    {
+        $this->createPosts(1);
+        $crawler = $this->client->request('GET', '/posts/1');
+        $this->assertTextFound($crawler, 'There are no comments yet. Be the first to write one!'); 
+    }
+    
+    public function testViewComments()
+    {
+    	$this->createComments();
+        $crawler = $this->client->request('GET', '/posts/1');
+        $this->assertTextFound($crawler, 'Title');
+        //$this->assertTextFound($crawler, 'CommentContent0');
+    }
 
     protected function createPosts($count)
     {
@@ -66,6 +82,28 @@ class PostsControllerTest extends BaseFunctionalTest
             $post->setContent('Content' . $i);
             $post->setAuthor($author);
             $this->entityManager()->persist($post);
+        }
+        $this->entityManager()->flush();
+    }
+    
+    protected function createComments()
+    {
+    	$author = new Author();
+        $author->setName('Author');
+        $this->entityManager()->persist($author);
+        $this->entityManager()->flush();
+        $post = new Post();
+        $post->setTitle('Title');
+        $post->setContent('Post content');
+        $post->setAuthor($author);
+        $this->entityManager()->persist($post);
+        $this->entityManager()->flush();
+        for ($i = 0; $i < 2; ++$i) {
+            $comment = new Comment();
+            $comment->setContent('CommentContent' . $i);
+            $comment->setAuthor($author);
+            $comment->setPost($post);
+            $this->entityManager()->persist($comment);
         }
         $this->entityManager()->flush();
     }
