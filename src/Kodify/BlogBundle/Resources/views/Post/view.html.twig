@@ -10,26 +10,26 @@
             {{ post.content }}
         </div>
         <div class="panel-footer">
-        	<h2>Comments</h2>
-        	<ul class="list-group">
-        		{% for comment in post.comments %}
-        			<li class="list-group-item">
-        				<div><strong>{{ comment.author.name }}</strong> wrote on {{ comment.createdAt|date("m/d/Y") }}:</div>
-        				<div>{{ comment.content }}</div>
-        			</li>
-        		{% else %}
-        			<li class="list-group-item">
-        				There are no comments yet. Be the first to write one!
-        			</li>
-        		{% endfor %}
-        	</ul>
-        	
-        	<h3>Write a Comment</h3>
-        	
-        	{{ form_start(commentForm) }}
-        	{{ form_widget(commentForm) }}
-        	<input type="submit" value="Publish" class="btn btn-primary" />
-        	{{ form_end(commentForm) }}
+            <h2>Comments</h2>
+            <ul id="comments" class="list-group">
+                {% for comment in post.comments %}
+                    <li class="list-group-item">
+                        <div><strong>{{ comment.author.name }}</strong> wrote on {{ comment.createdAt|date("m/d/Y") }}:</div>
+                        <div>{{ comment.content }}</div>
+                    </li>
+                {% else %}
+                    <li class="list-group-item">
+                        There are no comments yet. Be the first to write one!
+                    </li>
+                {% endfor %}
+            </ul>
+            
+            <h3>Write a Comment</h3>
+            
+            {{ form_start(commentForm) }}
+            {{ form_widget(commentForm) }}
+            <input type="submit" value="Publish" class="btn btn-primary" />
+            {{ form_end(commentForm) }}
         </div>
     </div>
 {% endblock %}

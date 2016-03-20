@@ -51,7 +51,15 @@ class Post extends AbstractBaseEntity
      * @ORM\OrderBy({"createdAt" = "DESC"})
      */
     protected $comments;
-
+	
+	
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id

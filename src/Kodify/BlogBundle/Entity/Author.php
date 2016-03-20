@@ -44,7 +44,7 @@ class Author extends AbstractBaseEntity
      */
     public function __construct()
     {
-        $this->videos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->posts = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function __toString()

@@ -17,7 +17,7 @@ class BaseFunctionalTest extends WebTestCase
 
     public function tearDown()
     {
-        //$this->cleanDb();
+        $this->cleanDb();
     }
 
     protected function cleanDb()
