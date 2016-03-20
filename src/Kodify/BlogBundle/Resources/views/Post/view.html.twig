@@ -10,6 +10,11 @@
             {{ post.content }}
         </div>
     </div>
+    {% if comments|length %}
+        <p>There are {{ comments|length }} comments</p>
+    {% else %}
+        <p>There are no comments</p>
+    {% endif %}
     {% for comment in comments %}
     	<div class="panel panel-default">
     		<div class="panel-heading">
@@ -20,6 +25,7 @@
         	</div>
         </div>
     {% endfor %}
+    <p>Create comment</p>
     {% block form %}
     {% include 'KodifyBlogBundle::Post/create.html.twig' %}
     {% endblock %}

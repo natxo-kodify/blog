@@ -11,7 +11,7 @@ class PostCommentType extends AbstractType
         $builder
             ->add('text')
             ->add('author')            
-            ->add('save', 'submit', ['attr' => ['class' => 'btn btn-success']]);
+            ->add('publish', 'submit', ['attr' => ['class' => 'btn btn-success']]);
     }
 
     public function getName()
