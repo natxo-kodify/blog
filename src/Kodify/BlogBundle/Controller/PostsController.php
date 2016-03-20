@@ -24,14 +24,23 @@ class PostsController extends Controller
         return $this->render($template, $parameters);
     }
 
-    public function viewAction($id)
+    public function viewAction(Request $request, $id)
     {
         $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
         if (!$currentPost instanceof Post) {
             throw $this->createNotFoundException('Post not found');
         }
-        
-        $commentForm = $this->createForm(new CommentType(), new Comment());
+
+    	$comment = new Comment();
+    	$comment->setPost($currentPost);
+    	$commentForm = $this->createForm(new CommentType(), $comment);
+    	$commentForm->handleRequest($request);
+    	
+    	if($commentForm->isSubmitted() && $commentForm->isValid()){
+            $this->getDoctrine()->getManager()->persist($comment);
+            $this->getDoctrine()->getManager()->flush();
+    	}
+
         
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
@@ -66,5 +75,11 @@ class PostsController extends Controller
         }
 
         return $this->render('KodifyBlogBundle:Default:create.html.twig', $parameters);
+    }
+    
+    
+    public function saveCommentAction(Request $request, $postId)
+    {
+    	
     }
 }
