@@ -21,6 +21,13 @@
         			</li>
         		{% endfor %}
         	</ul>
+        	
+        	<h3>Write a Comment</h3>
+        	
+        	{{ form_start(commentForm) }}
+        	{{ form_widget(commentForm) }}
+        	<input type="submit" value="Post" class="btn btn-primary" />
+        	{{ form_end(commentForm) }}
         </div>
     </div>
 {% endblock %}
