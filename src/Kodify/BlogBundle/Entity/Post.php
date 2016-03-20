@@ -48,6 +48,7 @@ class Post extends AbstractBaseEntity
     
     /**
      * @ORM\OnetoMany(targetEntity="Comment", mappedBy="post", cascade={"persist"})
+     * @ORM\OrderBy({"createdAt" = "DESC"})
      */
     protected $comments;
 
