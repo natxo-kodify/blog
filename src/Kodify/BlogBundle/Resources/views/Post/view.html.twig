@@ -11,7 +11,11 @@
         </div>
     </div>
     {% if comments|length %}
-        <p>There are {{ comments|length }} comments</p>
+        {% if comments|length == 1 %}
+            <p>There is 1 comment</p>
+        {% else %}
+            <p>There are {{ comments|length }} comments</p>
+        {% endif %}
     {% else %}
         <p>There are no comments</p>
     {% endif %}
@@ -28,6 +32,6 @@
     {% endfor %}
     <p>Create comment</p>
     {% block form %}
-    {% include 'KodifyBlogBundle::Post/create.html.twig' %}
+    {% include 'KodifyBlogBundle::Post/createComment.html.twig' %}
     {% endblock %}
 {% endblock %}
