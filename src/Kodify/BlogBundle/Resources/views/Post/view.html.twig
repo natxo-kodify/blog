@@ -10,4 +10,20 @@
             {{ post.content }}
         </div>
     </div>
+    {% block comments %}
+             {% if post.getComment|length > 0 %}
+                   {% for comment in post.getComment %}
+                      <div class="panel-comment panel-default">
+                           <div class="panel-body">
+                               {{ comment.content }}
+                           </div>
+                           <div class="comment-footer">
+                               <span class="pull-right">commented by: {{ comment.author.name }} on: {{ comment.createdAt|date("m/d/Y") }}</span>
+                           </div>
+                      </div>
+                   {% endfor %}
+               {% else %}
+                  <div class="panel-comment panel-default panel-body">There are no comments...</div>
+            {% endif %}
+    {% endblock %}
 {% endblock %}

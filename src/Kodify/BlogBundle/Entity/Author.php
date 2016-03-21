@@ -32,7 +32,12 @@ class Author extends AbstractBaseEntity
     /**
      * @ORM\OneToMany(targetEntity="Post", mappedBy="author", cascade={"persist"})
      */
-    protected $videos;
+    protected $posts;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="author", cascade={"persist"})
+     */
+    protected $comments;
 
     /**
      * Constructor
@@ -78,38 +83,5 @@ class Author extends AbstractBaseEntity
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Add videos
-     *
-     * @param \Kodify\BlogBundle\Entity\Post $videos
-     * @return Author
-     */
-    public function addVideo(\Kodify\BlogBundle\Entity\Post $videos)
-    {
-        $this->videos[] = $videos;
-
-        return $this;
-    }
-
-    /**
-     * Remove videos
-     *
-     * @param \Kodify\BlogBundle\Entity\Post $videos
-     */
-    public function removeVideo(\Kodify\BlogBundle\Entity\Post $videos)
-    {
-        $this->videos->removeElement($videos);
-    }
-
-    /**
-     * Get videos
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getVideos()
-    {
-        return $this->videos;
     }
 }
