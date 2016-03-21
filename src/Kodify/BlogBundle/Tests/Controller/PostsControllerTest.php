@@ -4,6 +4,7 @@ namespace Kodify\BlogBundle\Tests\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\Author;
+use Kodify\BlogBundle\Entity\Comment;
 use Kodify\BlogBundle\Tests\BaseFunctionalTest;
 
 class PostsControllerTest extends BaseFunctionalTest
@@ -54,6 +55,25 @@ class PostsControllerTest extends BaseFunctionalTest
         $this->assertTextNotFound($crawler, 'Content1');
     }
 
+    public function testViewPostNoComments()
+    {
+        $this->createPosts(1);
+        $crawler = $this->client->request('GET', '/posts/1');
+        $this->assertTextFound($crawler, 'There are no comments');
+    }
+
+    public function testViewPostWithComments()
+    {
+        $this->createPostWithComments(3);
+        $crawler = $this->client->request('GET', '/posts/1');
+        $this->assertTextNotFound($crawler, 'There are no comments');
+        $this->assertSame(
+            3,
+            substr_count($crawler->html(), 'Comment by'),
+            "We should find 3 comments"
+        );
+    }
+
     protected function createPosts($count)
     {
         $author = new Author();
@@ -68,6 +88,30 @@ class PostsControllerTest extends BaseFunctionalTest
             $this->entityManager()->persist($post);
         }
         $this->entityManager()->flush();
+    }
+
+    protected function createPostWithComments($numComments)
+    {
+        $author = new Author();
+        $author->setName('Author');
+        $this->entityManager()->persist($author);
+        $this->entityManager()->flush();
+
+        $post = new Post();
+        $post->setTitle('Title');
+        $post->setContent('Content');
+        $post->setAuthor($author);
+        $this->entityManager()->persist($post);
+        $this->entityManager()->flush();
+
+        for($i = 0; $i < $numComments; ++$i) {
+            $comment = new Comment();
+            $comment->setText('Test comment' . $i);
+            $comment->setAuthor($author);
+            $comment->setPost($post);
+            $this->entityManager()->persist($comment);
+            $this->entityManager()->flush();
+        }
     }
 
     public function countDataProvider()

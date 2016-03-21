@@ -124,4 +124,9 @@ class Post extends AbstractBaseEntity
     {
         return $this->author;
     }
+
+    public function __toString()
+    {
+        return $this->title;
+    }
 }

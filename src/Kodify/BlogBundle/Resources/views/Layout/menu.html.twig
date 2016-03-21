@@ -22,6 +22,8 @@
                             href="{{ path('create_post') }}">Create Post</a></li>
                 <li{% if app.request.get('_route') == 'create_author' %} class="active"{% endif %}><a
                             href="{{ path('create_author') }}">Create Author</a></li>
+                <li{% if app.request.get('_route') == 'create_comment' %} class="active"{% endif %}><a
+                            href="{{ path('create_comment') }}">Create Comment</a></li>
             </ul>
         </nav>
     </div>
