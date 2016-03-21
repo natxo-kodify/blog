@@ -18,10 +18,12 @@
                             href="{{ path('authors') }}">Authors</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li{% if app.request.get('_route') == 'create_post' %} class="active"{% endif %}><a
-                            href="{{ path('create_post') }}">Create Post</a></li>
-                <li{% if app.request.get('_route') == 'create_author' %} class="active"{% endif %}><a
-                            href="{{ path('create_author') }}">Create Author</a></li>
+               <li{% if app.request.get('_route') == 'create_post' %} class="active"{% endif %}><a
+                         href="{{ path('create_post') }}">Create Post</a></li>
+               <li{% if app.request.get('_route') == 'create_comment' %} class="active"{% endif %}><a
+                         href="{{ path('create_comment') }}">Publish Comment</a></li>
+               <li{% if app.request.get('_route') == 'create_author' %} class="active"{% endif %}><a
+                         href="{{ path('create_author') }}">Create Author</a></li>
             </ul>
         </nav>
     </div>
