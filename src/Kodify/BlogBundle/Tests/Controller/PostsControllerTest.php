@@ -4,6 +4,7 @@ namespace Kodify\BlogBundle\Tests\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\Author;
+use Kodify\BlogBundle\Entity\Comment;
 use Kodify\BlogBundle\Tests\BaseFunctionalTest;
 
 class PostsControllerTest extends BaseFunctionalTest
@@ -53,22 +54,53 @@ class PostsControllerTest extends BaseFunctionalTest
         $this->assertTextNotFound($crawler, 'Title1');
         $this->assertTextNotFound($crawler, 'Content1');
     }
+    
+    public function testViewPostNoComments()
+    {
+        $this->createPosts(1);
+        $crawler = $this->client->request('GET', '/posts/1');
+        $this->assertTextFound($crawler, 'There are no comments yet. Be the first to write one!'); 
+    }
+    
+    public function testViewPostWithComments()
+    {
+        
+        // this is a workaround for a bug in symfony. see: https://github.com/Codeception/Codeception/issues/2025
+        $this->client->request('GET', '/posts/2');
+        
+        
+        
+        $this->createPosts(2);
+        $crawler = $this->client->request('GET', '/posts/1');
+        $this->assertTextFound($crawler, 'Title0');
+        $this->assertTextFound($crawler, 'CommentContent0');
+        $this->assertSame($crawler->filter('#comments > li')->count(), 2);
+    }
 
     protected function createPosts($count)
     {
         $author = new Author();
         $author->setName('Author');
         $this->entityManager()->persist($author);
-        $this->entityManager()->flush();
+        
         for ($i = 0; $i < $count; ++$i) {
             $post = new Post();
             $post->setTitle('Title' . $i);
             $post->setContent('Content' . $i);
             $post->setAuthor($author);
             $this->entityManager()->persist($post);
+                        
+            for ($j = 0; $j < $count; ++$j) {
+                $comment = new Comment();
+                $comment->setContent('CommentContent' . $j);
+                $comment->setAuthor($author);
+                $comment->setPost($post);
+                $this->entityManager()->persist($comment);
+            }
         }
         $this->entityManager()->flush();
     }
+    
 
     public function countDataProvider()
     {

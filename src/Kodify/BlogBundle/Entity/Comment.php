@@ -6,13 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Post
+ * Comment
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\PostRepository")
+ * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\CommentRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class Post extends AbstractBaseEntity
+class Comment extends AbstractBaseEntity
 {
     /**
      * @var integer
@@ -25,15 +25,6 @@ class Post extends AbstractBaseEntity
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="title", type="text")
-     * @Assert\NotBlank()
-     *
-     */
-    private $title;
-
-    /**
-     * @var string
      * @Assert\NotBlank()
      * @ORM\Column(name="content", type="text")
      */
@@ -41,25 +32,19 @@ class Post extends AbstractBaseEntity
 
     /**
      * @Assert\NotBlank()
-     * @ORM\ManyToOne(targetEntity="Author", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Author", inversedBy="comments")
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
     protected $author;
-    
+
+
     /**
-     * @ORM\OnetoMany(targetEntity="Comment", mappedBy="post", cascade={"persist"})
-     * @ORM\OrderBy({"createdAt" = "DESC"})
+     * @Assert\NotBlank()
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
+     * @ORM\JoinColumn(name="postId", referencedColumnName="id")
      */
-    protected $comments;
-	
-	
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+    protected $post;
+
 
     /**
      * Get id
@@ -69,29 +54,6 @@ class Post extends AbstractBaseEntity
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set title
-     *
-     * @param string $title
-     * @return Post
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Get title
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
     }
 
     /**
@@ -139,39 +101,29 @@ class Post extends AbstractBaseEntity
     {
         return $this->author;
     }
-    
+
 
     /**
-     * Add comments
+     * Set post
      *
-     * @param \Kodify\BlogBundle\Entity\Comment $comments
-     * @return Post
+     * @param \Kodify\BlogBundle\Entity\Post $post
+     * @return Comment
      */
-    public function addComment(\Kodify\BlogBundle\Entity\Comment $comments)
+    public function setPost(\Kodify\BlogBundle\Entity\Post $post = null)
     {
-        $this->comments[] = $comments;
+        $this->post = $post;
 
         return $this;
     }
 
     /**
-     * Remove comments
+     * Get post
      *
-     * @param \Kodify\BlogBundle\Entity\Comment $comments
+     * @return \Kodify\BlogBundle\Entity\Post 
      */
-    public function removeComment(\Kodify\BlogBundle\Entity\Comment $comments)
+    public function getPost()
     {
-        $this->comments->removeElement($comments);
-    }
-
-    /**
-     * Get comments
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getComments()
-    {
-        return $this->comments;
+        return $this->post;
     }
 
 }
