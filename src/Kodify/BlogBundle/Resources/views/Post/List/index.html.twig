@@ -1,17 +1,25 @@
 {% extends 'KodifyBlogBundle::base.html.twig' %}
 
 {% block content %}
-
+<table style="width:100%;">
     {% for post in posts %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
-                <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
-            </div>
-            <div class="panel-body">
-                {{ post.content }}
-            </div>
-        </div>
+        {% if (loop.index % 2) %}<tr>{% endif %}
+            <td style="padding: 0 10px;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
+                        <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
+                    </div>
+                    <div class="panel-body">
+                        {{ post.content }}
+                    </div>
+                </div>
+            </td>
+        {% if (loop.index % 2) and loop.last %}
+            <td>&nbsp</td>
+        {% endif %}
+        {% if (loop.index0 % 2) or loop.last %}</tr>{% endif %}
     {% endfor %}
+    </table>
 
 {% endblock %}

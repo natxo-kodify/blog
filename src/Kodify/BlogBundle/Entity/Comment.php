@@ -6,15 +6,15 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Post
+ * Comment
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\PostRepository")
+ * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\CommentRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class Post extends AbstractBaseEntity
+class Comment extends AbstractBaseEntity
 {
-    /**
+	/**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
@@ -23,16 +23,7 @@ class Post extends AbstractBaseEntity
      */
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="title", type="text")
-     * @Assert\NotBlank()
-     *
-     */
-    private $title;
-
-    /**
+	/**
      * @var string
      * @Assert\NotBlank()
      * @ORM\Column(name="content", type="text")
@@ -41,20 +32,21 @@ class Post extends AbstractBaseEntity
 
     /**
      * @Assert\NotBlank()
-     * @ORM\ManyToOne(targetEntity="Author", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Author", inversedBy="comments")
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
     protected $author;
 
-    public function __toString()
-    {
-        return $this->title;
-    }
+    /**
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
+     * @ORM\JoinColumn(name="postId", referencedColumnName="id")
+     */
+    protected $post;
 
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -62,33 +54,10 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Set title
-     *
-     * @param string $title
-     * @return Post
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Get title
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
      * Set content
      *
      * @param string $content
-     * @return Post
+     * @return Comment
      */
     public function setContent($content)
     {
@@ -100,7 +69,7 @@ class Post extends AbstractBaseEntity
     /**
      * Get content
      *
-     * @return string
+     * @return string 
      */
     public function getContent()
     {
@@ -111,7 +80,7 @@ class Post extends AbstractBaseEntity
      * Set author
      *
      * @param \Kodify\BlogBundle\Entity\Author $author
-     * @return Post
+     * @return Comment
      */
     public function setAuthor(\Kodify\BlogBundle\Entity\Author $author = null)
     {
@@ -123,10 +92,49 @@ class Post extends AbstractBaseEntity
     /**
      * Get author
      *
-     * @return \Kodify\BlogBundle\Entity\Author
+     * @return \Kodify\BlogBundle\Entity\Author 
      */
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * Set post
+     *
+     * @param \Kodify\BlogBundle\Entity\Post $post
+     * @return Comment
+     */
+    public function setPost(\Kodify\BlogBundle\Entity\Post $post = null)
+    {
+        $this->post = $post;
+
+        return $this;
+    }
+
+    /**
+     * Get post
+     *
+     * @return \Kodify\BlogBundle\Entity\Post 
+     */
+    public function getPost()
+    {
+        return $this->post;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function markAsUpdated()
+    {
+        // Add your code here
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function initializeCreatedAt()
+    {
+        // Add your code here
     }
 }
