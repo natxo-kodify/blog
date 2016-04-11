@@ -117,8 +117,6 @@ class Comment extends AbstractBaseEntity
     }
 
 
-
-
     /**
      * Set post
      *
