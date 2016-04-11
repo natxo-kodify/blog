@@ -50,8 +50,12 @@ class PostsControllerTest extends BaseFunctionalTest
         $crawler = $this->client->request('GET', '/posts/1');
         $this->assertTextFound($crawler, 'Title0');
         $this->assertTextFound($crawler, 'Content0');
+
         $this->assertTextNotFound($crawler, 'Title1');
         $this->assertTextNotFound($crawler, 'Content1');
+
+        $this->assertTextFound($crawler, 'There are no comments');
+
     }
 
     protected function createPosts($count)
@@ -69,6 +73,7 @@ class PostsControllerTest extends BaseFunctionalTest
         }
         $this->entityManager()->flush();
     }
+
 
     public function countDataProvider()
     {

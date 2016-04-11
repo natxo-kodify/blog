@@ -35,6 +35,7 @@ class Comment extends AbstractBaseEntity
 
     /**
      *
+     * @Assert\NotNull()
      * @ORM\ManyToOne(targetEntity="Author", inversedBy="comments")
      */
     protected $author;
