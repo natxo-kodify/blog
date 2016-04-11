@@ -47,6 +47,22 @@ class Post extends AbstractBaseEntity
     protected $author;
 
     /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post")
+     */
+    protected $comments;
+
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
+
+        $this->createdAt = new \DateTime();
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -108,7 +124,7 @@ class Post extends AbstractBaseEntity
      * @param \Kodify\BlogBundle\Entity\Author $author
      * @return Post
      */
-    public function setAuthor(\Kodify\BlogBundle\Entity\Author $author = null)
+    public function setAuthor(\Kodify\BlogBundle\Entity\Author $author = NULL)
     {
         $this->author = $author;
 
@@ -124,4 +140,38 @@ class Post extends AbstractBaseEntity
     {
         return $this->author;
     }
+
+    /**
+     * Get comment
+     *
+     * @return \Kodify\BlogBundle\Entity\Comment
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \Kodify\BlogBundle\Entity\Comment $comments
+     * @return Post
+     */
+    public function addComment(\Kodify\BlogBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \Kodify\BlogBundle\Entity\Comment $comments
+     */
+    public function removeComment(\Kodify\BlogBundle\Entity\Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
 }

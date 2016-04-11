@@ -10,4 +10,28 @@
             {{ post.content }}
         </div>
     </div>
+    
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Comments</div>
+        
+        {% if numComments == 0 %}
+        	<div class="panel-body" style="border-top:1px solid #000;">
+        	<p>There are no comments</p>
+        	</div>
+        {% else %}
+	        {% for comment in comments %}
+	        	<div class="panel-body" style="border-top:1px solid #000;">
+	        	<p>{{comment.text}}</p>
+	        	</div>
+	        {% endfor %}
+	    {% endif %}
+
+    </div>
+    
+
+
+    <div  class="panel panel-default">
+    	<a href="{{ path('create_comment',{'id': id}) }}">Create Comment</a>
+    </div>
 {% endblock %}

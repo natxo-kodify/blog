@@ -35,9 +35,28 @@ class Author extends AbstractBaseEntity
     protected $videos;
 
     /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="author")
+     */
+    protected $comments;
+
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->videos = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
+
+    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -60,10 +79,56 @@ class Author extends AbstractBaseEntity
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
         return $this->name;
     }
+
+    /**
+     * Add videos
+     *
+     * @param \Kodify\BlogBundle\Entity\Post $videos
+     * @return Author
+     */
+    public function addVideo(\Kodify\BlogBundle\Entity\Post $videos)
+    {
+        $this->videos[] = $videos;
+
+        return $this;
+    }
+
+    /**
+     * Remove videos
+     *
+     * @param \Kodify\BlogBundle\Entity\Post $videos
+     */
+    public function removeVideo(\Kodify\BlogBundle\Entity\Post $videos)
+    {
+        $this->videos->removeElement($videos);
+    }
+
+    /**
+     * Get videos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getVideos()
+    {
+        return $this->videos;
+    }
+
+
+    /**
+     * Get comments
+     *
+     * @return string
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+
 }

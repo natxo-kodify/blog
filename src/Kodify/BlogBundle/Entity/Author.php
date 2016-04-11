@@ -35,6 +35,12 @@ class Author extends AbstractBaseEntity
     protected $videos;
 
     /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="author")
+     */
+    protected $comments;
+
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -112,4 +118,40 @@ class Author extends AbstractBaseEntity
     {
         return $this->videos;
     }
+
+
+    /**
+     * Get comments
+     *
+     * @return string
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+
+    /**
+     * Add comments
+     *
+     * @param \Kodify\BlogBundle\Entity\Comment $comments
+     * @return Author
+     */
+    public function addComment(\Kodify\BlogBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \Kodify\BlogBundle\Entity\Comment $comments
+     */
+    public function removeComment(\Kodify\BlogBundle\Entity\Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+    
 }
