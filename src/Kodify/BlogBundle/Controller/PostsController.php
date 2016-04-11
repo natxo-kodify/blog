@@ -30,7 +30,7 @@ class PostsController extends Controller
         }
 
         $post = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
-        $commentsList = $post->getComments();
+        $commentsList = array_reverse($post->getComments()->toArray());
 
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],

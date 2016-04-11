@@ -11,6 +11,9 @@
         </div>
     </div>
     
+    <div style="margin-bottom:15px;">
+        <a class="btn btn-default" href="{{ path('create_comment',{'id': id}) }}">Create a Comment</a>
+    </div>
 
     <div class="panel panel-default">
         <div class="panel-heading">Comments</div>
@@ -22,7 +25,7 @@
         {% else %}
 	        {% for comment in comments %}
 	        	<div class="panel-body" style="border-top:1px solid #000;">
-	        	<p>{{comment.text}}</p>
+	        	<p>{{comment.text}}<span class="pull-right">by: {{ comment.author.name }}</span></p>
 	        	</div>
 	        {% endfor %}
 	    {% endif %}
@@ -31,7 +34,5 @@
     
 
 
-    <div  class="panel panel-default">
-    	<a href="{{ path('create_comment',{'id': id}) }}">Create Comment</a>
-    </div>
+    
 {% endblock %}

@@ -11,7 +11,7 @@ class CommentController extends Controller
 {
     public function indexAction()
     {
-        
+        return $this->redirectToRoute('home', array(), 301);
     }
 
     
@@ -25,9 +25,10 @@ class CommentController extends Controller
                 'method' => 'POST',
             ]
         );
+
         $parameters = [
-            'form'        => $form->createView()/*,
-            'breadcrumbs' => ['home' => 'Home', 'create_comment' => 'Create Comment']*/
+            'form'        => $form->createView(),
+            'breadcrumbs' => ['home' => 'Home']
         ];
 
         $form->handleRequest($request);
