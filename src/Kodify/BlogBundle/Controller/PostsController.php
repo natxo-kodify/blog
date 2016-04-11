@@ -14,6 +14,7 @@ class PostsController extends Controller
         $posts      = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
         $template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
+        
         if (count($posts)) {
             $template            = 'KodifyBlogBundle:Post:List/index.html.twig';
             $parameters['posts'] = $posts;
@@ -25,12 +26,20 @@ class PostsController extends Controller
     public function viewAction($id)
     {
         $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
+        
         if (!$currentPost instanceof Post) {
             throw $this->createNotFoundException('Post not found');
         }
+
+        $post = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
+        $commentsList = array_reverse($post->getComments()->toArray());
+
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
+            'id'          => $id,
+            'numComments' => count($commentsList),
+            'comments'    => $commentsList,  
         ];
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
@@ -38,7 +47,7 @@ class PostsController extends Controller
 
     public function createAction(Request $request)
     {
-        $form       = $this->createForm(
+        $form = $this->createForm(
             new PostType(),
             new Post(),
             [
@@ -48,10 +57,11 @@ class PostsController extends Controller
         );
         $parameters = [
             'form'        => $form->createView(),
-            'breadcrumbs' => ['home' => 'Home', 'create_post' => 'Create Post']
+            'breadcrumbs' => ['home' => 'Home', 'create_post' => 'Create Post'],
         ];
 
         $form->handleRequest($request);
+        
         if ($form->isValid()) {
             $post = $form->getData();
             $this->getDoctrine()->getManager()->persist($post);

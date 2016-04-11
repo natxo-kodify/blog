@@ -22,6 +22,7 @@ class BaseFunctionalTest extends WebTestCase
 
     protected function cleanDb()
     {
+        $this->clearTableByName('Comment');
         $this->clearTableByName('Author');
         $this->clearTableByName('Post');
     }
@@ -70,5 +71,13 @@ class BaseFunctionalTest extends WebTestCase
         }
 
         return $this->assertTextFound($crawler, $text, 0, $message);
+    }
+
+    /*
+    * Required to don't get a failure when running all tests together
+    */
+    public function testIndex()
+    {
+        $this->assertEquals(1, 1);
     }
 }
