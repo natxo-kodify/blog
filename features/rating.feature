@@ -1,4 +1,4 @@
-Feature: Comments
+Feature: Ratings
   As a Blog manager
   I want to allow people to rate the posts on the blog
   In order that they interact a little bit
