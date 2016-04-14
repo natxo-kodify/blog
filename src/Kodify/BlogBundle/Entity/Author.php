@@ -2,6 +2,8 @@
 
 namespace Kodify\BlogBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -34,12 +36,9 @@ class Author extends AbstractBaseEntity
      */
     protected $videos;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
-        $this->videos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
 
     public function __toString()
@@ -83,10 +82,10 @@ class Author extends AbstractBaseEntity
     /**
      * Add videos
      *
-     * @param \Kodify\BlogBundle\Entity\Post $videos
+     * @param Post $videos
      * @return Author
      */
-    public function addVideo(\Kodify\BlogBundle\Entity\Post $videos)
+    public function addVideo(Post $videos)
     {
         $this->videos[] = $videos;
 
@@ -96,9 +95,9 @@ class Author extends AbstractBaseEntity
     /**
      * Remove videos
      *
-     * @param \Kodify\BlogBundle\Entity\Post $videos
+     * @param Post $videos
      */
-    public function removeVideo(\Kodify\BlogBundle\Entity\Post $videos)
+    public function removeVideo(Post $videos)
     {
         $this->videos->removeElement($videos);
     }
@@ -106,7 +105,7 @@ class Author extends AbstractBaseEntity
     /**
      * Get videos
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getVideos()
     {

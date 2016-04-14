@@ -2,6 +2,7 @@
 
 namespace Kodify\BlogBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -45,6 +46,16 @@ class Post extends AbstractBaseEntity
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
     protected $author;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"persist"})
+     */
+    protected $comments;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -105,10 +116,10 @@ class Post extends AbstractBaseEntity
     /**
      * Set author
      *
-     * @param \Kodify\BlogBundle\Entity\Author $author
+     * @param Author $author
      * @return Post
      */
-    public function setAuthor(\Kodify\BlogBundle\Entity\Author $author = null)
+    public function setAuthor(Author $author = null)
     {
         $this->author = $author;
 
@@ -118,10 +129,37 @@ class Post extends AbstractBaseEntity
     /**
      * Get author
      *
-     * @return \Kodify\BlogBundle\Entity\Author
+     * @return Author
      */
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * @param Comment $comment
+     * @return Post
+     */
+    public function addComment(Comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * @param Comment $comment
+     */
+    public function removeVideo(Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }
