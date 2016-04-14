@@ -4,10 +4,12 @@ namespace Kodify\BlogBundle\Test\Behat;
 
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
-use Behat\MinkExtension\Context\RawMinkContext;
+use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
+use Kodify\BlogBundle\Entity\Author;
+use Kodify\BlogBundle\Entity\Post;
 
-class FeatureContext extends RawMinkContext
+class FeatureContext extends MinkContext
 {
     use KernelDictionary;
 
@@ -36,7 +38,13 @@ class FeatureContext extends RawMinkContext
      */
     public function theFollowingAuthorsExist(TableNode $table)
     {
-        throw new PendingException();
+        $authorRepo = $this->getRepository(Author::class);
+        foreach ($table->getHash() as $authorData) {
+            $author = new Author();
+            $author->setName($authorData['name']);
+
+            $authorRepo->save($author);
+        }
     }
 
     /**
@@ -44,7 +52,18 @@ class FeatureContext extends RawMinkContext
      */
     public function theFollowingPostsExist(TableNode $table)
     {
-        throw new PendingException();
+        $postRepo = $this->getRepository(Post::class);
+        $authorRepo = $this->getRepository(Author::class);
+        foreach ($table->getHash() as $postData) {
+            $author = $authorRepo->findByName($postData['author']);
+
+            $post = new Post();
+            $post->setTitle($postData['title']);
+            $post->setContent($postData['content']);
+            $post->setAuthor($author);
+
+            $postRepo->save($post);
+        }
     }
 
     /**
@@ -52,7 +71,20 @@ class FeatureContext extends RawMinkContext
      */
     public function theFollowingCommentsExist(TableNode $table)
     {
-        throw new PendingException();
+        $postRepo = $this->getRepository(Post::class);
+        $authorRepo = $this->getRepository(Author::class);
+        $commentRepo = $this->getRepository(Comment::class);
+        foreach ($table->getHash() as $commentData) {
+            $author = $authorRepo->findByName($commentData['author']);
+            $post = $postRepo->findByTitle($commentData['post title']);
+
+            $comment = new Comment();
+            $comment->setText($commentData['text']);
+            $comment->setPost($post);
+            $comment->setAuthor($author);
+
+            $commentRepo->save($comment);
+        }
     }
 
     /**
@@ -60,7 +92,10 @@ class FeatureContext extends RawMinkContext
      */
     public function iVisitThePageForThePostWithTitle($arg1)
     {
-        throw new PendingException();
+        $postRepository = $this->getRepository(Post::class);
+        $post = $postRepository->findByTitle($arg1);
+
+        $this->visitPath('/posts/' . $post->getId());
     }
 
     /**
@@ -68,7 +103,7 @@ class FeatureContext extends RawMinkContext
      */
     public function iShouldSeeAMessageSayingThereAreNoComments()
     {
-        throw new PendingException();
+        $this->assertPageContainsText('There are no comments for this post yet');
     }
 
     /**
@@ -76,7 +111,8 @@ class FeatureContext extends RawMinkContext
      */
     public function iShouldSeeACommentsSectionWithComment($arg1)
     {
-        throw new PendingException();
+        $this->assertPageContainsText('There are '.$arg1.' comments.');
+        $this->assertElementOnPage('div#comments')
     }
 
     /**
