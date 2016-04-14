@@ -2,16 +2,40 @@
 
 namespace Kodify\BlogBundle\Test\Behat;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Kodify\BlogBundle\Entity\Author;
+use Kodify\BlogBundle\Entity\Comment;
 use Kodify\BlogBundle\Entity\Post;
+use Kodify\BlogBundle\Test\DoctrinePurger;
 
 class FeatureContext extends MinkContext
 {
     use KernelDictionary;
+
+    /**
+     * @BeforeSuite
+     */
+    public static function prepareDB(BeforeSuiteScope $scope)
+    {
+        // rudimentary calls
+        exec('app/console doctrine:database:drop --env=test --force');
+        exec('app/console doctrine:database:create --env=test');
+        exec('app/console doctrine:schema:create --env=test');
+    }
+
+    /**
+     * @BeforeScenario
+     * @database
+     */
+    public function purgeDB(BeforeScenarioScope $scope)
+    {
+        DoctrinePurger::purge($this->getService('doctrine.orm.entity_manager')->getConnection());
+    }
 
     /**
      * @param string $serviceName
@@ -55,7 +79,7 @@ class FeatureContext extends MinkContext
         $postRepo = $this->getRepository(Post::class);
         $authorRepo = $this->getRepository(Author::class);
         foreach ($table->getHash() as $postData) {
-            $author = $authorRepo->findByName($postData['author']);
+            $author = $authorRepo->findOneByName($postData['author']);
 
             $post = new Post();
             $post->setTitle($postData['title']);
@@ -75,8 +99,8 @@ class FeatureContext extends MinkContext
         $authorRepo = $this->getRepository(Author::class);
         $commentRepo = $this->getRepository(Comment::class);
         foreach ($table->getHash() as $commentData) {
-            $author = $authorRepo->findByName($commentData['author']);
-            $post = $postRepo->findByTitle($commentData['post title']);
+            $author = $authorRepo->findOneByName($commentData['author']);
+            $post = $postRepo->findOneByTitle($commentData['post title']);
 
             $comment = new Comment();
             $comment->setText($commentData['text']);
@@ -93,7 +117,7 @@ class FeatureContext extends MinkContext
     public function iVisitThePageForThePostWithTitle($arg1)
     {
         $postRepository = $this->getRepository(Post::class);
-        $post = $postRepository->findByTitle($arg1);
+        $post = $postRepository->findOneByTitle($arg1);
 
         $this->visitPath('/posts/' . $post->getId());
     }
@@ -111,8 +135,8 @@ class FeatureContext extends MinkContext
      */
     public function iShouldSeeACommentsSectionWithComment($arg1)
     {
-        $this->assertPageContainsText('There are '.$arg1.' comments.');
-        $this->assertElementOnPage('div#comments')
+        $this->assertPageContainsText('There are ' . $arg1 . ' comments.');
+        $this->assertElementOnPage('div#comments');
     }
 
     /**
