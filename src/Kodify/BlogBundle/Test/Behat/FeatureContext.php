@@ -3,8 +3,8 @@
 namespace Kodify\BlogBundle\Test\Behat;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Exception\Exception;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
@@ -16,6 +16,8 @@ use Kodify\BlogBundle\Test\DoctrinePurger;
 class FeatureContext extends MinkContext
 {
     use KernelDictionary;
+
+    private $providedData = [];
 
     /**
      * @BeforeSuite
@@ -119,6 +121,9 @@ class FeatureContext extends MinkContext
         $postRepository = $this->getRepository(Post::class);
         $post = $postRepository->findOneByTitle($arg1);
 
+        // I don't like having to save state
+        $this->providedData['postId'] = $post->getId();
+
         $this->visitPath('/posts/' . $post->getId());
     }
 
@@ -157,11 +162,15 @@ class FeatureContext extends MinkContext
     }
 
     /**
-     * @Given I fill the form with ":argument"
+     * @Given I fill the form with ":json"
      */
-    public function iFillTheFormWith($arg1)
+    public function iFillTheFormWith($formDataJson)
     {
-        throw new PendingException();
+        $formData = json_decode($formDataJson);
+        foreach ($formData as $field => $value) {
+            $this->fillField($field, $value);
+            $this->providedData[$field] = $value;
+        }
     }
 
     /**
@@ -169,7 +178,7 @@ class FeatureContext extends MinkContext
      */
     public function iClickOnTheButton($arg1)
     {
-        throw new PendingException();
+        $this->pressButton($arg1);
     }
 
     /**
@@ -177,7 +186,15 @@ class FeatureContext extends MinkContext
      */
     public function aCommentShouldBeCreatedForThePostWithTheProvidedData()
     {
-        throw new PendingException();
+        $commentRepo = $this->getRepository(Comment::class);
+        $comment = $commentRepo->findOneByPostId($this->providedData['postId']);
+
+        if ($comment->getAuthor()->getName() != $this->providedData['author']
+         || $comment->getText() != $this->providedData['text']) {
+            throw new \Exception('Comment has not been created with provided data.');
+        }
+
+        $this->providedData = [];
     }
 
 }
