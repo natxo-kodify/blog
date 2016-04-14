@@ -137,6 +137,7 @@ class FeatureContext extends MinkContext
     {
         $this->assertPageContainsText('There are ' . $arg1 . ' comments.');
         $this->assertElementOnPage('div#comments');
+        $this->assertNumElements($arg1, 'div#comments div.panel.panel-info');
     }
 
     /**
@@ -144,7 +145,7 @@ class FeatureContext extends MinkContext
      */
     public function theCommentISeeSays($arg1)
     {
-        throw new PendingException();
+        $this->assertElementContainsText('div#comments div.panel.panel-info div.panel-body', $arg1);
     }
 
     /**
@@ -152,7 +153,7 @@ class FeatureContext extends MinkContext
      */
     public function iDonTSeeTheComment($arg1)
     {
-        throw new PendingException();
+        $this->assertElementNotContainsText('div#comments div.panel.panel-info div.panel-body', $arg1);
     }
 
     /**
@@ -178,4 +179,5 @@ class FeatureContext extends MinkContext
     {
         throw new PendingException();
     }
+
 }
