@@ -3,10 +3,16 @@
 namespace Kodify\BlogBundle\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Component\DomCrawler\Crawler;
+use Doctrine\DBAL\Connection;
 
-class BaseFunctionalTest extends WebTestCase
+class BaseFunctionalTestCase extends WebTestCase
 {
     protected $entityManager;
+    /**
+     * @var Client $client
+     */
     protected $client;
 
     public function setUp()
@@ -37,20 +43,29 @@ class BaseFunctionalTest extends WebTestCase
 
     protected function clearTableByName($tableName)
     {
+        /** @var Connection $connection */
         $connection = $this->entityManager()->getConnection();
         $dbPlatform = $connection->getDatabasePlatform();
         $connection->beginTransaction();
         try {
             $connection->query('SET FOREIGN_KEY_CHECKS=0');
-            $q = $dbPlatform->getTruncateTableSql($tableName);
+            $q = $dbPlatform->getTruncateTableSQL($tableName);
             $connection->executeUpdate($q);
             $connection->query('SET FOREIGN_KEY_CHECKS=1');
             $connection->commit();
         } catch (\Exception $e) {
-            $connection->rollback();
+            $connection->rollBack();
         }
     }
 
+    /**
+     * Find a text a concrete number of times in the given crawler
+     *
+     * @param Crawler $crawler Web crawler for a given page
+     * @param string $text Text that must appear in there
+     * @param int $times Number of times the text must appear
+     * @param string $message Custom error message in case of failure
+     */
     protected function assertTextFound($crawler, $text, $times = 1, $message = '')
     {
         if ($message == '') {
@@ -69,6 +84,6 @@ class BaseFunctionalTest extends WebTestCase
             $message = "{$text} Should not appear on the page";
         }
 
-        return $this->assertTextFound($crawler, $text, 0, $message);
+        $this->assertTextFound($crawler, $text, 0, $message);
     }
 }
