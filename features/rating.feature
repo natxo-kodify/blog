@@ -14,7 +14,11 @@ Feature: Ratings
       | way       | up high      | someone |
       | land      | I heard of   | over    |
       | once      | In a lullaby | rainbow |
-
+    And the following ratings exist:
+      | post title | rating |
+      | land       | 5      |
+      | once       | 4      |
+      | land       | 3      |
 
   Scenario: No ratings on a post page
     Given I visit the page for the post with title "once"
@@ -27,12 +31,9 @@ Feature: Ratings
     Then  I should see that the post has a rating of "4"
   
   Scenario: Order at posts list
-    Given I visit the page for the post with title "way"
-    And   I give the post a rating of "5"
-    And   I give the post a rating of "3"
-    When  I visit the posts list page
-    And   Post with title "rainbow" has a mean rating of "4"
-    And   Post with title "over" has a mean rating of "3"
+    Given I visit the posts list page
+    And   Post with title "land" has a mean rating of "4"
+    And   Post with title "once" has a mean rating of "3"
     Then  Posts should be ordered by date
     And   I choose "order by rating"
-    Then  Post with title "rainbow" is before post with title "over"
+    Then  Post with title "land" is before post with title "once"
