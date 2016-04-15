@@ -3,6 +3,7 @@
 namespace Kodify\BlogBundle\Test\Behat;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
@@ -198,10 +199,75 @@ class FeatureContext extends MinkContext
         $comment = $commentRepo->findOneById($this->providedData['postId']);
 
         if ($comment->getAuthor()->getName() != $this->providedData['author']
-         || $comment->getText() != $this->providedData['text']) {
+            || $comment->getText() != $this->providedData['text']
+        ) {
             throw new \Exception('Comment has not been created with provided data.');
         }
 
         $this->providedData = [];
+    }
+
+    /**
+     * @Then I should see a message saying there are no ratings
+     */
+    public function iShouldSeeAMessageSayingThereAreNoRatings()
+    {
+        $this->assertPageContainsText('There are no ratings for this post.');
+    }
+
+    /**
+     * @When I give the post a rating of ":rating"
+     */
+    public function iGiveThePostARatingOf($rating)
+    {
+        $this->iClickOnTheButton('rate' + $rating);
+    }
+
+    /**
+     * @Then I should see that the post has a rating of ":rating"
+     */
+    public function iShouldSeeThatThePostHasARatingOf($rating)
+    {
+        $this->assertElementContainsText('rating_mean', $rating);
+    }
+
+    /**
+     * @Given I visit the posts list page
+     */
+    public function iVisitThePostsListPage()
+    {
+        $this->visitPath('/');
+    }
+
+    /**
+     * @Given Post with title ":title" has a mean rating of ":rating"
+     */
+    public function postWithTitleHasAMeanRatingOf($title, $rating)
+    {
+        $this->assertElementOnPage('.panel[data-post-title=' + $title + '] .rating', $rating);
+    }
+
+    /**
+     * @Then Posts should be ordered by date
+     */
+    public function postsShouldBeOrderedByDate()
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Given /^I choose "([^"]*)"$/
+     */
+    public function iChoose($arg1)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Then /^Post with title "([^"]*)" is before post with title "([^"]*)"$/
+     */
+    public function postWithTitleIsBeforePostWithTitle($arg1, $arg2)
+    {
+        throw new PendingException();
     }
 }

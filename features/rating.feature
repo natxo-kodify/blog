@@ -9,14 +9,13 @@ Feature: Ratings
       | someone          |
       | over             |
       | rainbow          |
-    
     And the following posts exist:
       | title     | content      | author  |
       | way       | up high      | someone |
       | land      | I heard of   | over    |
       | once      | In a lullaby | rainbow |
-    
 
+    
   Scenario: No ratings on a post page
     Given I visit the page for the post with title "once"
     Then I should see a message saying there are no ratings
