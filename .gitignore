@@ -28,8 +28,9 @@
 
 # Assets and user uploads
 /web/*
-/web/bundles/
 /web/uploads/
 
 .idea/
-*.iml
+
+# Vagrant
+/.vagrant
