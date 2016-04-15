@@ -168,16 +168,8 @@ class FeatureContext extends MinkContext
     {
         $formData = json_decode(str_replace("'", '"', $formDataJson), true);
 
-        $page = $this->getSession()->getPage();
         foreach ($formData as $field => $value) {
-            $fieldUppercase = ucfirst($field);
-
-            $fieldElement = $page->findField($fieldUppercase);
-            if ($fieldElement->getTagName() == 'select') {
-                $page->selectFieldOption($fieldUppercase, $value);
-            } else {
-                $this->fillField($fieldUppercase, $value);
-            }
+            $this->setValueInFormField($field, $value);
             $this->providedData[$field] = $value;
         }
     }
@@ -220,7 +212,8 @@ class FeatureContext extends MinkContext
      */
     public function iGiveThePostARatingOf($rating)
     {
-        $this->iClickOnTheButton('rate' + $rating);
+        $this->setValueInFormField('value', $rating);
+        $this->iClickOnTheButton('rate');
     }
 
     /**
@@ -228,7 +221,7 @@ class FeatureContext extends MinkContext
      */
     public function iShouldSeeThatThePostHasARatingOf($rating)
     {
-        $this->assertElementContainsText('rating_mean', $rating);
+        $this->assertElementContainsText('#rating', $rating);
     }
 
     /**
@@ -269,5 +262,22 @@ class FeatureContext extends MinkContext
     public function postWithTitleIsBeforePostWithTitle($arg1, $arg2)
     {
         throw new PendingException();
+    }
+
+    /**
+     * @param string $field
+     * @param mixed $value
+     */
+    private function setValueInFormField($field, $value)
+    {
+        $page = $this->getSession()->getPage();
+        $fieldUppercase = ucfirst($field);
+
+        $fieldElement = $page->findField($fieldUppercase);
+        if ($fieldElement->getTagName() == 'select') {
+            $page->selectFieldOption($fieldUppercase, $value);
+        } else {
+            $this->fillField($fieldUppercase, $value);
+        }
     }
 }
