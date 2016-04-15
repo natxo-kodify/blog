@@ -325,4 +325,26 @@ class FeatureContext extends MinkContext
             $this->fillField($fieldUppercase, $value);
         }
     }
+
+    /**
+     * @Given I visit the home page
+     */
+    public function iVisitTheHomePage()
+    {
+        $this->visitPath('/');
+    }
+
+    /**
+     * @Then The post with title ":title" is on the :col column, :row row
+     */
+    public function thePostWithTitleIsOnColumnRow($title, $col, $row)
+    {
+        $ordinalsToNumerals = [
+            'first' => 1,
+            'second' => 2,
+            'third' => 3,
+        ];
+        $element = 'div.panel#r%d-c%d[data-title=%s]';
+        $this->assertElementOnPage(sprintf($element, $ordinalsToNumerals[$row], $ordinalsToNumerals[$col], $title));
+    }
 }
