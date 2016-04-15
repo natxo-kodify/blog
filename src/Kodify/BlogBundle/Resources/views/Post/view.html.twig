@@ -18,10 +18,33 @@
         <div id="comments">
         {% for comment in post.comments %}
             <div class="panel panel-info">
+                <div class="panel-heading">by: {{ comment.author.name }} <span class="pull-right">on: {{ comment.createdAt|date("m/d/Y") }}</a></div>
                 <div class="panel-body">{{ comment.text }}</div>
-                <div class="panel-footer pull-right">by: {{ comment.author.name }} on: {{ comment.createdAt|date("m/d/Y") }}</div>
             </div>
         {% endfor %}
         </div>
     {% endif %}
+
+    <hr />
+
+    {% if message is defined %}
+        <div class="bg-primary">{{ message }}</div>
+    {% endif %}
+    <div class="form" id="comment_form">
+        <h5>Write your comment:</h5>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+    <form><button id="create_comment">Create comment</button></form>
+    <script>
+        $(function() {
+            $("#comment_form").hide();
+            $("#create_comment").click(function(e) {
+                e.preventDefault();
+                $("#create_comment").hide();
+                $("#comment_form").show();
+            });
+        });
+    </script>
 {% endblock %}

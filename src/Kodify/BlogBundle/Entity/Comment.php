@@ -32,7 +32,7 @@ class Comment extends AbstractBaseEntity
      * @var Author
      *
      * @Assert\NotBlank()
-     * @ORM\ManyToOne(targetEntity="Author", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Author", inversedBy="comments")
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
     protected $author;
@@ -40,7 +40,6 @@ class Comment extends AbstractBaseEntity
     /**
      * @var Post
      *
-     * @Assert\NotBlank()
      * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
      * @ORM\JoinColumn(name="postId", referencedColumnName="id")
      */

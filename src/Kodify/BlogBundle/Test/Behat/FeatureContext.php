@@ -4,7 +4,6 @@ namespace Kodify\BlogBundle\Test\Behat;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
-use Behat\Mink\Exception\Exception;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
@@ -116,10 +115,10 @@ class FeatureContext extends MinkContext
     /**
      * @Given I visit the page for the post with title ":argument"
      */
-    public function iVisitThePageForThePostWithTitle($arg1)
+    public function iVisitThePageForThePostWithTitle($title)
     {
         $postRepository = $this->getRepository(Post::class);
-        $post = $postRepository->findOneByTitle($arg1);
+        $post = $postRepository->findOneByTitle($title);
 
         // I don't like having to save state
         $this->providedData['postId'] = $post->getId();
@@ -146,7 +145,7 @@ class FeatureContext extends MinkContext
     }
 
     /**
-     * @Given The comment I see says ":argument"
+     * @Then The comment I see says ":argument"
      */
     public function theCommentISeeSays($arg1)
     {
@@ -154,7 +153,7 @@ class FeatureContext extends MinkContext
     }
 
     /**
-     * @Given I don't see the comment ":argument"
+     * @Then I don't see the comment :argument
      */
     public function iDonTSeeTheComment($arg1)
     {
@@ -166,9 +165,18 @@ class FeatureContext extends MinkContext
      */
     public function iFillTheFormWith($formDataJson)
     {
-        $formData = json_decode($formDataJson);
+        $formData = json_decode(str_replace("'", '"', $formDataJson), true);
+
+        $page = $this->getSession()->getPage();
         foreach ($formData as $field => $value) {
-            $this->fillField($field, $value);
+            $fieldUppercase = ucfirst($field);
+
+            $fieldElement = $page->findField($fieldUppercase);
+            if ($fieldElement->getTagName() == 'select') {
+                $page->selectFieldOption($fieldUppercase, $value);
+            } else {
+                $this->fillField($fieldUppercase, $value);
+            }
             $this->providedData[$field] = $value;
         }
     }
@@ -178,7 +186,7 @@ class FeatureContext extends MinkContext
      */
     public function iClickOnTheButton($arg1)
     {
-        $this->pressButton($arg1);
+        $this->pressButton(ucfirst($arg1));
     }
 
     /**
@@ -187,7 +195,7 @@ class FeatureContext extends MinkContext
     public function aCommentShouldBeCreatedForThePostWithTheProvidedData()
     {
         $commentRepo = $this->getRepository(Comment::class);
-        $comment = $commentRepo->findOneByPostId($this->providedData['postId']);
+        $comment = $commentRepo->findOneById($this->providedData['postId']);
 
         if ($comment->getAuthor()->getName() != $this->providedData['author']
          || $comment->getText() != $this->providedData['text']) {
@@ -196,5 +204,4 @@ class FeatureContext extends MinkContext
 
         $this->providedData = [];
     }
-
 }
