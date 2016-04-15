@@ -52,6 +52,11 @@ class Post extends AbstractBaseEntity
      */
     protected $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Rating", mappedBy="post", cascade={"persist"})
+     */
+    protected $ratings;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -162,4 +167,42 @@ class Post extends AbstractBaseEntity
     {
         return $this->comments;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRatings()
+    {
+        return $this->ratings;
+    }
+
+    /**
+     * @param Rating $rating
+     * @return $this
+     */
+    public function addRating(Rating $rating)
+    {
+        $this->ratings[] = $rating;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRating()
+    {
+        $numRatings = count($this->ratings);
+        if ($numRatings == 0) {
+            return null;
+        }
+        $total = 0;
+        foreach($this->ratings as $rating) {
+            $total += $rating->getValue();
+        }
+
+        return  $total / $numRatings;
+    }
+
+
 }
