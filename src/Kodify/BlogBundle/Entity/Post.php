@@ -60,6 +60,7 @@ class Post extends AbstractBaseEntity
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
 
     /**

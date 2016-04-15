@@ -8,9 +8,11 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Doctrine\ORM\EntityManagerInterface;
 use Kodify\BlogBundle\Entity\Author;
 use Kodify\BlogBundle\Entity\Comment;
 use Kodify\BlogBundle\Entity\Post;
+use Kodify\BlogBundle\Entity\Rating;
 use Kodify\BlogBundle\Test\DoctrinePurger;
 
 class FeatureContext extends MinkContext
@@ -36,7 +38,7 @@ class FeatureContext extends MinkContext
      */
     public function purgeDB(BeforeScenarioScope $scope)
     {
-        DoctrinePurger::purge($this->getService('doctrine.orm.entity_manager')->getConnection());
+        DoctrinePurger::purge($this->getEntityManager()->getConnection());
     }
 
     /**
@@ -49,14 +51,28 @@ class FeatureContext extends MinkContext
     }
 
     /**
+     * @return EntityManagerInterface
+     */
+    protected function getEntityManager()
+    {
+        return $this->getService('doctrine.orm.entity_manager');
+    }
+
+    /**
      * @param string $className
      * @return mixed
      */
     protected function getRepository($className)
     {
-        $em = $this->getService('doctrine.orm.entity_manager');
+        return $this->getEntityManager()->getRepository($className);
+    }
 
-        return $em->getRepository($className);
+    /**
+     * Useful to avoid LOSING time trying to figure out what is wrong with the test... just the F***ING CACHE
+     */
+    protected function clearUnitOfWork()
+    {
+        $this->getEntityManager()->clear();
     }
 
     /**
@@ -71,6 +87,7 @@ class FeatureContext extends MinkContext
 
             $authorRepo->save($author);
         }
+        $this->clearUnitOfWork();
     }
 
     /**
@@ -90,6 +107,7 @@ class FeatureContext extends MinkContext
 
             $postRepo->save($post);
         }
+        $this->clearUnitOfWork();
     }
 
     /**
@@ -111,6 +129,26 @@ class FeatureContext extends MinkContext
 
             $commentRepo->save($comment);
         }
+        $this->clearUnitOfWork();
+    }
+
+    /**
+     * @Given the following ratings exist:
+     */
+    public function theFollowingRatingsExist(TableNode $table)
+    {
+        $postRepo = $this->getRepository(Post::class);
+        $ratingRepo = $this->getRepository(Rating::class);
+        foreach ($table->getHash() as $postData) {
+            $post = $postRepo->findOneByTitle($postData['post title']);
+
+            $rating = new Rating();
+            $rating->setPost($post);
+            $rating->setValue((int)$postData['rating']);
+
+            $ratingRepo->save($rating);
+        }
+        $this->clearUnitOfWork();
     }
 
     /**
@@ -237,7 +275,10 @@ class FeatureContext extends MinkContext
      */
     public function postWithTitleHasAMeanRatingOf($title, $rating)
     {
-        $this->assertElementOnPage('.panel[data-post-title=' + $title + '] .rating', $rating);
+        $page = $this->getSession()->getPage();
+        $item = $page->find('css', 'span.rating[data-title=' . $title . ']');
+        $html = $item->getOuterHtml();
+        $this->assertElementContains('span.rating[data-title=' . $title . ']', $rating);
     }
 
     /**

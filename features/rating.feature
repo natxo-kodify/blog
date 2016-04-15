@@ -17,7 +17,9 @@ Feature: Ratings
     And the following ratings exist:
       | post title | rating |
       | land       | 5      |
+      | once       | 5      |
       | once       | 4      |
+      | once       | 0      |
       | land       | 3      |
 
   Scenario: No ratings on a post page
@@ -32,6 +34,7 @@ Feature: Ratings
   
   Scenario: Order at posts list
     Given I visit the posts list page
+    Then print last response
     And   Post with title "land" has a mean rating of "4"
     And   Post with title "once" has a mean rating of "3"
     Then  Posts should be ordered by date

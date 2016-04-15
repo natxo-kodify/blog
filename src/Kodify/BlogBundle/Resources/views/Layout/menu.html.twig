@@ -12,8 +12,10 @@
         </div>
         <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
             <ul class="nav navbar-nav">
-                <li{% if app.request.get('_route') == 'home' %} class="active"{% endif %}><a href="{{ path('home') }}">Home</a>
-                </li>
+                <li{% if app.request.get('_route') == 'home' %} class="active"{% endif %}><a
+                            href="{{ path('home') }}">Home</a></li>
+                <li{% if app.request.get('_route') == 'posts' %} class="active"{% endif %}><a
+                            href="{{ path('posts') }}">Posts</a></li>
                 <li{% if app.request.get('_route') == 'authors' %} class="active"{% endif %}><a
                             href="{{ path('authors') }}">Authors</a></li>
             </ul>
