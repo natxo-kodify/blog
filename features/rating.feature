@@ -23,7 +23,7 @@ Feature: Ratings
       | land       | 3      |
 
   Scenario: No ratings on a post page
-    Given I visit the page for the post with title "once"
+    Given I visit the page for the post with title "way"
     Then  I should see a message saying there are no ratings
 
   Scenario: Rate a post
