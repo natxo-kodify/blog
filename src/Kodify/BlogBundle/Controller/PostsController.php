@@ -8,6 +8,7 @@ use Kodify\BlogBundle\Entity\Rating;
 use Kodify\BlogBundle\Form\Type\CommentType;
 use Kodify\BlogBundle\Form\Type\PostType;
 use Kodify\BlogBundle\Form\Type\RatingType;
+use Kodify\BlogBundle\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,9 +16,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class PostsController extends Controller
 {
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
+        $orderBy = $request->query->get('orderBy', null);
+        $posts = $this->getPostRepository()->latestOrdered($orderBy);
+
         $template = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
         if (count($posts)) {
@@ -171,5 +174,14 @@ class PostsController extends Controller
             throw $this->createNotFoundException('Post not found');
         }
         return $currentPost;
+    }
+
+    /**
+     * TODO: Next step, inject dependencies like this into controller
+     * @return PostRepository
+     */
+    private function getPostRepository()
+    {
+        return $this->getDoctrine()->getRepository('KodifyBlogBundle:Post');
     }
 }
