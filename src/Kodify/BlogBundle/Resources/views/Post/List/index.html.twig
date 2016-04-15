@@ -9,11 +9,11 @@
             </button>
             <ul class="dropdown-menu" aria-labelledby="orderby-dropdow">
                 {% if app.request.get('orderBy') == 'rating' %}
-                    <li class="disabled"><a href="#">Rating <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a></li>
-                    <li><a href="{{ path('posts', {'orderBy': 'date'}) }}" title="order by date">Date</a></li>
+                    <li data-orderby="rating" class="disabled" data-order="rating"><a href="#">Rating <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a></li>
+                    <li><a href="{{ path('posts', {'orderBy': 'createdAt'}) }}" title="order by date">Date</a></li>
                 {% else %}
                     <li><a href="{{ path('posts', {'orderBy': 'rating'}) }}" title="order by rating">Rating</a></li>
-                    <li class="disabled"><a href="#">Date <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a></li>
+                    <li data-orderby="date" class="disabled"><a href="#">Date <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a></li>
                 {% endif %}
             </ul>
         </div>

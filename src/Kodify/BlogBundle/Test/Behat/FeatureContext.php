@@ -275,9 +275,6 @@ class FeatureContext extends MinkContext
      */
     public function postWithTitleHasAMeanRatingOf($title, $rating)
     {
-        $page = $this->getSession()->getPage();
-        $item = $page->find('css', 'span.rating[data-title=' . $title . ']');
-        $html = $item->getOuterHtml();
         $this->assertElementContains('span.rating[data-title=' . $title . ']', $rating);
     }
 
@@ -286,23 +283,30 @@ class FeatureContext extends MinkContext
      */
     public function postsShouldBeOrderedByDate()
     {
-        throw new PendingException();
+        $this->assertElementOnPage('li[data-orderby="date"]');
     }
 
     /**
-     * @Given /^I choose "([^"]*)"$/
+     * @Given I choose ":link"
      */
-    public function iChoose($arg1)
+    public function iChoose($link)
     {
-        throw new PendingException();
+        $this->clickLink($link);
     }
 
     /**
-     * @Then /^Post with title "([^"]*)" is before post with title "([^"]*)"$/
+     * @Then Post with title ":first" is before post with title ":second"
      */
-    public function postWithTitleIsBeforePostWithTitle($arg1, $arg2)
+    public function postWithTitleIsBeforePostWithTitle($first, $second)
     {
-        throw new PendingException();
+        $page = $this->getSession()->getPage();
+        $items = $page->findAll('css', 'div.panel-heading a');
+        foreach ($items as $k => $post) {
+            $found[$post->getText()] = $k;
+        }
+        if ($found[$first] > $found[$second]) {
+            throw new Exception(sprintf('Post with title "%s" was found before', $second));
+        }
     }
 
     /**
