@@ -15,10 +15,10 @@ Feature: Ratings
       | land      | I heard of   | over    |
       | once      | In a lullaby | rainbow |
 
-    
+
   Scenario: No ratings on a post page
     Given I visit the page for the post with title "once"
-    Then I should see a message saying there are no ratings
+    Then  I should see a message saying there are no ratings
 
   Scenario: Rate a post
     Given I visit the page for the post with title "way"
@@ -27,7 +27,10 @@ Feature: Ratings
     Then  I should see that the post has a rating of "4"
   
   Scenario: Order at posts list
-    Given I visit the posts list page
+    Given I visit the page for the post with title "way"
+    And   I give the post a rating of "5"
+    And   I give the post a rating of "3"
+    When  I visit the posts list page
     And   Post with title "rainbow" has a mean rating of "4"
     And   Post with title "over" has a mean rating of "3"
     Then  Posts should be ordered by date
