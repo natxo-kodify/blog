@@ -1,6 +1,10 @@
 {% extends 'KodifyBlogBundle::base.html.twig' %}
 
 {% block content %}
+    {% if message is defined %}
+        <div class="bg-primary">{{ message }}</div>
+    {% endif %}
+
     <div class="panel panel-default">
         <div class="panel-heading">
             <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
@@ -11,16 +15,25 @@
         </div>
     </div>
 
-    {% if post.ratings is not defined %}
-        <h5>There are no ratings for this post.</h5>
-        <hr />
-    {% endif %}
-
-
-    {% if post.comments|length == 0 %}
-        <h5>There are no comments for this post yet</h5>
+    <hr />
+    <h5>Ratings</h5>
+    {% if post.ratings|length == 0 %}
+        <p>There are no ratings for this post.</p>
     {% else %}
-        <h5>There are {{ post.comments|length }} comments.</h5>
+        <p>Article rating: <strong id="rating">{{ post.rating }}</strong>. Based on {{ post.ratings|length }} ratings. </p>
+    {% endif %}
+    <div class="form" id="rating_form">
+        {{ form_start(rating_form) }}
+        {{ form_widget(rating_form) }}
+        {{ form_end(rating_form) }}
+    </div>
+
+    <hr />
+    <h5>Comments</h5>
+    {% if post.comments|length == 0 %}
+        <p>There are no comments for this post yet.</p>
+    {% else %}
+        <p>There are {{ post.comments|length }} comments.</p>
         <div id="comments">
         {% for comment in post.comments %}
             <div class="panel panel-info">
@@ -33,14 +46,11 @@
 
     <hr />
 
-    {% if message is defined %}
-        <div class="bg-primary">{{ message }}</div>
-    {% endif %}
     <div class="form" id="comment_form">
         <h5>Write your comment:</h5>
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-        {{ form_end(form) }}
+        {{ form_start(comment_form) }}
+        {{ form_widget(comment_form) }}
+        {{ form_end(comment_form) }}
     </div>
     <form><button id="create_comment">Create comment</button></form>
     <script>
