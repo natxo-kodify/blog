@@ -11,6 +11,12 @@
         </div>
     </div>
 
+    {% if post.ratings is not defined %}
+        <h5>There are no ratings for this post.</h5>
+        <hr />
+    {% endif %}
+
+
     {% if post.comments|length == 0 %}
         <h5>There are no comments for this post yet</h5>
     {% else %}
