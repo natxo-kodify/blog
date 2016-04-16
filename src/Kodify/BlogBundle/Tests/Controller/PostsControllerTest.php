@@ -4,6 +4,7 @@ namespace Kodify\BlogBundle\Tests\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\Author;
+use Kodify\BlogBundle\Tests\Fixtures\PostsFixture;
 use Kodify\BlogBundle\Tests\BaseFunctionalTestCase;
 
 class PostsControllerTest extends BaseFunctionalTestCase
@@ -46,14 +47,21 @@ class PostsControllerTest extends BaseFunctionalTestCase
 
     public function testViewPost()
     {
-        $this->createPosts(2);
-        $crawler = $this->client->request('GET', '/posts/1');
-        $this->assertTextFound($crawler, 'Title0');
-        $this->assertTextFound($crawler, 'Content0');
-        $this->assertTextNotFound($crawler, 'Title1');
-        $this->assertTextNotFound($crawler, 'Content1');
+        $this->loader->addFixture(new PostsFixture());
+        $this->loadFixtures($this->entityManager());
+
+        $crawler = $this->client->request('GET', sprintf('/posts/%s', PostsFixture::Way));
+        $this->assertTextFound($crawler, PostsFixture::Way);
+        $this->assertTextNotFound($crawler, PostsFixture::Land);
+        $this->assertTextNotFound($crawler, PostsFixture::Once);
     }
 
+    /**
+     * Independent from default fixtures.
+     * Creates the given number of posts attached to a single author
+     *
+     * @param $count Number of posts to create
+     */
     protected function createPosts($count)
     {
         $author = new Author();

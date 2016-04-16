@@ -2,7 +2,7 @@
 
 namespace Kodify\BlogBundle\Tests\Controller;
 
-use Kodify\BlogBundle\Entity\Author;
+use Kodify\BlogBundle\Tests\Fixtures\AuthorsFixture;
 use Kodify\BlogBundle\Tests\BaseFunctionalTestCase;
 
 class AuthorsControllerTest extends BaseFunctionalTestCase
@@ -15,14 +15,14 @@ class AuthorsControllerTest extends BaseFunctionalTestCase
 
     public function testIndexWithAuthors()
     {
-        $this->createAuthors(10);
+        $this->loader->addFixture(new AuthorsFixture());
+        $this->loadFixtures($this->entityManager());
+
         $crawler = $this->client->request('GET', '/authors');
         $this->assertTextNotFound($crawler, "There are no authors, let's create some!!");
-        $this->assertSame(
-            8,
-            substr_count($crawler->html(), 'Name'),
-            "We should find 8 authors listed"
-        );
+        $this->assertTextFound($crawler, AuthorsFixture::Someone);
+        $this->assertTextFound($crawler, AuthorsFixture::Over);
+        $this->assertTextFound($crawler, AuthorsFixture::Rainbow);
     }
 
     public function testCreateAuthorGetRequest()
@@ -38,15 +38,4 @@ class AuthorsControllerTest extends BaseFunctionalTestCase
         $this->assertTextNotFound($crawler, "Author Created!");
         $this->assertTextFound($crawler, 'Name');
     }
-
-    protected function createAuthors($count)
-    {
-        for ($i = 0; $i < $count; ++$i) {
-            $author = new Author();
-            $author->setName("Name{$i}");
-            $this->entityManager()->persist($author);
-        }
-        $this->entityManager()->flush();
-    }
-
 }

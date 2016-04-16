@@ -2,22 +2,33 @@
 
 namespace Kodify\BlogBundle\Tests;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\DomCrawler\Crawler;
 use Doctrine\DBAL\Connection;
 
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+
 class BaseFunctionalTestCase extends WebTestCase
 {
     protected $entityManager;
     /**
-     * @var Client $client
+     * @var Client
      */
     protected $client;
+
+    /**
+     * @var Loader
+     */
+    protected $loader;
 
     public function setUp()
     {
         $this->client = static::createClient();
+        $this->loader = new Loader();
         $this->cleanDb();
     }
 
@@ -32,6 +43,21 @@ class BaseFunctionalTestCase extends WebTestCase
         $this->clearTableByName('Post');
     }
 
+    /**
+     * Loads the fixtures present in the loader
+     *
+     * @param $entityManager EntityManager
+     */
+    protected function loadFixtures($entityManager)
+    {
+        $purger = new ORMPurger();
+        $executor = new ORMExecutor($entityManager, $purger);
+        $executor->execute($this->loader->getFixtures());
+    }
+
+    /**
+     * @return EntityManager
+     */
     protected function entityManager()
     {
         if ($this->entityManager == null) {
