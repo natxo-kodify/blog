@@ -15,8 +15,7 @@ class AuthorsControllerTest extends BaseFunctionalTestCase
 
     public function testIndexWithAuthors()
     {
-        $this->loader->addFixture(new AuthorsFixture());
-        $this->loadFixtures($this->entityManager());
+        $this->loadFixtures(new AuthorsFixture());
 
         $crawler = $this->client->request('GET', '/authors');
         $this->assertTextNotFound($crawler, "There are no authors, let's create some!!");

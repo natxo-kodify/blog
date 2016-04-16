@@ -47,8 +47,7 @@ class PostsControllerTest extends BaseFunctionalTestCase
 
     public function testViewPost()
     {
-        $this->loader->addFixture(new PostsFixture());
-        $this->loadFixtures($this->entityManager());
+        $this->loadFixtures(new PostsFixture());
 
         $crawler = $this->client->request('GET', sprintf('/posts/%s', PostsFixture::Way));
         $this->assertTextFound($crawler, PostsFixture::Way);

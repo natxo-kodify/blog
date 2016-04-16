@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\DomCrawler\Crawler;
 use Doctrine\DBAL\Connection;
 
+use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
@@ -44,14 +45,22 @@ class BaseFunctionalTestCase extends WebTestCase
     }
 
     /**
-     * Loads the fixtures present in the loader
+     * Loads the given fixtures
      *
-     * @param $entityManager EntityManager
+     * @param $fixtures AbstractFixture|AbstractFixture[] Fixtures to be loaded
      */
-    protected function loadFixtures($entityManager)
+    protected function loadFixtures($fixtures)
     {
+        if (!is_array($fixtures)) {
+            $fixtures = [$fixtures];
+        }
+        
+        foreach ($fixtures as $fixture) {
+            $this->loader->addFixture($fixture);
+        }
+
         $purger = new ORMPurger();
-        $executor = new ORMExecutor($entityManager, $purger);
+        $executor = new ORMExecutor($this->entityManager(), $purger);
         $executor->execute($this->loader->getFixtures());
     }
 
