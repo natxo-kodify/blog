@@ -1,0 +1,38 @@
+{% extends 'KodifyBlogBundle::base.html.twig' %}
+
+{% block content %}
+
+    {% for row in posts|batch(2) %}
+        {% set rownum = loop.index %}
+        <div class="row">
+            {% for post in row %}
+                {% set colnum = loop.index %}
+                <div class="col-lg-6">
+
+                    <div class="panel panel-default" data-title="{{ post.title }}" id="r{{ rownum }}-c{{ colnum}}">
+                        <div class="panel-heading">
+                            <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
+                            <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
+                        </div>
+                        <div class="panel-body">
+                            {{ post.content }}
+                        </div>
+                        <div class="panel-footer small">
+                            {% if post.ratings|length == 0 %}
+                                Post not rated yet
+                            {% else %}
+                                Post rating:
+                            {% endif %}
+                            <span class="rating" data-title="{{ post.title }}">{{ post.rating() }}</span>
+                        </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+
+
+
+    {% endfor %}
+
+{% endblock %}

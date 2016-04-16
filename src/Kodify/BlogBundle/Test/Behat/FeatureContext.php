@@ -267,7 +267,7 @@ class FeatureContext extends MinkContext
      */
     public function iVisitThePostsListPage()
     {
-        $this->visitPath('/');
+        $this->visitPath('/posts');
     }
 
     /**

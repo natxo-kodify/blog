@@ -22,7 +22,7 @@ class PostsController extends Controller
         $posts = $this->getPostRepository()->latestOrdered($orderBy);
 
         $template = 'KodifyBlogBundle:Post:List/empty.html.twig';
-        $parameters = ['breadcrumbs' => ['home' => 'Home']];
+        $parameters = ['breadcrumbs' => ['posts' => 'Posts']];
         if (count($posts)) {
             $template = 'KodifyBlogBundle:Post:List/index.html.twig';
             $parameters['posts'] = $posts;

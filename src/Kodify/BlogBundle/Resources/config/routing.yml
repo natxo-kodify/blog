@@ -1,6 +1,6 @@
 home:
     path:     /
-    defaults: { _controller: KodifyBlogBundle:Posts:index }
+    defaults: { _controller: KodifyBlogBundle:Home:index }
 authors:
     path:     /authors
     defaults: { _controller: KodifyBlogBundle:Authors:index }
