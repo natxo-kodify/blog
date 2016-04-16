@@ -2,16 +2,21 @@
 
 namespace Kodify\BlogBundle\Controller;
 
-use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Form\Type\PostType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class PostsController extends Controller
+class PostsController extends AppController
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected $services = [
+        'app.post_service'
+    ];
+    
     public function indexAction()
     {
-        $posts      = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
+        $posts      = $this->get('app.post_service')->getLatest();
         $template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
         if (count($posts)) {
@@ -24,8 +29,8 @@ class PostsController extends Controller
 
     public function viewAction($id)
     {
-        $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
-        if (!$currentPost instanceof Post) {
+        $currentPost = $this->get('app.post_service')->findById($id);
+        if ($currentPost === null) {
             throw $this->createNotFoundException('Post not found');
         }
         $parameters = [
@@ -39,8 +44,8 @@ class PostsController extends Controller
     public function createAction(Request $request)
     {
         $form       = $this->createForm(
-            new PostType(),
-            new Post(),
+            PostType::class,
+            null,
             [
                 'action' => $this->generateUrl('create_post'),
                 'method' => 'POST',
@@ -54,8 +59,7 @@ class PostsController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $post = $form->getData();
-            $this->getDoctrine()->getManager()->persist($post);
-            $this->getDoctrine()->getManager()->flush();
+            $this->get('app.post_service')->persist($post);
             $parameters['message'] = 'Post Created!';
         }
 
