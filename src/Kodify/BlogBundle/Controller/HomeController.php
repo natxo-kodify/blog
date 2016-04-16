@@ -12,6 +12,7 @@ class HomeController extends Controller
         $posts = $this->getPostRepository()->latest();
 
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
+        $template = 'KodifyBlogBundle:Post:List/empty.html.twig';
         if (count($posts)) {
             $template = 'KodifyBlogBundle::Home/index.html.twig';
             $parameters['posts'] = $posts;
