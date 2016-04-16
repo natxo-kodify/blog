@@ -25,6 +25,12 @@
         <testsuite name="Fux Test Suite">
             <directory>../src/Kodify/*/Tests</directory>
         </testsuite>
+        <testsuite name="Controllers">
+            <directory>../src/Kodify/*/Tests/Controller</directory>
+        </testsuite>
+        <testsuite name="Forms">
+            <directory>../src/Kodify/*/Tests/Form</directory>
+        </testsuite>
     </testsuites>
 
     <php>
