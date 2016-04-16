@@ -9,9 +9,12 @@ use Kodify\BlogBundle\Entity\Author;
 
 class AuthorsFixture extends AbstractFixture
 {
-    const Someone = 'someone';
-    const Over = 'over';
-    const Rainbow = 'rainbow';
+    const SOMEONE = 'someone';
+    const SOMEONE_ID = 1;
+    const OVER = 'over';
+    const OVER_ID = 2;
+    const RAINBOW = 'rainbow';
+    const RAINBOW_ID = 3;
 
     /**
      * {@inheritDoc}
@@ -19,9 +22,9 @@ class AuthorsFixture extends AbstractFixture
     public function load(ObjectManager $manager)
     {
         $entities = [
-            ['name' => self::Someone],
-            ['name' => self::Over],
-            ['name' => self::Rainbow],
+            ['name' => self::SOMEONE],
+            ['name' => self::OVER],
+            ['name' => self::RAINBOW],
         ];
         
         foreach ($entities as $data) {

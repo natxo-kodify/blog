@@ -10,9 +10,12 @@ use Kodify\BlogBundle\Entity\Post;
 
 class PostsFixture extends AbstractFixture implements DependentFixtureInterface
 {
-    const Way = 'way';
-    const Land = 'land';
-    const Once = 'once';
+    const WAY = 'way';
+    const WAY_ID = 1;
+    const LAND = 'land';
+    const LAND_ID = 2;
+    const ONCE = 'once';
+    const ONCE_ID = 3;
 
     /**
      * {@inheritDoc}
@@ -31,17 +34,17 @@ class PostsFixture extends AbstractFixture implements DependentFixtureInterface
     {
         $entities = [
             [
-                'title' => self::Way,
+                'title' => self::WAY,
                 'content' => 'up high',
-                'author' => $this->getReference(sprintf('author:%s', AuthorsFixture::Someone))
+                'author' => $this->getReference(sprintf('author:%s', AuthorsFixture::SOMEONE))
             ],[
-                'title' => self::Land,
+                'title' => self::LAND,
                 'content' => 'I heard of',
-                'author' => $this->getReference(sprintf('author:%s', AuthorsFixture::Over))
+                'author' => $this->getReference(sprintf('author:%s', AuthorsFixture::OVER))
             ],[
-                'title' => self::Once,
+                'title' => self::ONCE,
                 'content' => 'In a lullaby',
-                'author' => $this->getReference(sprintf('author:%s', AuthorsFixture::Rainbow))
+                'author' => $this->getReference(sprintf('author:%s', AuthorsFixture::RAINBOW))
             ]
         ];
         

@@ -49,10 +49,10 @@ class PostsControllerTest extends BaseFunctionalTestCase
     {
         $this->loadFixtures(new PostsFixture());
 
-        $crawler = $this->client->request('GET', sprintf('/posts/%s', PostsFixture::Way));
-        $this->assertTextFound($crawler, PostsFixture::Way);
-        $this->assertTextNotFound($crawler, PostsFixture::Land);
-        $this->assertTextNotFound($crawler, PostsFixture::Once);
+        $crawler = $this->client->request('GET', sprintf('/posts/%s', PostsFixture::WAY));
+        $this->assertTextFound($crawler, PostsFixture::WAY);
+        $this->assertTextNotFound($crawler, PostsFixture::LAND);
+        $this->assertTextNotFound($crawler, PostsFixture::ONCE);
     }
 
     /**

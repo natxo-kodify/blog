@@ -1,0 +1,12 @@
+<ul class="list-group comments">
+    {% if post.comments is defined %}
+        {#TODO:: Something like this:#}
+        {#{% for path, title in breadcrumbs %}#}
+            {#<li{% if loop.last %} class="active"{% endif %}><a href="{{ path(path) }}">{{ title }}</a></li>#}
+        {#{% endfor %}#}
+    {% else %}
+        <li class="list-group-item">
+            There are no comments
+        </li>
+    {% endif %}
+</ul>

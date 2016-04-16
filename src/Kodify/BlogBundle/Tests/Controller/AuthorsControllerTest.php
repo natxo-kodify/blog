@@ -19,9 +19,9 @@ class AuthorsControllerTest extends BaseFunctionalTestCase
 
         $crawler = $this->client->request('GET', '/authors');
         $this->assertTextNotFound($crawler, "There are no authors, let's create some!!");
-        $this->assertTextFound($crawler, AuthorsFixture::Someone);
-        $this->assertTextFound($crawler, AuthorsFixture::Over);
-        $this->assertTextFound($crawler, AuthorsFixture::Rainbow);
+        $this->assertTextFound($crawler, AuthorsFixture::SOMEONE);
+        $this->assertTextFound($crawler, AuthorsFixture::OVER);
+        $this->assertTextFound($crawler, AuthorsFixture::RAINBOW);
     }
 
     public function testCreateAuthorGetRequest()
