@@ -1,4 +1,4 @@
-Feature: Comments
+Feature: Ratings
   As a Blog manager
   I want to allow people to rate the posts on the blog
   In order that they interact a little bit
@@ -9,17 +9,22 @@ Feature: Comments
       | someone          |
       | over             |
       | rainbow          |
-    
     And the following posts exist:
       | title     | content      | author  |
       | way       | up high      | someone |
       | land      | I heard of   | over    |
       | once      | In a lullaby | rainbow |
-    
+    And the following ratings exist:
+      | post title | rating |
+      | land       | 5      |
+      | once       | 5      |
+      | once       | 4      |
+      | once       | 0      |
+      | land       | 3      |
 
   Scenario: No ratings on a post page
-    Given I visit the page for the post with title "once"
-    Then I should see a message saying there are no ratings
+    Given I visit the page for the post with title "way"
+    Then  I should see a message saying there are no ratings
 
   Scenario: Rate a post
     Given I visit the page for the post with title "way"
@@ -29,8 +34,9 @@ Feature: Comments
   
   Scenario: Order at posts list
     Given I visit the posts list page
-    And   Post with title "rainbow" has a mean rating of "4"
-    And   Post with title "over" has a mean rating of "3"
+    Then print last response
+    And   Post with title "land" has a mean rating of "4"
+    And   Post with title "once" has a mean rating of "3"
     Then  Posts should be ordered by date
     And   I choose "order by rating"
-    Then  Post with title "rainbow" is before post with title "over"
+    Then  Post with title "land" is before post with title "once"

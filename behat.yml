@@ -1,0 +1,11 @@
+default:
+    suites:
+        kodify:
+            contexts:
+                - Kodify\BlogBundle\Test\Behat\FeatureContext
+    extensions:
+        Behat\Symfony2Extension: ~
+        Behat\MinkExtension:
+            sessions:
+                default:
+                    symfony2: ~

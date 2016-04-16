@@ -10,4 +10,28 @@ namespace Kodify\BlogBundle\Repository;
  */
 class PostRepository extends AbstractBaseRepository
 {
+    public function latestOrdered($fieldToOrderBy = null, $limit = null, $offset = 0)
+    {
+        $validOrderByFields = ['rating'];
+        if (!in_array($fieldToOrderBy, $validOrderByFields)) {
+            $fieldToOrderBy = 'p.createdAt';
+        }
+
+        if (is_null($limit)) {
+            $limit = static::LIST_DEFAULT_LIMIT;
+        }
+
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->addSelect('SUM(r.value)/COUNT(r.id) AS HIDDEN rating')
+            ->leftJoin('p.ratings', 'r', 'r.postId = p.id')
+            ->groupBy('p')
+            ->orderBy($fieldToOrderBy, 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+
+        return $this->findBy([], [$fieldToOrderBy, 'DESC'], $limit, $offset);
+    }
 }

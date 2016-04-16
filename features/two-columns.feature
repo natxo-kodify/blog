@@ -18,6 +18,6 @@ Feature: Two columns for post list
 
   Scenario: Visit home page
     Given I visit the home page
-    Then The post with title "way" is on first column, first row
+    Then The post with title "way" is on the first column, first row
     And  The post with title "land" is on the second column, first row
     And  The post with title "once" is on the first column, second row

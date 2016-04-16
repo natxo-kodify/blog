@@ -1,15 +1,26 @@
 home:
     path:     /
-    defaults: { _controller: KodifyBlogBundle:Posts:index }
+    defaults: { _controller: KodifyBlogBundle:Home:index }
 authors:
     path:     /authors
     defaults: { _controller: KodifyBlogBundle:Authors:index }
+posts:
+    path:     /posts/
+    defaults: { _controller: KodifyBlogBundle:Posts:index }
 create_post:
     path:     /posts/create
     defaults: { _controller: KodifyBlogBundle:Posts:create }
 view_post:
     path:     /posts/{id}
     defaults: { _controller: KodifyBlogBundle:Posts:view }
+add_comment:
+    path:     /posts/{postId}/comment
+    methods:  [POST]
+    defaults: { _controller: KodifyBlogBundle:Posts:addComment }
+add_rating:
+    path:     /posts/{postId}/rating
+    methods:  [POST]
+    defaults: { _controller: KodifyBlogBundle:Posts:addRating }
 create_author:
     path:     /authors/create
     defaults: { _controller: KodifyBlogBundle:Authors:create }

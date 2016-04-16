@@ -2,6 +2,23 @@
 
 {% block content %}
 
+    <div class="order-bar right">
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="orderby-dropdow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Order by <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="orderby-dropdow">
+                {% if app.request.get('orderBy') == 'rating' %}
+                    <li data-orderby="rating" class="disabled" data-order="rating"><a href="#">Rating <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a></li>
+                    <li><a href="{{ path('posts', {'orderBy': 'createdAt'}) }}" title="order by date">Date</a></li>
+                {% else %}
+                    <li><a href="{{ path('posts', {'orderBy': 'rating'}) }}" title="order by rating">Rating</a></li>
+                    <li data-orderby="date" class="disabled"><a href="#">Date <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
     {% for post in posts %}
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -10,6 +27,14 @@
             </div>
             <div class="panel-body">
                 {{ post.content }}
+            </div>
+            <div class="panel-footer small">
+                {% if post.ratings|length == 0 %}
+                    Post not rated yet
+                {% else %}
+                    Post rating:
+                {% endif %}
+                <span class="rating" data-title="{{ post.title }}">{{ post.rating() }}</span>
             </div>
         </div>
     {% endfor %}
