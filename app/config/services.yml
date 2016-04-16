@@ -6,3 +6,6 @@ parameters:
 services:
     app.post_service:
         class: Kodify\BlogBundle\Service\PostService
+
+    app.author_service:
+            class: Kodify\BlogBundle\Service\AuthorService
