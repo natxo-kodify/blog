@@ -3,8 +3,8 @@
 namespace Kodify\BlogBundle\Service;
 
 //TODO:: use Kodify\BlogBundle\Entity\Comment;
-//TODO:: use Kodify\BlogBundle\Form\Type\CommentType;
 //TODO:: use Kodify\BlogBundle\Repository\CommentRepository;
+use Kodify\BlogBundle\Form\Type\CommentType;
 use Kodify\BlogBundle\Tests\Fixtures\CommentsFixture;
 use Kodify\BlogBundle\Tests\Fixtures\PostsFixture;
 use Symfony\Component\Form\FormInterface;
@@ -78,15 +78,14 @@ class CommentService extends AppService
     /**
      * Creates a form related to a Comment with the given options
      *
-     * @param $commentType mixed //TODO::CommentType A form CommentType instance
+     * @param $commentType CommentType A form CommentType instance
      * @param $options array The given options to be passed to the form constructor
      * @return FormInterface
      */
     public function createForm($commentType, $options) {
-        //TODO::
-//        return $this->container->get('form.factory')->create(
-//            $commentType,
-//            new Comment(),
-//            $options);
+        return $this->container->get('form.factory')->create(
+            $commentType,
+            [], //TODO:: new Comment()
+            $options);
     }
 }

@@ -9,7 +9,9 @@
         <div class="panel-body">
             {{ post.content }}
             {% block comments %}
-                {% include 'KodifyBlogBundle:Comment:List/index.html.twig' with {'comments': comments } only %}
+                {% include 'KodifyBlogBundle:Comment:List/index.html.twig'
+                    with {'postId': post.id }
+                %}
             {% endblock %}
         </div>
     </div>

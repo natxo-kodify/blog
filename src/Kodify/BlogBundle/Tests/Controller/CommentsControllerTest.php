@@ -2,6 +2,7 @@
 
 namespace Kodify\BlogBundle\Tests\Controller;
 
+use Kodify\BlogBundle\Tests\Fixtures\AuthorsFixture;
 use Kodify\BlogBundle\Tests\Fixtures\CommentsFixture;
 use Kodify\BlogBundle\Tests\Fixtures\PostsFixture;
 use Kodify\BlogBundle\Tests\BaseFunctionalTestCase;
@@ -29,5 +30,32 @@ class CommentsControllerTest extends BaseFunctionalTestCase
         $this->assertElementWithClassFound($crawler, 'comment', 1);
         $this->assertTextFound($crawler, CommentsFixture::NICE);
         $this->assertTextNotFound($crawler, CommentsFixture::SONG);
+    }
+
+    public function testCreateComment()
+    {
+        
+        $commentText = 'Judy Garland was great!';
+
+        $crawler = $this->client->request('GET', sprintf('/posts/%s', PostsFixture::ONCE_ID));
+
+        $linkCreateComment = $crawler->selectLink('Create Comment')->link();
+        $crawler = $this->client->click($linkCreateComment);
+
+        $this->assertTextFound($crawler, 'Text');
+        $this->assertTextFound($crawler, 'Publish');
+        $form = $crawler->selectButton('Publish')->form([
+            'comment[text]' => $commentText,
+            'comment[author]' => AuthorsFixture::SOMEONE
+        ]);
+        $this->client->submit($form);
+        $this->client->followRedirect();
+
+        //TODO:: Complete it!
+        $this->markTestIncomplete('Still not persisting');
+        
+        $this->assertElementWithClassFound($crawler, 'comments', 1);
+        $this->assertElementWithClassFound($crawler, 'comment', 1);
+        $this->assertTextFound($crawler, $commentText);
     }
 }
