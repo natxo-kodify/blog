@@ -1,0 +1,13 @@
+<ul class="list-group comments">
+    {% if comments is not empty %}
+        {% for comment in comments %}
+            <li class="list-group-item comment">
+                {{ comment.text }}
+            </li>
+        {% endfor %}
+    {% else %}
+        <li class="list-group-item">
+            There are no comments
+        </li>
+    {% endif %}
+</ul>

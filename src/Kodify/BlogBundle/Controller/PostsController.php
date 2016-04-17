@@ -2,7 +2,6 @@
 
 namespace Kodify\BlogBundle\Controller;
 
-use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Form\Type\PostType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,7 +10,7 @@ class PostsController extends Controller
 {
     public function indexAction()
     {
-        $posts      = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
+        $posts      = $this->get('post_service')->getLatest(5);
         $template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
         if (count($posts)) {
@@ -24,13 +23,14 @@ class PostsController extends Controller
 
     public function viewAction($id)
     {
-        $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
-        if (!$currentPost instanceof Post) {
+        $currentPost = $this->get('post_service')->findById($id);
+        if ($currentPost === null) {
             throw $this->createNotFoundException('Post not found');
         }
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
+            'comments'    => $this->get('comment_service')->getLatestByPost($id, 5)
         ];
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
@@ -38,9 +38,8 @@ class PostsController extends Controller
 
     public function createAction(Request $request)
     {
-        $form       = $this->createForm(
+        $form       = $this->get('post_service')->createForm(
             new PostType(),
-            new Post(),
             [
                 'action' => $this->generateUrl('create_post'),
                 'method' => 'POST',
@@ -53,9 +52,7 @@ class PostsController extends Controller
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $post = $form->getData();
-            $this->getDoctrine()->getManager()->persist($post);
-            $this->getDoctrine()->getManager()->flush();
+            $this->get('post_service')->persistForm($form);
             $parameters['message'] = 'Post Created!';
         }
 

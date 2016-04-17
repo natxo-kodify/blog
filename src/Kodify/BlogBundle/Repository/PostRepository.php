@@ -1,6 +1,7 @@
 <?php
 
 namespace Kodify\BlogBundle\Repository;
+use Kodify\BlogBundle\Entity\Post;
 
 /**
  * PostRepository
@@ -10,4 +11,13 @@ namespace Kodify\BlogBundle\Repository;
  */
 class PostRepository extends AbstractBaseRepository
 {
+    /**
+     * Persists the given author to the database
+     * @param $post Post
+     */
+    public function persist($post)
+    {
+        $this->getEntityManager()->persist($post);
+        $this->getEntityManager()->flush();
+    }
 }

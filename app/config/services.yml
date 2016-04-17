@@ -4,6 +4,32 @@ parameters:
 #    parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    author_repository:
+        class: Kodify\BlogBundle\Repository\AuthorRepository
+        factory: ["@doctrine", getRepository]
+        arguments: [Kodify\BlogBundle\Entity\Author]
+
+    post_repository:
+        class: Kodify\BlogBundle\Repository\PostRepository
+        factory: ["@doctrine", getRepository]
+        arguments: [Kodify\BlogBundle\Entity\Post]
+
+    author_service:
+        class: Kodify\BlogBundle\Service\AuthorService
+        arguments: ["@author_repository"]
+        calls:
+              - [ setContainer,[ "@service_container" ] ]
+
+    post_service:
+        class: Kodify\BlogBundle\Service\PostService
+        arguments: ["@post_repository"]
+        calls:
+              - [ setContainer,[ "@service_container" ] ]
+
+    comment_service:
+        class: Kodify\BlogBundle\Service\CommentService
+        arguments: [null, "@post_service"]
+        calls:
+              - [ setContainer,[ "@service_container" ] ]
+
+

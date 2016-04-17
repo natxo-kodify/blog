@@ -1,6 +1,7 @@
 <?php
 
 namespace Kodify\BlogBundle\Repository;
+use Kodify\BlogBundle\Entity\Author;
 
 /**
  * AuthorRepository
@@ -10,5 +11,13 @@ namespace Kodify\BlogBundle\Repository;
  */
 class AuthorRepository extends AbstractBaseRepository
 {
-    const LIST_DEFAULT_LIMIT = 8;
+    /**
+     * Persists the given author to the database
+     * @param $author Author
+     */
+    public function persist($author)
+    {
+        $this->getEntityManager()->persist($author);
+        $this->getEntityManager()->flush();
+    }
 }
