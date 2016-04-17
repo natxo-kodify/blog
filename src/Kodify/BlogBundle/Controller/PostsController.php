@@ -2,6 +2,7 @@
 
 namespace Kodify\BlogBundle\Controller;
 
+use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Form\Type\PostType;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -44,8 +45,8 @@ class PostsController extends AppController
     public function createAction(Request $request)
     {
         $form       = $this->createForm(
-            PostType::class,
-            null,
+            new PostType(),
+            new Post(),
             [
                 'action' => $this->generateUrl('create_post'),
                 'method' => 'POST',

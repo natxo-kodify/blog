@@ -2,6 +2,7 @@
 
 namespace Kodify\BlogBundle\Controller;
 
+use Kodify\BlogBundle\Entity\Author;
 use Kodify\BlogBundle\Form\Type\AuthorType;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -31,8 +32,8 @@ class AuthorsController extends AppController
     public function createAction(Request $request)
     {
         $form       = $this->createForm(
-            AuthorType::class,
-            null,
+            new AuthorType(),
+            new Author(),
             [
                 'action' => $this->generateUrl('create_author'),
                 'method' => 'POST',
