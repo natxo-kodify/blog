@@ -121,4 +121,22 @@ class BaseFunctionalTestCase extends WebTestCase
 
         $this->assertTextFound($crawler, $text, 0, $message);
     }
+
+    /**
+     * @param Crawler $crawler Web crawler for a given page
+     * @param string $class The class name
+     * @param int $times Number of times the text must appear
+     * @param string $message Custom error message in case of failure
+     */
+    protected function assertElementWithClassFound($crawler, $class, $times = 1, $message = null)
+    {
+        if (is_null($message)) {
+            $message = "Elements with class {$class} did not appear {$times} times";
+        }
+        $this->assertSame(
+            $times,
+            $crawler->filter('.' . $class)->count(),
+            $message
+        );
+    }
 }

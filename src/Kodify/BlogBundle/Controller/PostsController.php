@@ -30,6 +30,7 @@ class PostsController extends Controller
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
+            'comments'    => $this->get('comment_service')->getLatestByPost($id, 5)
         ];
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);

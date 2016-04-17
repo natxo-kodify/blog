@@ -6,10 +6,15 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-// use Kodify\BlogBundle\Entity\Comment;
+//TODO:: use Kodify\BlogBundle\Entity\Comment;
 
 class CommentsFixture extends AbstractFixture implements DependentFixtureInterface
 {
+    const NICE = 'nice!!';
+    const NICE_ID = 1;
+    const SONG = 'Is that a song?';
+    const SONG_ID = 2;
+
     /**
      * {@inheritDoc}
      */

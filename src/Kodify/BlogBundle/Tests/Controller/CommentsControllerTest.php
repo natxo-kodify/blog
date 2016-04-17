@@ -21,4 +21,13 @@ class CommentsControllerTest extends BaseFunctionalTestCase
         $crawler = $this->client->request('GET', sprintf('/posts/%s', PostsFixture::ONCE_ID));
         $this->assertTextFound($crawler, "There are no comments");
     }
+
+    public function testSeeCommentsOnAPostPage()
+    {
+        $crawler = $this->client->request('GET', sprintf('/posts/%s', PostsFixture::WAY_ID));
+        $this->assertElementWithClassFound($crawler, 'comments', 1);
+        $this->assertElementWithClassFound($crawler, 'comment', 1);
+        $this->assertTextFound($crawler, CommentsFixture::NICE);
+        $this->assertTextNotFound($crawler, CommentsFixture::SONG);
+    }
 }

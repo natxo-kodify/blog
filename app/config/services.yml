@@ -6,12 +6,12 @@ parameters:
 services:
     author_repository:
         class: Kodify\BlogBundle\Repository\AuthorRepository
-        factory: ["@doctrine.orm.default_entity_manager", getRepository]
+        factory: ["@doctrine", getRepository]
         arguments: [Kodify\BlogBundle\Entity\Author]
 
     post_repository:
         class: Kodify\BlogBundle\Repository\PostRepository
-        factory: ["@doctrine.orm.default_entity_manager", getRepository]
+        factory: ["@doctrine", getRepository]
         arguments: [Kodify\BlogBundle\Entity\Post]
 
     author_service:
@@ -23,6 +23,12 @@ services:
     post_service:
         class: Kodify\BlogBundle\Service\PostService
         arguments: ["@post_repository"]
+        calls:
+              - [ setContainer,[ "@service_container" ] ]
+
+    comment_service:
+        class: Kodify\BlogBundle\Service\CommentService
+        arguments: [null, "@post_service"]
         calls:
               - [ setContainer,[ "@service_container" ] ]
 
