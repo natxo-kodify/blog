@@ -12,14 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 abstract class AbstractBaseRepository extends EntityRepository
 {
-    const LIST_DEFAULT_LIMIT = 5;
-
-    public function latest($limit = null, $offset = 0)
+    /**
+     * Gets the latest entries
+     *
+     * @param int $limit Number of entries to retrieve
+     * @param int $offset Number of ordered entries to skip
+     * @return array
+     */
+    public function latest($limit, $offset = 0)
     {
-        if (is_null($limit)) {
-            $limit = static::LIST_DEFAULT_LIMIT;
-        }
-
         return $this->findBy([], ['createdAt' => 'DESC'], $limit, $offset);
     }
 

@@ -2,23 +2,16 @@
 
 namespace Kodify\BlogBundle\Controller;
 
-use Kodify\BlogBundle\Entity\Author;
 use Kodify\BlogBundle\Form\Type\AuthorType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 
-class AuthorsController extends AppController
+class AuthorsController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected $services = [
-        'app.author_service'
-    ];
-
     public function indexAction()
     {
-        $authors    = $this->get('app.author_service')->getLatest();
+        $authors    = $this->get('author_service')->getLatest(8);
         $template   = 'KodifyBlogBundle:Author:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home', 'authors' => 'Authors']];
         if (count($authors)) {
@@ -31,9 +24,8 @@ class AuthorsController extends AppController
 
     public function createAction(Request $request)
     {
-        $form       = $this->createForm(
+        $form       = $this->get('author_service')->createForm(
             new AuthorType(),
-            new Author(),
             [
                 'action' => $this->generateUrl('create_author'),
                 'method' => 'POST',
@@ -47,7 +39,7 @@ class AuthorsController extends AppController
         $form->handleRequest($request);
         if ($form->isValid()) {
             $author = $form->getData();
-            $this->get('app.author_service')->persist($author);
+            $this->get('author_service')->persist($author);
             $parameters['message'] = 'Author Created!';
         }
 

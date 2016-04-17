@@ -4,8 +4,26 @@ parameters:
 #    parameter_name: value
 
 services:
-    app.post_service:
-        class: Kodify\BlogBundle\Service\PostService
+    author_repository:
+        class: Kodify\BlogBundle\Repository\AuthorRepository
+        factory: ["@doctrine.orm.default_entity_manager", getRepository]
+        arguments: [Kodify\BlogBundle\Entity\Author]
 
-    app.author_service:
-            class: Kodify\BlogBundle\Service\AuthorService
+    post_repository:
+        class: Kodify\BlogBundle\Repository\PostRepository
+        factory: ["@doctrine.orm.default_entity_manager", getRepository]
+        arguments: [Kodify\BlogBundle\Entity\Post]
+
+    author_service:
+        class: Kodify\BlogBundle\Service\AuthorService
+        arguments: ["@author_repository"]
+        calls:
+              - [ setContainer,[ "@service_container" ] ]
+
+    post_service:
+        class: Kodify\BlogBundle\Service\PostService
+        arguments: ["@post_repository"]
+        calls:
+              - [ setContainer,[ "@service_container" ] ]
+
+

@@ -1,32 +1,26 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: marc
- * Date: 16/04/16
- * Time: 19:06
- */
 
 namespace Kodify\BlogBundle\Service;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\Form\FormInterface;
 
 
-class AppService extends ContainerAware
+abstract class AppService extends ContainerAware
 {
     /**
-     * Shortcut to return the Doctrine Registry service.
+     * Persists the given object
      *
-     * @return Registry
-     *
-     * @throws \LogicException If DoctrineBundle is not available
+     * @param $entity mixed
      */
-    public function getDoctrine()
-    {
-        if (!$this->container->has('doctrine')) {
-            throw new \LogicException('The DoctrineBundle is not registered in your application.');
-        }
+    public abstract function persist($entity);
 
-        return $this->container->get('doctrine');
+    /**
+     * Persists the data available from the given form
+     *
+     * @param $form FormInterface The form with the data to be persisted
+     */
+    public function persistForm($form) {
+        $this->persist($form->getData());
     }
 }
