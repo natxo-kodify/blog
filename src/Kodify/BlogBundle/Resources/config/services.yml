@@ -11,15 +11,11 @@ services:
 
     author_service:
         class: Kodify\BlogBundle\Service\AuthorService
-        arguments: ["@author_repository"]
-        calls:
-              - [ setContainer,[ "@service_container" ] ]
+        arguments: ["@author_repository", "@form.factory"]
 
     post_service:
         class: Kodify\BlogBundle\Service\PostService
-        arguments: ["@post_repository"]
-        calls:
-              - [ setContainer,[ "@service_container" ] ]
+        arguments: ["@post_repository", "@form.factory"]
 
     comment_service:
         class: Kodify\BlogBundle\Service\CommentService

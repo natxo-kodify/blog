@@ -2,26 +2,37 @@
 
 namespace Kodify\BlogBundle\Service;
 
-use Kodify\BlogBundle\Entity\Author;
 use Kodify\BlogBundle\Form\Type\AuthorType;
-use Kodify\BlogBundle\Repository\AuthorRepository;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Kodify\BlogBundle\Domain\AuthorInterface;
+use Kodify\BlogBundle\Domain\AuthorRepositoryInterface;
+
+use Kodify\BlogBundle\Entity\Author;
+
 
 class AuthorService extends AppService
 {
+
     /**
-     * @var AuthorRepository
+     * @var AuthorRepositoryInterface
      */
     private $authorRepository;
 
     /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
      * AuthorService constructor.
      *
-     * @param $authorRepository AuthorRepository
+     * @param $authorRepository AuthorRepositoryInterface
+     * @param $formFactory FormFactoryInterface
      */
-    public function __construct($authorRepository)
+    public function __construct($authorRepository, $formFactory)
     {
         $this->authorRepository = $authorRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -37,7 +48,7 @@ class AuthorService extends AppService
     /**
      * Persists the given Author
      *
-     * @param $author Author
+     * @param $author AuthorInterface
      */
     public function persist($author) {
         $this->authorRepository->persist($author);
@@ -48,11 +59,16 @@ class AuthorService extends AppService
      *
      * @param $authorType AuthorType A form AuthorType instance
      * @param $options array The given options to be passed to the form constructor
-     * @return FormInterface
+     * @return FormFactoryInterface
      */
     public function createForm($authorType, $options) {
-        return $this->container->get('form.factory')->create(
+        return $this->formFactory->create(
             $authorType,
+            /**
+             * TODO:: Remove the following dependency on a database entity
+             * Don't know how to get around this using forms.
+             * Also, creating an instance here makes it not properly untestable.
+             */
             new Author(),
             $options);
     }
