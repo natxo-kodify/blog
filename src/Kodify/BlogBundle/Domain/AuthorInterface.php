@@ -6,7 +6,7 @@ namespace Kodify\BlogBundle\Domain;
  *
  * Interface representing what an Author domain object shall do (independently of the database)
  */
-interface AuthorInterface extends DomainBaseInterface
+interface AuthorInterface extends BaseDomainInterface
 {
 
     /**

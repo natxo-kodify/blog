@@ -2,11 +2,11 @@
 namespace Kodify\BlogBundle\Domain;
 
 /**
- * DomainBaseInterface
+ * BaseDomainInterface
  *
  * Common Interface shared by all domain objects
  */
-interface DomainBaseInterface
+interface BaseDomainInterface
 {
 
     /**

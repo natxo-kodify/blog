@@ -6,7 +6,7 @@ namespace Kodify\BlogBundle\Domain;
  *
  * Interface representing what a Post domain object shall do (independently of the database)
  */
-interface PostInterface extends DomainBaseInterface
+interface PostInterface extends BaseDomainInterface
 {
 
     /**
