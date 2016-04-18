@@ -5,6 +5,8 @@ namespace Kodify\BlogBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use Kodify\BlogBundle\Domain\PostInterface;
+
 /**
  * Post
  *
@@ -12,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\PostRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class Post extends AbstractBaseEntity
+class Post extends AbstractBaseEntity implements PostInterface
 {
     /**
      * @var integer
@@ -47,9 +49,15 @@ class Post extends AbstractBaseEntity
     protected $author;
 
     /**
-     * Get id
-     *
-     * @return integer
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return $this->title;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -57,10 +65,7 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Set title
-     *
-     * @param string $title
-     * @return Post
+     * {@inheritdoc}
      */
     public function setTitle($title)
     {
@@ -70,9 +75,7 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Get title
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getTitle()
     {
@@ -80,10 +83,7 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Set content
-     *
-     * @param string $content
-     * @return Post
+     * {@inheritdoc}
      */
     public function setContent($content)
     {
@@ -93,9 +93,7 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Get content
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getContent()
     {
@@ -103,12 +101,9 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Set author
-     *
-     * @param \Kodify\BlogBundle\Entity\Author $author
-     * @return Post
+     * {@inheritdoc}
      */
-    public function setAuthor(\Kodify\BlogBundle\Entity\Author $author = null)
+    public function setAuthor($author = null)
     {
         $this->author = $author;
 
@@ -116,9 +111,7 @@ class Post extends AbstractBaseEntity
     }
 
     /**
-     * Get author
-     *
-     * @return \Kodify\BlogBundle\Entity\Author
+     * {@inheritdoc}
      */
     public function getAuthor()
     {

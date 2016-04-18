@@ -21,9 +21,7 @@ abstract class AbstractBaseEntity
     protected $updatedAt;
 
     /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
+     * {@inheritdoc}
      */
     public function setCreatedAt($createdAt)
     {
@@ -35,9 +33,7 @@ abstract class AbstractBaseEntity
     }
 
     /**
-     * Get createdAt
-     *
-     * @return \DateTime
+     * {@inheritdoc}
      */
     public function getCreatedAt()
     {
@@ -45,9 +41,7 @@ abstract class AbstractBaseEntity
     }
 
     /**
-     * Set updatedAt
-     *
-     * @param \DateTime $updatedAt
+     * {@inheritdoc}
      */
     public function setUpdatedAt($updatedAt = null)
     {
@@ -74,9 +68,7 @@ abstract class AbstractBaseEntity
     }
 
     /**
-     * Get updatedAt
-     *
-     * @return \DateTime
+     * {@inheritdoc}
      */
     public function getUpdatedAt()
     {
