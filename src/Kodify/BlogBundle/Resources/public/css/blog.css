@@ -26,3 +26,13 @@ label {
 .create-comment {
     margin-top: 5px;
 }
+
+.post.first-column {
+    width: 49%;
+    float: left;
+}
+
+.post.second-column {
+    float: right;
+    width: 49%;
+}
