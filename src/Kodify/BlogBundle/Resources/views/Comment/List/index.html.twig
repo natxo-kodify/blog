@@ -1,0 +1,23 @@
+<ul class="list-group comments">
+    {% if comments is not empty %}
+        {% for comment in comments %}
+            <li class="list-group-item comment">
+                {{ comment.text }}
+            </li>
+        {% endfor %}
+    {% else %}
+        <li class="list-group-item">
+            There are no comments
+        </li>
+    {% endif %}
+
+    {% if formCreateComment is defined %}
+        {% include 'KodifyBlogBundle:Comment:create.html.twig'
+            with {'form': formCreateComment, 'postId': post.id } only
+        %}
+    {% else %}
+        <a class="btn btn-primary" href="{{ path('create_comment', {'postId': postId }) }}">
+            Create Comment
+        </a>
+    {% endif %}
+</ul>

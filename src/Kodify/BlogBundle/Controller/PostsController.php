@@ -2,16 +2,16 @@
 
 namespace Kodify\BlogBundle\Controller;
 
-use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Form\Type\PostType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class PostsController extends Controller
 {
     public function indexAction()
     {
-        $posts      = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
+        $posts      = $this->get('post_service')->getLatest(5);
         $template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
         if (count($posts)) {
@@ -22,25 +22,32 @@ class PostsController extends Controller
         return $this->render($template, $parameters);
     }
 
-    public function viewAction($id)
+    /**
+     * Returns a view of the given post
+     *
+     * @param $id int The id of the post to view
+     * @param array $additionalParams additional params to send to the view
+     * @return Response
+     */
+    public function viewAction($id, $additionalParams = [])
     {
-        $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
-        if (!$currentPost instanceof Post) {
+        $currentPost = $this->get('post_service')->findById($id);
+        if ($currentPost === null) {
             throw $this->createNotFoundException('Post not found');
         }
-        $parameters = [
+        $parameters = array_merge([
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
-        ];
+            'comments'    => $this->get('comment_service')->getLatestByPost($id, 5)
+        ], $additionalParams);
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
     }
 
     public function createAction(Request $request)
     {
-        $form       = $this->createForm(
+        $form       = $this->get('post_service')->createForm(
             new PostType(),
-            new Post(),
             [
                 'action' => $this->generateUrl('create_post'),
                 'method' => 'POST',
@@ -53,9 +60,7 @@ class PostsController extends Controller
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $post = $form->getData();
-            $this->getDoctrine()->getManager()->persist($post);
-            $this->getDoctrine()->getManager()->flush();
+            $this->get('post_service')->persistForm($form);
             $parameters['message'] = 'Post Created!';
         }
 

@@ -17,3 +17,22 @@ label {
 .thumbnail img {
     height: 200px;
 }
+
+.comments {
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+
+.create-comment {
+    margin-top: 5px;
+}
+
+.post.first-column {
+    width: 49%;
+    float: left;
+}
+
+.post.second-column {
+    float: right;
+    width: 49%;
+}

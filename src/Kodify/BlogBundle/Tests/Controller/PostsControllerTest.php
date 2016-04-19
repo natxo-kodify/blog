@@ -4,9 +4,10 @@ namespace Kodify\BlogBundle\Tests\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\Author;
-use Kodify\BlogBundle\Tests\BaseFunctionalTest;
+use Kodify\BlogBundle\Tests\Fixtures\PostsFixture;
+use Kodify\BlogBundle\Tests\BaseFunctionalTestCase;
 
-class PostsControllerTest extends BaseFunctionalTest
+class PostsControllerTest extends BaseFunctionalTestCase
 {
     public function testIndexNoPosts()
     {
@@ -46,14 +47,56 @@ class PostsControllerTest extends BaseFunctionalTest
 
     public function testViewPost()
     {
-        $this->createPosts(2);
-        $crawler = $this->client->request('GET', '/posts/1');
-        $this->assertTextFound($crawler, 'Title0');
-        $this->assertTextFound($crawler, 'Content0');
-        $this->assertTextNotFound($crawler, 'Title1');
-        $this->assertTextNotFound($crawler, 'Content1');
+        $this->loadFixtures(new PostsFixture());
+
+        $crawler = $this->client->request('GET', sprintf('/posts/%s', PostsFixture::WAY));
+        $this->assertTextFound($crawler, PostsFixture::WAY);
+        $this->assertTextNotFound($crawler, PostsFixture::LAND);
+        $this->assertTextNotFound($crawler, PostsFixture::ONCE);
     }
 
+    /**
+     * Feature: Two columns for post list
+     *   As a Blog manager
+     *   I want to have a post list at two columns
+     *   In order that it looks better
+     */
+    //Scenario: Visit home page
+    public function testViewPostTwoColumns()
+    {
+        $this->loadFixtures(new PostsFixture());
+
+        //Given I visit the home page
+        $crawler = $this->client->request('GET', '/');
+
+        //Then The post with title "way" is on first column, first row
+        $domElement = $crawler->filter('.post.first-column')->getNode(0);
+        $this->assertContains(PostsFixture::WAY,
+            $domElement->textContent,
+            'The post with title "way" is NOT on first column, first row'
+        );
+
+        //And  The post with title "land" is on the second column, first row
+        $domElement = $crawler->filter('.post.second-column')->getNode(0);
+        $this->assertContains(PostsFixture::LAND,
+            $domElement->textContent,
+            'The post with title "land" is NOT on the second column, first row'
+        );
+
+        //And  The post with title "once" is on the first column, second row
+        $domElement = $crawler->filter('.post.first-column')->getNode(1);
+        $this->assertContains(PostsFixture::ONCE,
+            $domElement->textContent,
+            'The post with title "once" is NOT on the first column, second row'
+        );
+    }
+
+    /**
+     * Independent from default fixtures.
+     * Creates the given number of posts attached to a single author
+     *
+     * @param $count Number of posts to create
+     */
     protected function createPosts($count)
     {
         $author = new Author();

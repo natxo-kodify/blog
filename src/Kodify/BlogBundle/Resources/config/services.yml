@@ -1,4 +1,27 @@
 services:
-#    kodify_blog.example:
-#        class: Kodify\BlogBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    author_repository:
+        class: Kodify\BlogBundle\Repository\AuthorRepository
+        factory: ["@doctrine", getRepository]
+        arguments: [Kodify\BlogBundle\Entity\Author]
+
+    post_repository:
+        class: Kodify\BlogBundle\Repository\PostRepository
+        factory: ["@doctrine", getRepository]
+        arguments: [Kodify\BlogBundle\Entity\Post]
+
+    comment_repository:
+        class: Kodify\BlogBundle\Repository\CommentRepository
+        factory: ["@doctrine", getRepository]
+        arguments: [Kodify\BlogBundle\Entity\Comment]
+
+    author_service:
+        class: Kodify\BlogBundle\Service\AuthorService
+        arguments: ["@author_repository", "@form.factory"]
+
+    post_service:
+        class: Kodify\BlogBundle\Service\PostService
+        arguments: ["@post_repository", "@form.factory"]
+
+    comment_service:
+        class: Kodify\BlogBundle\Service\CommentService
+        arguments: ["@comment_repository", "@form.factory", "@post_service"]
