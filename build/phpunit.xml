@@ -31,6 +31,9 @@
         <testsuite name="Forms">
             <directory>../src/Kodify/*/Tests/Form</directory>
         </testsuite>
+        <testsuite name="Services">
+            <directory>../src/Kodify/*/Tests/Service</directory>
+        </testsuite>
     </testsuites>
 
     <php>

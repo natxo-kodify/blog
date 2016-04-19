@@ -4,6 +4,8 @@ namespace Kodify\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Kodify\BlogBundle\Domain\AuthorInterface;
+
 /**
  * Author
  *
@@ -11,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\AuthorRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class Author extends AbstractBaseEntity
+class Author extends AbstractBaseEntity implements AuthorInterface
 {
     /**
      * @var integer
@@ -42,15 +44,16 @@ class Author extends AbstractBaseEntity
         $this->videos = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function __toString()
     {
         return $this->name;
     }
 
     /**
-     * Get id
-     *
-     * @return integer
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -58,10 +61,7 @@ class Author extends AbstractBaseEntity
     }
 
     /**
-     * Set name
-     *
-     * @param string $name
-     * @return Author
+     * {@inheritdoc}
      */
     public function setName($name)
     {
@@ -71,9 +71,7 @@ class Author extends AbstractBaseEntity
     }
 
     /**
-     * Get name
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -81,12 +79,9 @@ class Author extends AbstractBaseEntity
     }
 
     /**
-     * Add videos
-     *
-     * @param \Kodify\BlogBundle\Entity\Post $videos
-     * @return Author
+     * {@inheritdoc}
      */
-    public function addVideo(\Kodify\BlogBundle\Entity\Post $videos)
+    public function addVideo($videos)
     {
         $this->videos[] = $videos;
 
@@ -94,19 +89,15 @@ class Author extends AbstractBaseEntity
     }
 
     /**
-     * Remove videos
-     *
-     * @param \Kodify\BlogBundle\Entity\Post $videos
+     * {@inheritdoc}
      */
-    public function removeVideo(\Kodify\BlogBundle\Entity\Post $videos)
+    public function removeVideo($videos)
     {
         $this->videos->removeElement($videos);
     }
 
     /**
-     * Get videos
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * {@inheritdoc}
      */
     public function getVideos()
     {

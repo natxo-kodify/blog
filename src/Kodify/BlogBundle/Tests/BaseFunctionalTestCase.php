@@ -2,22 +2,34 @@
 
 namespace Kodify\BlogBundle\Tests;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\DomCrawler\Crawler;
 use Doctrine\DBAL\Connection;
 
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+
 class BaseFunctionalTestCase extends WebTestCase
 {
     protected $entityManager;
     /**
-     * @var Client $client
+     * @var Client
      */
     protected $client;
+
+    /**
+     * @var Loader
+     */
+    protected $loader;
 
     public function setUp()
     {
         $this->client = static::createClient();
+        $this->loader = new Loader();
         $this->cleanDb();
     }
 
@@ -32,6 +44,29 @@ class BaseFunctionalTestCase extends WebTestCase
         $this->clearTableByName('Post');
     }
 
+    /**
+     * Loads the given fixtures
+     *
+     * @param $fixtures AbstractFixture|AbstractFixture[] Fixtures to be loaded
+     */
+    protected function loadFixtures($fixtures)
+    {
+        if (!is_array($fixtures)) {
+            $fixtures = [$fixtures];
+        }
+        
+        foreach ($fixtures as $fixture) {
+            $this->loader->addFixture($fixture);
+        }
+
+        $purger = new ORMPurger();
+        $executor = new ORMExecutor($this->entityManager(), $purger);
+        $executor->execute($this->loader->getFixtures());
+    }
+
+    /**
+     * @return EntityManager
+     */
     protected function entityManager()
     {
         if ($this->entityManager == null) {
@@ -85,5 +120,23 @@ class BaseFunctionalTestCase extends WebTestCase
         }
 
         $this->assertTextFound($crawler, $text, 0, $message);
+    }
+
+    /**
+     * @param Crawler $crawler Web crawler for a given page
+     * @param string $class The class name
+     * @param int $times Number of times the text must appear
+     * @param string $message Custom error message in case of failure
+     */
+    protected function assertElementWithClassFound($crawler, $class, $times = 1, $message = null)
+    {
+        if (is_null($message)) {
+            $message = "Elements with class {$class} did not appear {$times} times";
+        }
+        $this->assertSame(
+            $times,
+            $crawler->filter('.' . $class)->count(),
+            $message
+        );
     }
 }
