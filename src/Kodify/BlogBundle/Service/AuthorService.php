@@ -39,10 +39,11 @@ class AuthorService extends AppService
      * Gets the latest authors
      *
      * @param $limit int The number of posts wanted
+     * @param int $offset Number of ordered authors to skip
      * @return array The latest posts
      */
-    public function getLatest($limit) {
-        return $this->authorRepository->latest($limit);
+    public function getLatest($limit, $offset = 0) {
+        return $this->authorRepository->latest($limit, $offset);
     }
 
     /**

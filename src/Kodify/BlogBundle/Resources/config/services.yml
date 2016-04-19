@@ -9,6 +9,11 @@ services:
         factory: ["@doctrine", getRepository]
         arguments: [Kodify\BlogBundle\Entity\Post]
 
+    comment_repository:
+        class: Kodify\BlogBundle\Repository\CommentRepository
+        factory: ["@doctrine", getRepository]
+        arguments: [Kodify\BlogBundle\Entity\Comment]
+
     author_service:
         class: Kodify\BlogBundle\Service\AuthorService
         arguments: ["@author_repository", "@form.factory"]
@@ -19,6 +24,4 @@ services:
 
     comment_service:
         class: Kodify\BlogBundle\Service\CommentService
-        arguments: [null, "@post_service"]
-        calls:
-              - [ setContainer,[ "@service_container" ] ]
+        arguments: ["@comment_repository", "@form.factory", "@post_service"]

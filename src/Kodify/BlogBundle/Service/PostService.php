@@ -38,10 +38,12 @@ class PostService extends AppService
      * Gets the latest posts published
      *
      * @param $limit int The number of posts wanted
+     * @param $offset int Number of ordered posts to skip
      * @return array The latest posts
      */
-    public function getLatest($limit) {
-        return $this->postRepository->latest($limit);
+    public function getLatest($limit, $offset = 0) 
+    {
+        return $this->postRepository->latest($limit, $offset);
     }
 
     /**
@@ -49,7 +51,8 @@ class PostService extends AppService
      * @param $id int The id of the post
      * @return PostInterface
      */
-    public function findById($id) {
+    public function findById($id) 
+    {
         return $this->postRepository->findOneBy(['id' => $id]);
     }
 
@@ -57,7 +60,8 @@ class PostService extends AppService
      * Persists the given Post
      * @param $post PostInterface
      */
-    public function persist($post) {
+    public function persist($post) 
+    {
         $this->postRepository->persist($post);
     }
 
@@ -68,7 +72,8 @@ class PostService extends AppService
      * @param $options array The given options to be passed to the form constructor
      * @return FormFactoryInterface
      */
-    public function createForm($postType, $options) {
+    public function createForm($postType, $options) 
+    {
         return $this->formFactory->create(
             $postType,
             /**

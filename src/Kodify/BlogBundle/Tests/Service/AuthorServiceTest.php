@@ -11,9 +11,8 @@ use Kodify\BlogBundle\Service\AuthorService;
 
 
 /**
- * Class NetworkServiceTest
+ * Class AuthorServiceTest
  *
- * @package App\Test\TestCase\Model\Service
  */
 class AuthorServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -65,7 +64,8 @@ class AuthorServiceTest extends \PHPUnit_Framework_TestCase
         unset(
             $this->service,
             $this->repositoryMock,
-            $this->domainMock
+            $this->domainMock,
+            $this->formFactoryMock
         );
     }
 
@@ -75,11 +75,11 @@ class AuthorServiceTest extends \PHPUnit_Framework_TestCase
             ->expects($this->exactly(2))
             ->method('latest')
             ->will($this->returnValueMap([
-                [1, 0, $this->domainMock],
+                [1, 5, $this->domainMock],
                 [0, 0, null],
             ]));
 
-        $this->assertSame($this->domainMock, $this->service->getLatest(1),
+        $this->assertSame($this->domainMock, $this->service->getLatest(1, 5),
             'AuthorService is not calling correctly the expected collaborators to get the latest Authors.'
         );
 

@@ -3,6 +3,7 @@ namespace Kodify\BlogBundle\Tests\Form\Type;
 
 use Kodify\BlogBundle\Form\Type\CommentType;
 use Kodify\BlogBundle\Tests\Fixtures\AuthorsFixture;
+use Kodify\BlogBundle\Tests\Fixtures\PostsFixture;
 use Symfony\Component\Form\Test\TypeTestCase;
 
 class CommentTypeTest extends TypeTestCase
@@ -11,6 +12,7 @@ class CommentTypeTest extends TypeTestCase
     {
         $formData = array(
             'text'   => 'test',
+            'post'   => PostsFixture::WAY_ID,
             'author' => AuthorsFixture::SOMEONE_ID
         );
         $type     = new CommentType();

@@ -10,9 +10,8 @@ use Kodify\BlogBundle\Domain\PostRepositoryInterface;
 use Kodify\BlogBundle\Service\PostService;
 
 /**
- * Class NetworkServiceTest
- *
- * @package App\Test\TestCase\Model\Service
+ * Class PostServiceTest
+ * 
  */
 class PostServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -64,7 +63,8 @@ class PostServiceTest extends \PHPUnit_Framework_TestCase
         unset(
             $this->service,
             $this->repositoryMock,
-            $this->domainMock
+            $this->domainMock,
+            $this->formFactoryMock
         );
     }
 
@@ -74,11 +74,11 @@ class PostServiceTest extends \PHPUnit_Framework_TestCase
             ->expects($this->exactly(2))
             ->method('latest')
             ->will($this->returnValueMap([
-                [1, 0, $this->domainMock],
+                [1, 5, $this->domainMock],
                 [0, 0, null],
             ]));
 
-        $this->assertSame($this->domainMock, $this->service->getLatest(1),
+        $this->assertSame($this->domainMock, $this->service->getLatest(1, 5),
             'PostService is not calling correctly the expected collaborators to get the latest Posts.'
         );
 

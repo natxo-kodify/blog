@@ -19,10 +19,10 @@ interface PostRepositoryInterface extends BaseRepositoryInterface
     public function findOneBy(array $criteria, array $orderBy = null);
     
     /**
-     * Gets the latest authors created
+     * Gets the latest posts created
      *
-     * @param int $limit Number of authors to retrieve
-     * @param int $offset Number of ordered authors to skip
+     * @param int $limit Number of posts to retrieve
+     * @param int $offset Number of ordered posts to skip
      * @return array
      */
     public function latest($limit, $offset = 0);
