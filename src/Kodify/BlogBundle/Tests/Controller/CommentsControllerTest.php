@@ -46,7 +46,7 @@ class CommentsControllerTest extends BaseFunctionalTestCase
         $this->assertTextFound($crawler, 'Publish');
         $form = $crawler->selectButton('Publish')->form([
             'comment[text]' => $commentText,
-            'comment[author]' => AuthorsFixture::SOMEONE
+            'comment[author]' => AuthorsFixture::SOMEONE_ID
         ]);
         $this->client->submit($form);
         $this->client->followRedirect();

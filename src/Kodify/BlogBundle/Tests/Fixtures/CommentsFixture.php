@@ -6,7 +6,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-//TODO:: use Kodify\BlogBundle\Entity\Comment;
+use Kodify\BlogBundle\Entity\Comment;
 
 class CommentsFixture extends AbstractFixture implements DependentFixtureInterface
 {
@@ -30,6 +30,25 @@ class CommentsFixture extends AbstractFixture implements DependentFixtureInterfa
      */
     public function load(ObjectManager $manager)
     {
-        //TODO:: Load fixtures here
+        $entities = [
+            [
+                'text' => self::NICE,
+                'post' => $this->getReference(sprintf('post:%s', PostsFixture::WAY)),
+                'author' => $this->getReference(sprintf('author:%s', AuthorsFixture::SOMEONE))
+            ],[
+                'text' => self::SONG,
+                'post' => $this->getReference(sprintf('post:%s', PostsFixture::LAND)),
+                'author' => $this->getReference(sprintf('author:%s', AuthorsFixture::RAINBOW))
+            ]
+        ];
+
+        foreach ($entities as $data) {
+            $entity = new Comment();
+            $entity->setText($data['text']);
+            $entity->setPost($data['post']);
+            $entity->setAuthor($data['author']);
+            $manager->persist($entity);
+        }
+        $manager->flush();
     }
 }

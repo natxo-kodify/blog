@@ -3,19 +3,18 @@
 namespace Kodify\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Kodify\BlogBundle\Domain\AuthorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Kodify\BlogBundle\Domain\PostInterface;
+use Kodify\BlogBundle\Domain\CommentInterface;
 
 /**
  * Post
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\PostRepository")
+ * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\CommentRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class Post extends AbstractBaseEntity implements PostInterface
+class Comment extends AbstractBaseEntity implements CommentInterface
 {
     /**
      * @var integer
@@ -33,20 +32,18 @@ class Post extends AbstractBaseEntity implements PostInterface
      * @Assert\NotBlank()
      *
      */
-    private $title;
+    private $text;
 
     /**
-     * @var string
      * @Assert\NotBlank()
-     * @ORM\Column(name="content", type="text")
+     * @ORM\ManyToOne(targetEntity="Post")
+     * @ORM\JoinColumn(name="postId", referencedColumnName="id")
      */
-    private $content;
+    protected $post;
 
     /**
-     * @var AuthorInterface
-     * 
      * @Assert\NotBlank()
-     * @ORM\ManyToOne(targetEntity="Author", inversedBy="videos")
+     * @ORM\ManyToOne(targetEntity="Author")
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
     protected $author;
@@ -56,7 +53,7 @@ class Post extends AbstractBaseEntity implements PostInterface
      */
     public function __toString()
     {
-        return $this->title;
+        return $this->text;
     }
 
     /**
@@ -70,9 +67,9 @@ class Post extends AbstractBaseEntity implements PostInterface
     /**
      * {@inheritdoc}
      */
-    public function setTitle($title)
+    public function setText($text)
     {
-        $this->title = $title;
+        $this->text = $text;
 
         return $this;
     }
@@ -80,17 +77,17 @@ class Post extends AbstractBaseEntity implements PostInterface
     /**
      * {@inheritdoc}
      */
-    public function getTitle()
+    public function getText()
     {
-        return $this->title;
+        return $this->text;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setContent($content)
+    public function setPost($post)
     {
-        $this->content = $content;
+        $this->post = $post;
 
         return $this;
     }
@@ -98,10 +95,12 @@ class Post extends AbstractBaseEntity implements PostInterface
     /**
      * {@inheritdoc}
      */
-    public function getContent()
+    public function getPost()
     {
-        return $this->content;
+        return $this->post;
     }
+
+
 
     /**
      * {@inheritdoc}

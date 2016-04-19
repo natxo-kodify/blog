@@ -9,20 +9,19 @@ services:
         factory: ["@doctrine", getRepository]
         arguments: [Kodify\BlogBundle\Entity\Post]
 
+    comment_repository:
+        class: Kodify\BlogBundle\Repository\CommentRepository
+        factory: ["@doctrine", getRepository]
+        arguments: [Kodify\BlogBundle\Entity\Comment]
+
     author_service:
         class: Kodify\BlogBundle\Service\AuthorService
-        arguments: ["@author_repository"]
-        calls:
-              - [ setContainer,[ "@service_container" ] ]
+        arguments: ["@author_repository", "@form.factory"]
 
     post_service:
         class: Kodify\BlogBundle\Service\PostService
-        arguments: ["@post_repository"]
-        calls:
-              - [ setContainer,[ "@service_container" ] ]
+        arguments: ["@post_repository", "@form.factory"]
 
     comment_service:
         class: Kodify\BlogBundle\Service\CommentService
-        arguments: [null, "@post_service"]
-        calls:
-              - [ setContainer,[ "@service_container" ] ]
+        arguments: ["@comment_repository", "@form.factory", "@post_service"]

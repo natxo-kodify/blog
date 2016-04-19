@@ -24,6 +24,10 @@ class CommentsController extends Controller
     {
         $form = $this->getCreateForm($postId);
 
+        $form->get('post')->setData(
+            $this->get('post_service')->findById($postId)
+        );
+        
         $form->handleRequest($request);
         if ($form->isValid()) {
             $this->get('comment_service')->persistForm($form);

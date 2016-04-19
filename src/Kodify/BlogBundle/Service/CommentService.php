@@ -2,20 +2,24 @@
 
 namespace Kodify\BlogBundle\Service;
 
-//TODO:: use Kodify\BlogBundle\Entity\Comment;
-//TODO:: use Kodify\BlogBundle\Repository\CommentRepository;
 use Kodify\BlogBundle\Form\Type\CommentType;
-use Kodify\BlogBundle\Tests\Fixtures\CommentsFixture;
-use Kodify\BlogBundle\Tests\Fixtures\PostsFixture;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Kodify\BlogBundle\Domain\CommentInterface;
+use Kodify\BlogBundle\Domain\CommentRepositoryInterface;
 
+use Kodify\BlogBundle\Entity\Comment;
 
 class CommentService extends AppService
 {
     /**
-     * @var mixed //TODO:: CommentRepository
+     * @var CommentRepositoryInterface
      */
     private $commentRepository;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
 
     /**
      * @var PostService
@@ -25,12 +29,14 @@ class CommentService extends AppService
     /**
      * CommentService constructor.
      *
-     * @param $commentRepository mixed //TODO:: CommentRepository
+     * @param $commentRepository CommentRepositoryInterface
+     * @param $formFactory FormFactoryInterface
      * @param $postService PostService
      */
-    public function __construct($commentRepository = null, $postService)
+    public function __construct($commentRepository, $formFactory, $postService)
     {
         $this->commentRepository = $commentRepository;
+        $this->formFactory = $formFactory;
         $this->postService = $postService;
     }
     
@@ -39,40 +45,26 @@ class CommentService extends AppService
      *
      * @param $postId int The id of the Post
      * @param $limit int The number of comments wanted
+     * @param $offset int  Number of ordered comments to skip
      * @return array The latest comments of the post
      */
-    public function getLatestByPost($postId, $limit) {
+    public function getLatestByPost($postId, $limit, $offset = 0)
+    {
         $post = $this->postService->findById($postId);
         if ($post === null) {
             return [];
         }
-
-        //TODO:: Refactor this
-        if ($post->getId() == PostsFixture::WAY_ID) {
-            return [
-                ['text' => CommentsFixture::NICE]
-            ];
-        } else {
-            return [];
-        }
-    }
-
-    /**
-     * Gets a Comment object given its id
-     * @param $id int The id of the comment
-     * @return mixed //TODO:: Comment
-     */
-    public function findBy($id) {
-        //TODO:: return $this->commentRepository->find($id);
+        return $this->commentRepository->getLatestByPost($post, $limit, $offset);
     }
 
     /**
      * Persists the given Comment
      *
-     * @param $comment mixed //TODO:: Comment
+     * @param $comment CommentInterface
      */
-    public function persist($comment) {
-        //TODO:: $this->commentRepository->persist($comment);
+    public function persist($comment)
+    {
+        $this->commentRepository->persist($comment);
     }
 
     /**
@@ -80,12 +72,18 @@ class CommentService extends AppService
      *
      * @param $commentType CommentType A form CommentType instance
      * @param $options array The given options to be passed to the form constructor
-     * @return FormInterface
+     * @return FormFactoryInterface
      */
-    public function createForm($commentType, $options) {
-        return $this->container->get('form.factory')->create(
+    public function createForm($commentType, $options)
+    {
+        return $this->formFactory->create(
             $commentType,
-            [], //TODO:: new Comment()
+            /**
+             * TODO:: Remove the following dependency on a database entity
+             * Don't know how to get around this using forms.
+             * Also, creating an instance here makes it not properly untestable.
+             */
+            new Comment(),
             $options);
     }
 }
