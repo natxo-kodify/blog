@@ -21,11 +21,8 @@ class CommentRepository extends EntityRepository implements CommentRepositoryInt
      */
     public function persist($comment)
     {
-        //TODO:: Persist it
-        /*
         $this->getEntityManager()->persist($comment);
         $this->getEntityManager()->flush();
-        */
     }
 
     /**

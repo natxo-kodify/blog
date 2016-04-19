@@ -34,7 +34,6 @@ class CommentsControllerTest extends BaseFunctionalTestCase
 
     public function testCreateComment()
     {
-        
         $commentText = 'Judy Garland was great!';
 
         $crawler = $this->client->request('GET', sprintf('/posts/%s', PostsFixture::ONCE_ID));
@@ -49,10 +48,7 @@ class CommentsControllerTest extends BaseFunctionalTestCase
             'comment[author]' => AuthorsFixture::SOMEONE_ID
         ]);
         $this->client->submit($form);
-        $this->client->followRedirect();
-
-        //TODO:: Complete it!
-        $this->markTestIncomplete('Still not persisting');
+        $crawler = $this->client->followRedirect();
         
         $this->assertElementWithClassFound($crawler, 'comments', 1);
         $this->assertElementWithClassFound($crawler, 'comment', 1);

@@ -24,9 +24,10 @@ class CommentsController extends Controller
     {
         $form = $this->getCreateForm($postId);
 
-        $form->get('post')->setData(
-            $this->get('post_service')->findById($postId)
-        );
+        //TODO:: Manage better the forms to avoid this
+        $dataWithRoutePost = $request->request->get('comment');
+        $dataWithRoutePost['post'] = $postId;
+        $request->request->set('comment', $dataWithRoutePost);
         
         $form->handleRequest($request);
         if ($form->isValid()) {
