@@ -2,12 +2,20 @@
 
 namespace Kodify\BlogBundle\Tests\Controller;
 
+use Kodify\BlogBundle\Entity\Comment;
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\Author;
 use Kodify\BlogBundle\Tests\BaseFunctionalTest;
 
+/**
+ * Class PostsControllerTest
+ * @package Kodify\BlogBundle\Tests\Controller
+ */
 class PostsControllerTest extends BaseFunctionalTest
 {
+    /**
+     * test index withou post, should show a message
+     */
     public function testIndexNoPosts()
     {
         $crawler = $this->client->request('GET', '/');
@@ -15,6 +23,10 @@ class PostsControllerTest extends BaseFunctionalTest
     }
 
     /**
+     * Text index with post, should show only the number of post defined in $countToCheck
+     * @param int $postsToCreate
+     * @param int $countToCheck
+     *
      * @dataProvider countDataProvider
      */
     public function testIndexWithPosts($postsToCreate, $countToCheck)
@@ -38,12 +50,18 @@ class PostsControllerTest extends BaseFunctionalTest
         }
     }
 
+    /**
+     * test access to no existing post
+     */
     public function testViewNonExistingPost()
     {
         $crawler = $this->client->request('GET', '/posts/1');
         $this->assertTextFound($crawler, 'Post not found', 1);
     }
 
+    /**
+     * test access to existing post
+     */
     public function testViewPost()
     {
         $this->createPosts(2);
@@ -54,6 +72,10 @@ class PostsControllerTest extends BaseFunctionalTest
         $this->assertTextNotFound($crawler, 'Content1');
     }
 
+    /**
+     * Function to creates as much post as indicated in $count
+     * @param $count
+     */
     protected function createPosts($count)
     {
         $author = new Author();

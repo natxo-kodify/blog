@@ -10,4 +10,14 @@
             {{ post.content }}
         </div>
     </div>
+
+    {% include 'KodifyBlogBundle:Comment:view.html.twig' with {'post': post, 'formComment': formComment } %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@KodifyBlogBundle/Resources/public/js/*' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
