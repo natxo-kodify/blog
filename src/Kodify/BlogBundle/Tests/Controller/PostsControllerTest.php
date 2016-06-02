@@ -36,6 +36,8 @@ class PostsControllerTest extends BaseFunctionalTest
             $this->assertTextFound($crawler, "Title{$i}");
             $this->assertTextFound($crawler, "Content{$i}");
         }
+
+        $this->assertTrue($crawler->filter('div.col-sm-6.post')->count() == $countToCheck, "We should find <div class=\"col-sm-6 post\"> $countToCheck times");
     }
 
     public function testViewNonExistingPost()

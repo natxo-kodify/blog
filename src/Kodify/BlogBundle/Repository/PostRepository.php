@@ -10,4 +10,14 @@ namespace Kodify\BlogBundle\Repository;
  */
 class PostRepository extends AbstractBaseRepository
 {
+    public function findPostWithComments($id)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p, c')
+            ->leftJoin('p.comments', 'c')
+            ->where('p = :post')
+            ->setParameter('post', $id);
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
 }

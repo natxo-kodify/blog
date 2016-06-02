@@ -10,4 +10,21 @@
             {{ post.content }}
         </div>
     </div>
+
+    <h3>Comments</h3>
+    <hr/>
+    {% for comment in post.comments %}
+        <blockquote {{ cycle(['class=blockquote-reverse', ''], loop.index) }}>
+            <p>{{ comment.content }}</p>
+            <footer>Comment by: {{ comment.author }} on: {{ comment.createdAt|date("m/d/Y") }}</footer>
+        </blockquote>
+    {% else %}
+        There are no comments
+    {% endfor %}
+    <hr/>
+    <div class="form">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
 {% endblock %}
