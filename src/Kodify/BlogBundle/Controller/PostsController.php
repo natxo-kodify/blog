@@ -3,6 +3,7 @@
 namespace Kodify\BlogBundle\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
+use Kodify\BlogBundle\Entity\Comment;
 use Kodify\BlogBundle\Form\Type\PostType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +19,7 @@ class PostsController extends Controller
             $template            = 'KodifyBlogBundle:Post:List/index.html.twig';
             $parameters['posts'] = $posts;
         }
-
+		
         return $this->render($template, $parameters);
     }
 
@@ -28,11 +29,14 @@ class PostsController extends Controller
         if (!$currentPost instanceof Post) {
             throw $this->createNotFoundException('Post not found');
         }
-        $parameters = [
+        $comments = $this->getDoctrine()->getRepository('KodifyBlogBundle:Comment')->findBy(['post'=> $currentPost]);
+		
+		$parameters = [
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
+			'comments' 	  => $comments, 
         ];
-
+		
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
     }
 

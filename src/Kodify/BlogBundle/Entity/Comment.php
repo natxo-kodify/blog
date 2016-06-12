@@ -9,7 +9,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Comment
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Entity\CommentRepository")
+ * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Repository\CommentRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Comment extends AbstractBaseEntity
 {
