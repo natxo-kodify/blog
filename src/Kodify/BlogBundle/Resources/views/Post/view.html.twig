@@ -6,7 +6,7 @@
             <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
             <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
             <span class="pull-right">
-				Rating AVG: <span id="js_rating_score">{{ post.avgRating }}</span>
+				Rating AVG: <span id="js_rating_score">{% if (post.avgRating > 0) %}{{ post.avgRating }} {%else%}No rating yet &nbsp;{%endif%}</span>
 				Rate:<select id="js_rating_change" data-ajax="{{path('add_rating', {'id':post.id})}}">
 						<option>--Choose--</option>
 						{% for i in range(end_rating,start_rating) %}

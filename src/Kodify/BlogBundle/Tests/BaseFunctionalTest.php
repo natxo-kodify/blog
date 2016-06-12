@@ -22,8 +22,9 @@ class BaseFunctionalTest extends WebTestCase
 
     protected function cleanDb()
     {
-        $this->clearTableByName('Author');
-        $this->clearTableByName('Post');
+        $this->clearTableByName('`Comment`');
+		$this->clearTableByName('Author');
+        $this->clearTableByName('Post');        
     }
 
     protected function entityManager()

@@ -54,7 +54,7 @@ class Post extends AbstractBaseEntity
 	 /**
      * @var float
      *
-     * @ORM\Column(name="avgRating", type="decimal", precision=2, scale=2)    
+     * @ORM\Column(name="avgRating", type="decimal", precision=4, scale=2, nullable=true)    
      *
      */
 	protected $avgRating; 
@@ -62,7 +62,7 @@ class Post extends AbstractBaseEntity
 	 /**
      * @var integer
      *
-     * @ORM\Column(name="countRatings", type="integer") 
+     * @ORM\Column(name="countRatings", type="integer", nullable=true) 
      *
      */
 	protected $countRatings;
