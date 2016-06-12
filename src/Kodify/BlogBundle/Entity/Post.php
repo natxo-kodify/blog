@@ -59,6 +59,12 @@ class Post extends AbstractBaseEntity
         $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
     }
 	
+	//!!@ToDo 
+	public function __toString()
+    {
+        return $this->title;
+    }
+	
     /**
      * Get id
      *

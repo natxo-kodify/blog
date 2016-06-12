@@ -12,3 +12,8 @@
     </div>
 	{% include 'KodifyBlogBundle::Comment/index.html.twig' %} 
 {% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('bundles/kodifyblog/js/comments.js') }}"></script>    
+{% endblock %}

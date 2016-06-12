@@ -41,7 +41,7 @@ class Comment extends AbstractBaseEntity
     private $author;
 
     /**
-     * @Assert\NotBlank() 
+     * 
      * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
      * @ORM\JoinColumn(name="postId", referencedColumnName="id")
 	 * 

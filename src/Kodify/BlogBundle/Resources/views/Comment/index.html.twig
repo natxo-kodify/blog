@@ -1,1 +1,19 @@
-Hehe :) 
+
+{% for comment in comments %}
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<a href="#">Comment #{{ loop.index }}</a>
+		<span class="pull-right">by: {{ comment.author.name }} on: {{ comment.createdAt|date("m/d/Y") }}</span>
+	</div>
+	<div class="panel-body">
+		{{ comment.content }}
+	</div>
+</div>
+{% endfor %}
+	
+<button id="js_comments_toggle">Add a comment</button>
+<div id="js_comment_form" class="form hide">
+	{{ form_start(add_comment_form) }}
+	{{ form_widget(add_comment_form) }}
+	{{ form_end(add_comment_form) }}
+</div>
