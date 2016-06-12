@@ -12,10 +12,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PostsController extends Controller
 {
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $posts      = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
-        $template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
+		
+		$orderby = $request->get('order');
+		$postRepository = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post');
+		if ($orderby == 'rating') {
+			$postRepository->setOrderBy(['avgRating' => 'DESC', 'createdAt'=>'DESC']);	
+		}
+		
+		$posts      = $postRepository->latest();
+		$template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
         if (count($posts)) {
             $template            = 'KodifyBlogBundle:Post:List/index.html.twig';

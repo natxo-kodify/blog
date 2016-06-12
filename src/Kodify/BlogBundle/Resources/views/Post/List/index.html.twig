@@ -1,7 +1,16 @@
 {% extends 'KodifyBlogBundle::base.html.twig' %}
 
 {% block content %}
-
+	<div class="row">
+		<div class="col-md-6 pull-right">
+			<div class="panel panel-default pull-right">
+				<div class="btn-group" role="group_by" aria-label="Order by..">
+				  <button type="button" class="btn btn-default"><a href="{{ path('home') }}">Date</a></button>
+				  <button type="button" class="btn btn-default"><a href="{{ path('home',{'order':'rating'}) }}">Rating</a></button>
+				</div>
+			</div>
+		</div>
+	</div>
     {% for post in posts %}
 		{% if (0 == loop.index0 % 2) %}
 		<div class="row">
