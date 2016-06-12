@@ -47,7 +47,7 @@ class Post extends AbstractBaseEntity
     protected $author;
 	
 	/**
-	 * @OneToMany(targetEntity="Comment", mappedBy="post")
+	 * @ORM\OneToMany(targetEntity="Comment", mappedBy="post")
 	 */
     protected $comments; 
 	
@@ -159,5 +159,15 @@ class Post extends AbstractBaseEntity
     public function removeComment(\Kodify\BlogBundle\Entity\Comment $comment)
     {
         $this->comments->removeElement($comment);
+    }
+	
+	/**
+     * Get Comments 
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

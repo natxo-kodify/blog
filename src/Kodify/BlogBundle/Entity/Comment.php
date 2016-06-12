@@ -3,6 +3,7 @@
 namespace Kodify\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Comment
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Kodify\BlogBundle\Entity\CommentRepository")
  */
-class Comment
+class Comment extends AbstractBaseEntity
 {
     /**
      * @var integer
@@ -20,48 +21,29 @@ class Comment
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=255)
-     */
-    private $title;
-
+	
     /**
      * @var string
      *
      * @ORM\Column(name="content", type="text")
+	 * @Assert\NotBlank()
+	 * 
      */
     private $content;
-
+	
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="createdAt", type="datetime")
-     */
-    private $createdAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updatedAt", type="datetime")
-     */
-    private $updatedAt;
-
-    /**
-     * @var integer  
-     *
-     * @ManyToOne(targetEntity="Author")
-     * @JoinColumn(name="authorId", referencedColumnName="id")
+     * @Assert\NotBlank() 
+     * @ORM\ManyToOne(targetEntity="Author")
+     * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
+	 * 
      */
     private $author;
 
     /**
-     * @var integer  
-     *
-     * @ManyToOne(targetEntity="Post", inversedBy="comments")
-     * @JoinColumn(name="postId", referencedColumnName="id")
+     * @Assert\NotBlank() 
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
+     * @ORM\JoinColumn(name="postId", referencedColumnName="id")
+	 * 
      */
     private $post;
 
@@ -74,29 +56,6 @@ class Comment
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set title
-     *
-     * @param string $title
-     * @return Comment
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Get title
-     *
-     * @return string 
-     */
-    public function getTitle()
-    {
-        return $this->title;
     }
 
     /**
@@ -121,96 +80,51 @@ class Comment
     {
         return $this->content;
     }
+	
 
     /**
-     * Set createdAt
+     * Set author
      *
-     * @param \DateTime $createdAt
+     * @param \Kodify\BlogBundle\Entity\Author $author
      * @return Comment
      */
-    public function setCreatedAt($createdAt)
+    public function setAuthor($author)
     {
-        $this->createdAt = $createdAt;
+        $this->author = $author;
 
         return $this;
     }
 
     /**
-     * Get createdAt
+     * Get author
      *
-     * @return \DateTime 
+     * @return \Kodify\BlogBundle\Entity\Author
      */
-    public function getCreatedAt()
+    public function getAuthor()
     {
-        return $this->createdAt;
+        return $this->author;
     }
 
     /**
-     * Set updatedAt
+     * Set post
      *
-     * @param \DateTime $updatedAt
+     * @param @param \Kodify\BlogBundle\Entity\Post $post
      * @return Comment
      */
-    public function setUpdatedAt($updatedAt)
+    public function setPost($post)
     {
-        $this->updatedAt = $updatedAt;
+        $this->post = $post;
 
         return $this;
     }
 
     /**
-     * Get updatedAt
+     * Get post
      *
-     * @return \DateTime 
+     * @return \Kodify\BlogBundle\Entity\Post $post
      */
-    public function getUpdatedAt()
+    public function getPost()
     {
-        return $this->updatedAt;
-    }
-
-    /**
-     * Set authorId
-     *
-     * @param integer $authorId
-     * @return Comment
-     */
-    public function setAuthorId($authorId)
-    {
-        $this->authorId = $authorId;
-
-        return $this;
-    }
-
-    /**
-     * Get authorId
-     *
-     * @return integer 
-     */
-    public function getAuthorId()
-    {
-        return $this->authorId;
-    }
-
-    /**
-     * Set postId
-     *
-     * @param integer $postId
-     * @return Comment
-     */
-    public function setPostId($postId)
-    {
-        $this->postId = $postId;
-
-        return $this;
-    }
-
-    /**
-     * Get postId
-     *
-     * @return integer 
-     */
-    public function getPostId()
-    {
-        return $this->postId;
+        return $this->post;
     }
 }
