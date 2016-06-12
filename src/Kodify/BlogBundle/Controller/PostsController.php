@@ -8,6 +8,7 @@ use Kodify\BlogBundle\Form\Type\PostType;
 use Kodify\BlogBundle\Form\Type\CommentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PostsController extends Controller
 {
@@ -46,6 +47,8 @@ class PostsController extends Controller
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
 			'comments' 	  => $comments, 
+			'start_rating' => 1,
+			'end_rating' => 5,
 			'add_comment_form' => $add_comment_form->createView()
         ];
 		
@@ -87,5 +90,27 @@ class PostsController extends Controller
 
         return $this->render('KodifyBlogBundle:Default:create.html.twig', $parameters);
     }
+	
+	public function addRatingAction($id, Request $request) {
+		try{ 
+			$currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
+			if (!$currentPost instanceof Post) {
+				throw $this->createNotFoundException('Post not found');
+			}
+			
+			$rating = $request->get('rating');
+			if ($rating != (int)$rating) {
+				throw new \Exception('Invalid value for rating');
+			}
+			
+			$new_rating = $currentPost->addToRating($rating);
+			
+			$this->getDoctrine()->getManager()->persist($currentPost);
+			$this->getDoctrine()->getManager()->flush();
+		} catch( \Exception $ex) {
+			return new JsonResponse(array('error' => $ex->getMessage()));
+		}
+		return new JsonResponse(array('new_rating'=> $new_rating));
+	}
 	
 }

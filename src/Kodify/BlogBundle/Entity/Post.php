@@ -51,6 +51,22 @@ class Post extends AbstractBaseEntity
 	 */
     protected $comments; 
 	
+	 /**
+     * @var float
+     *
+     * @ORM\Column(name="avgRating", type="decimal", precision=2, scale=2)    
+     *
+     */
+	protected $avgRating; 
+	
+	 /**
+     * @var integer
+     *
+     * @ORM\Column(name="countRatings", type="integer") 
+     *
+     */
+	protected $countRatings;
+	
 	/**
      * Constructor
      */
@@ -176,4 +192,69 @@ class Post extends AbstractBaseEntity
     {
         return $this->comments;
     }
+	
+	/**
+     * Set avgRating
+     *
+     * @param string $avgRating
+     * @return Post
+     */
+    public function setAvgRating($avgRating)
+    {
+        $this->avgRating = $avgRating;
+
+        return $this;
+    }
+
+    /**
+     * Get avg_rating
+     *
+     * @return string 
+     */
+    public function getAvgRating()
+    {
+        return $this->avgRating;
+    }
+
+    /**
+     * Set count_ratings
+     *
+     * @param integer $countRatings
+     * @return Post
+     */
+    public function setCountRatings($countRatings)
+    {
+        $this->countRatings = $countRatings;
+
+        return $this;
+    }
+
+    /**
+     * Get count_ratings
+     *
+     * @return integer 
+     */
+    public function getCountRatings()
+    {
+        return $this->countRatings;
+    }
+	
+	/**
+     * Add $rating to the avgRating for current Post 
+	 *
+     * @param integer $rating 
+	 * 
+     * @return float 
+     */
+	public function addToRating($rating) {
+		$sum = $this->avgRating*$this->countRatings;
+		$sum += $rating; 
+		$this->countRatings++;
+		
+		$this->setAvgRating(round($sum/$this->countRatings, 1));
+		$this->setCountRatings($this->countRatings);
+		
+		return $this->avgRating;
+	}
 }
+

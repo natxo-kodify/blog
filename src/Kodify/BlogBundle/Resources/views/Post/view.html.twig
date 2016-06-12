@@ -5,6 +5,15 @@
         <div class="panel-heading">
             <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
             <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
+            <span class="pull-right">
+				Rating AVG: <span id="js_rating_score">{{ post.avgRating }}</span>
+				Rate:<select id="js_rating_change" data-ajax="{{path('add_rating', {'id':post.id})}}">
+						<option>--Choose--</option>
+						{% for i in range(end_rating,start_rating) %}
+						<option>{{i}}</option>
+						{%endfor%}
+					  </select> &nbsp;
+			</span>
         </div>
         <div class="panel-body">
             {{ post.content }}
@@ -16,4 +25,5 @@
 {% block javascripts %}
 	{{ parent() }}
 	<script src="{{ asset('bundles/kodifyblog/js/comments.js') }}"></script>    
+	<script src="{{ asset('bundles/kodifyblog/js/rating.js') }}"></script>    
 {% endblock %}
