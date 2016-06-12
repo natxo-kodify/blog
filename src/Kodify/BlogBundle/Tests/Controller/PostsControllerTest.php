@@ -103,13 +103,11 @@ class PostsControllerTest extends BaseFunctionalTest
 	public function testDefaultOrderHome() 
 	{
 		$this->createPosts(3);
-		$crawler = $this->client->request('GET', '/home');
-		$postTitles = $crawler->filterXPath('descendant-or-self::.panel-heading/a')->each(function (Crawler $node, $i) {
-			return $node->text();
-		});
-		print_r($postTitles);
-		die();
-		$this->assertEquals($postTitles, ['Title0','Title1','Title2']);
+		$crawler = $this->client->request('GET', '/');
+		
+		$this->assertEquals($crawler->filter('.panel-heading > a')->eq(0)->text(), 'Title0');
+		$this->assertEquals($crawler->filter('.panel-heading > a')->eq(1)->text(), 'Title1');
+		$this->assertEquals($crawler->filter('.panel-heading > a')->eq(2)->text(), 'Title2');
 		
 	}
 	
@@ -128,10 +126,10 @@ class PostsControllerTest extends BaseFunctionalTest
 		$expectedTitles = ['Title0','Title2','Title1'];
 		
 		$crawler = $this->client->request('GET', '/home?order=rating');
-		$postTitles = $crawler->filterXPath('descendant-or-self::.panel-heading/a')->each(function (Crawler $node, $i) {
-			return $node->text();
-		});
-		$this->assertEquals($postTitles, $expectedTitles);
+		
+		$this->assertEquals($crawler->filter('.panel-heading > a')->eq(0)->text(), $expectedTitles[0]);
+		$this->assertEquals($crawler->filter('.panel-heading > a')->eq(1)->text(), $expectedTitles[1]);
+		$this->assertEquals($crawler->filter('.panel-heading > a')->eq(2)->text(), $expectedTitles[2]);
 		
 	}
 
