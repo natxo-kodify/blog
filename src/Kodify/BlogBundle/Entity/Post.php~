@@ -40,15 +40,51 @@ class Post extends AbstractBaseEntity
     private $content;
 
     /**
+     * @Assert\NotBlank()
      * @ORM\ManyToOne(targetEntity="Author", inversedBy="posts")
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
     protected $author;
-
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="Comment", mappedBy="post")
+	 */
+    protected $comments; 
+	
+	 /**
+     * @var float
+     *
+     * @ORM\Column(name="avg_rating", type="decimal", precision=1, scale=2)    
+     *
+     */
+	protected $avg_rating; 
+	
+	 /**
+     * @var integer
+     *
+     * @ORM\Column(name="count_ratings", type="integer") 
+     *
+     */
+	protected $count_ratings;
+	
+	/**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+	
+	//!!@ToDo 
+	public function __toString()
+    {
+        return $this->title;
+    }
+	
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -71,7 +107,7 @@ class Post extends AbstractBaseEntity
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -94,10 +130,112 @@ class Post extends AbstractBaseEntity
     /**
      * Get content
      *
-     * @return string 
+     * @return string
      */
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * Set author
+     *
+     * @param \Kodify\BlogBundle\Entity\Author $author
+     * @return Post
+     */
+    public function setAuthor(\Kodify\BlogBundle\Entity\Author $author = null)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \Kodify\BlogBundle\Entity\Author
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+	
+	/**
+     * Add Comment
+     *
+     * @param \Kodify\BlogBundle\Entity\Comment $comment
+     * @return Post
+     */
+    public function addComment(\Kodify\BlogBundle\Entity\Comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+	
+	/**
+     * Remove comment
+     *
+     * @param \Kodify\BlogBundle\Entity\Comment $comment
+     */
+    public function removeComment(\Kodify\BlogBundle\Entity\Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+	
+	/**
+     * Get Comments 
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+	
+	/**
+     * Set avg_rating
+     *
+     * @param string $avgRating
+     * @return Post
+     */
+    public function setAvgRating($avgRating)
+    {
+        $this->avg_rating = $avgRating;
+
+        return $this;
+    }
+
+    /**
+     * Get avg_rating
+     *
+     * @return string 
+     */
+    public function getAvgRating()
+    {
+        return $this->avg_rating;
+    }
+
+    /**
+     * Set count_ratings
+     *
+     * @param integer $countRatings
+     * @return Post
+     */
+    public function setCountRatings($countRatings)
+    {
+        $this->count_ratings = $countRatings;
+
+        return $this;
+    }
+
+    /**
+     * Get count_ratings
+     *
+     * @return integer 
+     */
+    public function getCountRatings()
+    {
+        return $this->count_ratings;
     }
 }

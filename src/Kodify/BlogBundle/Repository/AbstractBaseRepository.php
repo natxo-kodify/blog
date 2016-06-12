@@ -13,15 +13,22 @@ use Doctrine\ORM\EntityRepository;
 abstract class AbstractBaseRepository extends EntityRepository
 {
     const LIST_DEFAULT_LIMIT = 5;
-
+	
+	protected $orderBy = ['createdAt' => 'DESC'];
+	
     public function latest($limit = null, $offset = 0)
     {
         if (is_null($limit)) {
             $limit = static::LIST_DEFAULT_LIMIT;
         }
 
-        return $this->findBy([], ['createdAt' => 'DESC'], $limit, $offset);
+        return $this->findBy([], $this->orderBy, $limit, $offset);
     }
+	
+	
+	public function setOrderBy($orderBy) {
+		$this->orderBy = $orderBy;
+	}
 
 
 }

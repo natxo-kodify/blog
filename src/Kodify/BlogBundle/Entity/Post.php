@@ -45,7 +45,42 @@ class Post extends AbstractBaseEntity
      * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
      */
     protected $author;
-
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="Comment", mappedBy="post")
+	 */
+    protected $comments; 
+	
+	 /**
+     * @var float
+     *
+     * @ORM\Column(name="avgRating", type="decimal", precision=4, scale=2, nullable=true)    
+     *
+     */
+	protected $avgRating; 
+	
+	 /**
+     * @var integer
+     *
+     * @ORM\Column(name="countRatings", type="integer", nullable=true) 
+     *
+     */
+	protected $countRatings;
+	
+	/**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+	
+	//!!@ToDo 
+	public function __toString()
+    {
+        return $this->title;
+    }
+	
     /**
      * Get id
      *
@@ -124,4 +159,102 @@ class Post extends AbstractBaseEntity
     {
         return $this->author;
     }
+	
+	/**
+     * Add Comment
+     *
+     * @param \Kodify\BlogBundle\Entity\Comment $comment
+     * @return Post
+     */
+    public function addComment(\Kodify\BlogBundle\Entity\Comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+	
+	/**
+     * Remove comment
+     *
+     * @param \Kodify\BlogBundle\Entity\Comment $comment
+     */
+    public function removeComment(\Kodify\BlogBundle\Entity\Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+	
+	/**
+     * Get Comments 
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+	
+	/**
+     * Set avgRating
+     *
+     * @param string $avgRating
+     * @return Post
+     */
+    public function setAvgRating($avgRating)
+    {
+        $this->avgRating = $avgRating;
+
+        return $this;
+    }
+
+    /**
+     * Get avg_rating
+     *
+     * @return string 
+     */
+    public function getAvgRating()
+    {
+        return $this->avgRating;
+    }
+
+    /**
+     * Set count_ratings
+     *
+     * @param integer $countRatings
+     * @return Post
+     */
+    public function setCountRatings($countRatings)
+    {
+        $this->countRatings = $countRatings;
+
+        return $this;
+    }
+
+    /**
+     * Get count_ratings
+     *
+     * @return integer 
+     */
+    public function getCountRatings()
+    {
+        return $this->countRatings;
+    }
+	
+	/**
+     * Add $rating to the avgRating for current Post 
+	 *
+     * @param integer $rating 
+	 * 
+     * @return float 
+     */
+	public function addToRating($rating) {
+		$sum = $this->avgRating*$this->countRatings;
+		$sum += $rating; 
+		$this->countRatings++;
+		
+		$this->setAvgRating(round($sum/$this->countRatings, 1));
+		$this->setCountRatings($this->countRatings);
+		
+		return $this->avgRating;
+	}
 }
+
