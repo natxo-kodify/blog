@@ -1,0 +1,8 @@
+{% for comment in comments %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <span>{{ comment.text }}</span>
+            <span class="pull-right">by: {{ comment.author.name }} on: {{ comment.createdAt|date("m/d/Y") }}</span>
+        </div>
+    </div>
+{% endfor %}

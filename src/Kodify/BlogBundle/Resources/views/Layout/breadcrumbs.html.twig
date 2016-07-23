@@ -1,7 +1,13 @@
 <ol class="breadcrumb">
     {% if  breadcrumbs is defined %}
-        {% for path, title in breadcrumbs %}
-            <li{% if loop.last %} class="active"{% endif %}><a href="{{ path(path) }}">{{ title }}</a></li>
+        {% for breadcrumb in breadcrumbs %}
+            <li{% if loop.last %} class="active"{% endif %}>
+                {% if breadcrumb.params is defined %}
+                    <a href="{{ path(breadcrumb.path, breadcrumb.params) }}">{{ breadcrumb.anchor }}</a>
+                {% else %}
+                    <a href="{{ path(breadcrumb.path) }}">{{ breadcrumb.anchor }}</a>
+                {% endif %}
+            </li>
         {% endfor %}
     {% else %}
         <li class="active"><a href="#">No breadcrumbs</a></li>

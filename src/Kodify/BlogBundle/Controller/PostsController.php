@@ -13,7 +13,14 @@ class PostsController extends Controller
     {
         $posts      = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
         $template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
-        $parameters = ['breadcrumbs' => ['home' => 'Home']];
+        $parameters = [
+            'breadcrumbs' => [
+                [
+                    'anchor' => 'Home',
+                    'path' => 'home',
+                ]
+            ]
+        ];
         if (count($posts)) {
             $template            = 'KodifyBlogBundle:Post:List/index.html.twig';
             $parameters['posts'] = $posts;
@@ -29,7 +36,12 @@ class PostsController extends Controller
             throw $this->createNotFoundException('Post not found');
         }
         $parameters = [
-            'breadcrumbs' => ['home' => 'Home'],
+            'breadcrumbs' => [
+                [
+                    'anchor' => 'Home',
+                    'path' => 'home',
+                ]
+            ],
             'post'        => $currentPost,
         ];
 
@@ -48,7 +60,16 @@ class PostsController extends Controller
         );
         $parameters = [
             'form'        => $form->createView(),
-            'breadcrumbs' => ['home' => 'Home', 'create_post' => 'Create Post']
+            'breadcrumbs' => [
+                [
+                    'anchor' => 'Home',
+                    'path' => 'home',
+                ],
+                [
+                    'anchor' => 'Create Post',
+                    'path' => 'create_post'
+                ]
+            ]
         ];
 
         $form->handleRequest($request);

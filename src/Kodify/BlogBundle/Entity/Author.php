@@ -3,6 +3,7 @@
 namespace Kodify\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Author
@@ -35,17 +36,22 @@ class Author extends AbstractBaseEntity
     protected $posts;
 
     /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="author", cascade={"persist"})
+     */
+    protected $comments;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->posts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->posts = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function __toString()
     {
         return $this->name;
-        
     }
 
     /**
@@ -82,7 +88,7 @@ class Author extends AbstractBaseEntity
     }
 
     /**
-     * Add videos
+     * Add posts
      *
      * @param \Kodify\BlogBundle\Entity\Post $post
      * @return Author
@@ -95,9 +101,9 @@ class Author extends AbstractBaseEntity
     }
 
     /**
-     * Remove videos
+     * Remove posts
      *
-     * @param \Kodify\BlogBundle\Entity\Post $videos
+     * @param \Kodify\BlogBundle\Entity\Post $post
      */
     public function removePost(\Kodify\BlogBundle\Entity\Post $post)
     {
@@ -105,12 +111,45 @@ class Author extends AbstractBaseEntity
     }
 
     /**
-     * Get videos
+     * Get posts
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getVideos()
+    public function getPosts()
     {
         return $this->posts;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \Kodify\BlogBundle\Entity\Comment $comment
+     * @return Author
+     */
+    public function addComment(\Kodify\BlogBundle\Entity\Comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \Kodify\BlogBundle\Entity\Comment $comment
+     */
+    public function removeComment(\Kodify\BlogBundle\Entity\Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

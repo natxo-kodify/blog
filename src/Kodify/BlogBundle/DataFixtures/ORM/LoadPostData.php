@@ -27,6 +27,7 @@ class LoadPostData extends AbstractFixture implements OrderedFixtureInterface
         $post->setContent($content);
         $post->setAuthor($this->getReference($author));
         $manager->persist($post);
+        $this->addReference($title, $post);
     }
 
     public function getOrder()
