@@ -3,6 +3,7 @@
 namespace Kodify\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Author
@@ -32,14 +33,20 @@ class Author extends AbstractBaseEntity
     /**
      * @ORM\OneToMany(targetEntity="Post", mappedBy="author", cascade={"persist"})
      */
-    protected $videos;
+    protected $posts;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="author", cascade={"persist"})
+     */
+    protected $comments;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->videos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->posts = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function __toString()
@@ -81,35 +88,68 @@ class Author extends AbstractBaseEntity
     }
 
     /**
-     * Add videos
+     * Add posts
      *
-     * @param \Kodify\BlogBundle\Entity\Post $videos
+     * @param \Kodify\BlogBundle\Entity\Post $post
      * @return Author
      */
-    public function addVideo(\Kodify\BlogBundle\Entity\Post $videos)
+    public function addPost(\Kodify\BlogBundle\Entity\Post $post)
     {
-        $this->videos[] = $videos;
+        $this->posts[] = $post;
 
         return $this;
     }
 
     /**
-     * Remove videos
+     * Remove posts
      *
-     * @param \Kodify\BlogBundle\Entity\Post $videos
+     * @param \Kodify\BlogBundle\Entity\Post $post
      */
-    public function removeVideo(\Kodify\BlogBundle\Entity\Post $videos)
+    public function removePost(\Kodify\BlogBundle\Entity\Post $post)
     {
-        $this->videos->removeElement($videos);
+        $this->posts->removeElement($post);
     }
 
     /**
-     * Get videos
+     * Get posts
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getVideos()
+    public function getPosts()
     {
-        return $this->videos;
+        return $this->posts;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \Kodify\BlogBundle\Entity\Comment $comment
+     * @return Author
+     */
+    public function addComment(\Kodify\BlogBundle\Entity\Comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \Kodify\BlogBundle\Entity\Comment $comment
+     */
+    public function removeComment(\Kodify\BlogBundle\Entity\Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

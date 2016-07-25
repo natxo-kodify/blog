@@ -2,6 +2,9 @@
 
 namespace Kodify\BlogBundle\Tests\Controller;
 
+use Kodify\BlogBundle\DataFixtures\ORM\LoadAuthorData;
+use Kodify\BlogBundle\DataFixtures\ORM\LoadCommentData;
+use Kodify\BlogBundle\DataFixtures\ORM\LoadPostData;
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Entity\Author;
 use Kodify\BlogBundle\Tests\BaseFunctionalTest;
@@ -52,6 +55,53 @@ class PostsControllerTest extends BaseFunctionalTest
         $this->assertTextFound($crawler, 'Content0');
         $this->assertTextNotFound($crawler, 'Title1');
         $this->assertTextNotFound($crawler, 'Content1');
+    }
+
+    public function testIndexPostsIn2Columns()
+    {
+        $this->addFixture(new LoadAuthorData());
+        $this->addFixture(new LoadPostData());
+        $this->executeFixtures();
+
+        $crawler = $this->client->request('GET', '/');
+
+        $this->assertTextNotFound(
+            $crawler,
+            "There are no posts, let's create some!!",
+            'Empty list found, it should have posts'
+        );
+
+        $titleLink = $crawler->filter('div.col-md-6 > div.panel-heading > a')->eq(0);
+        $this->assertSame('way', $titleLink->text());
+        $titleLink = $crawler->filter('div.col-md-6 > div.panel-heading > a')->eq(1);
+        $this->assertSame('land', $titleLink->text());
+        $titleLink = $crawler->filter('div.col-md-6 > div.panel-heading > a')->eq(2);
+        $this->assertSame('once', $titleLink->text());
+    }
+
+    public function testNoComments()
+    {
+        $this->addFixture(new LoadAuthorData());
+        $this->addFixture(new LoadPostData());
+        $this->addFixture(new LoadCommentData());
+        $this->executeFixtures();
+
+        $crawler = $this->client->request('GET', '/posts/3');
+
+        $this->assertTextFound($crawler, "There are no comments, let's create one!!");
+    }
+
+    public function testWithComments()
+    {
+        $this->addFixture(new LoadAuthorData());
+        $this->addFixture(new LoadPostData());
+        $this->addFixture(new LoadCommentData());
+        $this->executeFixtures();
+
+        $crawler = $this->client->request('GET', '/posts/1');
+
+        $this->assertTextFound($crawler, "nice!!");
+        $this->assertTextNotFound($crawler, "Is that a song?");
     }
 
     protected function createPosts($count)

@@ -33,3 +33,6 @@
 
 .idea/
 *.iml
+
+# Docker mysql data
+/docker/mysql/data/*

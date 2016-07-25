@@ -9,5 +9,14 @@
         <div class="panel-body">
             {{ post.content }}
         </div>
+        <div class="panel-footer">
+            {% if post.comments is empty %}
+                There are no comments, let's create one!!
+            {% else %}
+                {% set comments = post.comments %}
+                {% include 'KodifyBlogBundle:Comment/List:index.html.twig' with {'comments': comments} only %}
+            {% endif %}
+            <a href="{{ path('create_comment', {'id': post.id}) }}">Create Comment</a>
+        </div>
     </div>
 {% endblock %}
