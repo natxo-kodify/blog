@@ -4,6 +4,8 @@ namespace Kodify\BlogBundle\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
 use Kodify\BlogBundle\Form\Type\PostType;
+use Kodify\BlogBundle\Entity\Comment;
+use Kodify\BlogBundle\Form\Type\CommentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -24,16 +26,43 @@ class PostsController extends Controller
 
     public function viewAction($id)
     {
-        $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
-        if (!$currentPost instanceof Post) {
-            throw $this->createNotFoundException('Post not found');
-        }
+        $currentPost = $this->getCurrentPostOrThrowNotFound($id);
+        $comments = $this->getPostComments($id);
+        $comment_form = $this->getFormToComment($id);
+        
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
+            'form'        => $comment_form->createView(),
+            'comments'    => $comments,
         ];
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
+    }
+
+    private function getCurrentPostOrThrowNotFound($id)
+    {
+        return $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
+        if (!$currentPost instanceof Post) {
+            throw $this->createNotFoundException('Post not found');
+        }
+    }
+
+    private function getPostComments($id)
+    {
+        return $this->getDoctrine()->getRepository('KodifyBlogBundle:Comment')->byPostId($id);
+    }
+
+    private function getFormToComment($id_post)
+    {
+        return $this->createForm(
+            new CommentType(),
+            new Comment(),
+            [
+                'action' => $this->generateUrl('create_comment',array('id'=> $id_post)),
+                'method' => 'POST',
+            ]
+        );
     }
 
     public function createAction(Request $request)
@@ -46,10 +75,6 @@ class PostsController extends Controller
                 'method' => 'POST',
             ]
         );
-        $parameters = [
-            'form'        => $form->createView(),
-            'breadcrumbs' => ['home' => 'Home', 'create_post' => 'Create Post']
-        ];
 
         $form->handleRequest($request);
         if ($form->isValid()) {
@@ -59,6 +84,10 @@ class PostsController extends Controller
             $parameters['message'] = 'Post Created!';
         }
 
+        $parameters = [
+            'form'        => $form->createView(),
+            'breadcrumbs' => ['home' => 'Home', 'create_post' => 'Create Post']
+        ];
         return $this->render('KodifyBlogBundle:Default:create.html.twig', $parameters);
     }
 }

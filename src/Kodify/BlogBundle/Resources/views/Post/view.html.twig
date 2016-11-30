@@ -10,4 +10,22 @@
             {{ post.content }}
         </div>
     </div>
+    <div class="form">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+    <div>
+    	<h2>Comments</h2>
+	    {% for comment in comments %}
+	        <div class="col-xs-8 col-xs-offset-2 panel panel-default">
+	            <div class="panel-body">
+	                {{ comment.text }}
+	                <span class="pull-right">by: {{ comment.author.name }} on: {{ comment.createdAt|date("m/d/Y") }}</span>
+	            </div>
+	        </div>
+	    {% else %}
+	    <b>There are no comments. Be the first one!</b>
+	    {% endfor %}
+    </div>
 {% endblock %}
