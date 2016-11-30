@@ -10,6 +10,12 @@ create_post:
 view_post:
     path:     /posts/{id}
     defaults: { _controller: KodifyBlogBundle:Posts:view }
+rate_post:
+    path:     /posts/{id}/{rate}
+    defaults: { _controller: KodifyBlogBundle:Posts:rate }
 create_author:
     path:     /authors/create
     defaults: { _controller: KodifyBlogBundle:Authors:create }
+create_comment:
+    path:     /comments/create/{postid}
+    defaults: { _controller: KodifyBlogBundle:Comments:create }

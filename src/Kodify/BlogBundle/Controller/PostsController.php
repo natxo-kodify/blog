@@ -11,29 +11,67 @@ class PostsController extends Controller
 {
     public function indexAction()
     {
-        $posts      = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->latest();
+        $sortby = $this->getRequest()->query->get('sort');
+        //if sortby=1, we're sorting the posts by rate; otherwise by date of publication
+        if ($sortby) {
+            $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->SortByRate();
+        }
+        else{
+            $sortby = 0;
+            $posts = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->SortByDate();   
+        }
+
         $template   = 'KodifyBlogBundle:Post:List/empty.html.twig';
         $parameters = ['breadcrumbs' => ['home' => 'Home']];
         if (count($posts)) {
             $template            = 'KodifyBlogBundle:Post:List/index.html.twig';
-            $parameters['posts'] = $posts;
+            $parameters = ['posts' => $posts,
+                        'sortby'=> $sortby,
+                        'breadcrumbs' => ['home' => 'Home']
+                        ];
         }
-
         return $this->render($template, $parameters);
     }
 
     public function viewAction($id)
     {
         $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
+        $listComment = $this->getDoctrine()->getRepository('KodifyBlogBundle:Comment')->findByPost($id);
+
         if (!$currentPost instanceof Post) {
             throw $this->createNotFoundException('Post not found');
         }
         $parameters = [
             'breadcrumbs' => ['home' => 'Home'],
             'post'        => $currentPost,
+            'listComment' => $listComment,  
         ];
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
+    }
+
+    public function rateAction($id, $rate)
+    {
+        $currentPost = $this->getDoctrine()->getRepository('KodifyBlogBundle:Post')->find($id);
+        $listComment = $this->getDoctrine()->getRepository('KodifyBlogBundle:Comment')->findByPost($id);
+
+        if (!$currentPost instanceof Post) {
+            throw $this->createNotFoundException('Post not found');
+        }
+
+        //Calculating the new rate
+        $currentPost->setRate(($rate + $currentPost->getNbrate()*$currentPost->getRate())/($currentPost->getNbrate() + 1)); 
+        $currentPost->setNbrate(($currentPost->getNbrate())+1);
+
+        $this->getDoctrine()->getManager()->persist($currentPost);
+        $this->getDoctrine()->getManager()->flush();
+
+        $parameters = [
+            'breadcrumbs' => ['home' => 'Home'],
+            'post'        => $currentPost,
+            'listComment' => $listComment,  
+        ];
+        return $this->redirect($this->generateUrl( 'view_post',array( 'id' => $id ) ) );
     }
 
     public function createAction(Request $request)

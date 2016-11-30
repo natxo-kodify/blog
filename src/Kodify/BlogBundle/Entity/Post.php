@@ -33,6 +33,22 @@ class Post extends AbstractBaseEntity
     private $title;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="rate", type="decimal", scale=2, nullable=true)
+     *
+     */
+    private $rate;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="nbrate", type="integer", nullable=true)
+     *
+     */
+    private $nbrate;
+
+    /**
      * @var string
      * @Assert\NotBlank()
      * @ORM\Column(name="content", type="text")
@@ -124,4 +140,52 @@ class Post extends AbstractBaseEntity
     {
         return $this->author;
     }
+
+
+    /**
+     * Set rate
+     *
+     * @param float $rate
+     * @return Post
+     */
+    public function setRate($rate)
+    {
+        $this->rate = $rate;
+
+        return $this;
+    }
+
+    /**
+     * Get rate
+     *
+     * @return float 
+     */
+    public function getRate()
+    {
+        return $this->rate;
+    }
+
+    /**
+     * Set nbrate
+     *
+     * @param integer $nbrate
+     * @return Post
+     */
+    public function setNbrate($nbrate)
+    {
+        $this->nbrate = $nbrate;
+
+        return $this;
+    }
+
+    /**
+     * Get nbrate
+     *
+     * @return integer 
+     */
+    public function getNbrate()
+    {
+        return $this->nbrate;
+    }
+
 }

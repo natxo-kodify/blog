@@ -1,0 +1,18 @@
+{% if  post.rate == NULL or post.rate == 0 %}
+    There is no rating for this post yet
+{% else %} 
+    This post has been rated {{ post.nbrate }} times, its average rate is: {{ post.rate|number_format(2, ',') }}
+{% endif %}
+<span class="pull-right">
+    <div class="btn-group">
+        <a class="btn btn-xs btn-primary">Rate this Post</a>
+        <button class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+        <ul class="dropdown-menu pull-right">
+            <li> <a href="{{ path( 'rate_post' , {'id':post.id, 'rate':1} ) }}">1</a></li>
+            <li> <a href="{{ path( 'rate_post' , {'id':post.id, 'rate':2} ) }}">2</a></li>
+            <li> <a href="{{ path( 'rate_post' , {'id':post.id, 'rate':3} ) }}">3</a></li>
+            <li> <a href="{{ path( 'rate_post' , {'id':post.id, 'rate':4} ) }}">4</a></li>
+            <li> <a href="{{ path( 'rate_post' , {'id':post.id, 'rate':5} ) }}">5</a></li>
+        </ul>
+    </div>
+</span>

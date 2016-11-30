@@ -1,10 +1,16 @@
+#sort{
+    margin-bottom:10px
+}
+
 label {
     width: 200px;
 }
+
 #post label {
     height: 50px;
     vertical-align: middle;
 }
+
 .bg-primary {
     padding: 4px;
     margin-bottom: 10px;
@@ -17,3 +23,4 @@ label {
 .thumbnail img {
     height: 200px;
 }
+
