@@ -1,3 +1,7 @@
+kodify_blog_comment:
+    resource: "@KodifyBlogBundle/Resources/config/routing/comment.yml"
+    prefix:   /comment
+
 home:
     path:     /
     defaults: { _controller: KodifyBlogBundle:Posts:index }

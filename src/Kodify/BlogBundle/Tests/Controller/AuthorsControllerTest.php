@@ -3,9 +3,9 @@
 namespace Kodify\BlogBundle\Tests\Controller;
 
 use Kodify\BlogBundle\Entity\Author;
-use Kodify\BlogBundle\Tests\BaseFunctionalTest;
+use Kodify\BlogBundle\Tests\BaseFunctional;
 
-class AuthorsControllerTest extends BaseFunctionalTest
+class AuthorsControllerTest extends BaseFunctional
 {
     public function testIndexNoAuthors()
     {

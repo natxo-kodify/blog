@@ -3,7 +3,9 @@
 namespace Kodify\BlogBundle\Controller;
 
 use Kodify\BlogBundle\Entity\Post;
+use Kodify\BlogBundle\Entity\Comment;
 use Kodify\BlogBundle\Form\Type\PostType;
+use Kodify\BlogBundle\Form\Type\CommentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,12 +30,29 @@ class PostsController extends Controller
         if (!$currentPost instanceof Post) {
             throw $this->createNotFoundException('Post not found');
         }
+        $comments    = $this->getDoctrine()->getRepository('KodifyBlogBundle:Comment')->findBy(array('post' => $id));
         $parameters = [
-            'breadcrumbs' => ['home' => 'Home'],
-            'post'        => $currentPost,
+            'breadcrumbs'   => ['home' => 'Home'],
+            'post'          => $currentPost,
+            'comments'      => $comments,
+            'form_comment'  => $this->createCommentForm($currentPost),
         ];
 
         return $this->render('KodifyBlogBundle::Post/view.html.twig', $parameters);
+    }
+
+    private function createCommentForm(Post $currentPost)
+    {
+        $comment    = new Comment();
+        $form       = $this->createForm(
+            new CommentType(),
+            $comment,
+            [
+                'action' => $this->generateUrl('comment_create'),
+                'method' => 'POST',
+            ]
+        );
+        return $form->createView();
     }
 
     public function createAction(Request $request)

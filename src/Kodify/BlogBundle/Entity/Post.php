@@ -88,7 +88,6 @@ class Post extends AbstractBaseEntity
     public function setContent($content)
     {
         $this->content = $content;
-
         return $this;
     }
 
@@ -111,7 +110,6 @@ class Post extends AbstractBaseEntity
     public function setAuthor(\Kodify\BlogBundle\Entity\Author $author = null)
     {
         $this->author = $author;
-
         return $this;
     }
 
@@ -123,5 +121,13 @@ class Post extends AbstractBaseEntity
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->title;
     }
 }
