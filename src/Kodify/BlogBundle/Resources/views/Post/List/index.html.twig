@@ -1,17 +1,34 @@
 {% extends 'KodifyBlogBundle::base.html.twig' %}
 
 {% block content %}
-
+    <div class="row">
+        <div class="pull-right">
+            <ul class="nav nav-pills">
+                <li role="presentation" {% if sort == constant('Kodify\\BlogBundle\\Entity\\Post::ORDER_DATE') %}class="active"{% endif %}><a href="{{ url('sorted_home',{'sort': 1}) }}">Order by date</a></li>
+                <li role="presentation" {% if sort == constant('Kodify\\BlogBundle\\Entity\\Post::ORDER_RATING') %}class="active"{% endif %}><a href="{{ url('sorted_home',{'sort': 2}) }}">Order by rating</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row top-buffer">
     {% for post in posts %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
-                <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
-            </div>
-            <div class="panel-body">
-                {{ post.content }}
+        <div class="col-md-6 col-xs-6">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                        <div class="row">
+                        <div class="col-md-8">
+                            <a href="{{ path('view_post',{id: post.id}) }}" class="postTitle">{{ post.title }}</a>
+                        </div>
+                        <div class="col-md-4">
+                            <span>by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
+                        </div>
+                        </div>
+                </div>
+                <div class="panel-body">
+                    {{ post.content }}
+                </div>
             </div>
         </div>
     {% endfor %}
+    </div>
 
 {% endblock %}

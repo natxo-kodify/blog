@@ -1,0 +1,260 @@
+#!/usr/bin/php
+<?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Console\Application;
+
+class CodeQualityTool extends Application
+{
+    private $output;
+    private $input;
+
+    const PHP_FILES_IN_SRC = '/^src\/(.*)(\.php)$/';
+    const TWIG_FILES_IN_SRC = '/^src\/(.*)(\.twig)$/';
+    const ORIGINAL_COMMIT = '1e9df454658813f45e53e2c114b6adb4c8753a70';
+
+    public function __construct()
+    {
+        parent::__construct('Code Quality Tool', '1.0.0');
+    }
+
+    public function doRun(InputInterface $input, OutputInterface $output)
+    {
+        $this->input = $input;
+        $this->output = $output;
+
+        $output->writeln('<fg=white;options=bold;bg=blue>Chicplace Code Quality Tool</fg=white;options=bold;bg=blue>');
+        $output->writeln('<info>Retrieving modified files</info>');
+        $files = $this->extractCommitedFiles();
+
+        $output->writeln('<info>Check composer</info>');
+        $this->checkComposer($files);
+
+        $output->writeln('<info>Running PHPLint</info>');
+        if (!$this->phpLint($files)) {
+            throw new Exception('There are some PHP syntax errors!');
+        }
+
+        $output->writeln('<info>Cleaning code style with PHP-CS-Fixer</info>');
+        $this->codeStyle($files);
+
+        $output->writeln('<info>Cleaning code style with PHPCBF</info>');
+        $this->codeStylePsr($files);
+        $this->gitAdd($files);
+
+        $output->writeln('<info>Checking code mess with PHPMD</info>');
+        if (!$this->phPmd($files)) {
+            throw new Exception(sprintf('There are PHPMD violations!'));
+        }
+
+        $output->writeln('<info>Running twig lint</info>');
+        if(!$this->twigLint($files)) {
+            throw new Exception(sprintf('There are some TWIG sintex violations!'));
+        }
+
+
+        $output->writeln('<info>Running unit tests</info>');
+        if (!$this->unitTests()) {
+            throw new Exception('Fix the fucking tests!');
+        }
+
+        $output->writeln("<info>Good job dude!!</info>");
+    }
+
+    private function checkComposer($files)
+    {
+        $composerJsonDetected = false;
+        $composerLockDetected = false;
+
+        foreach ($files as $file) {
+            if ($file === 'composer.json') {
+                $composerJsonDetected = true;
+            }
+
+            if ($file === 'composer.lock') {
+                $composerLockDetected = true;
+            }
+        }
+
+        if ($composerJsonDetected && !$composerLockDetected) {
+            throw new Exception('composer.lock must be commited if composer.json is modified!');
+        }
+    }
+
+    private function extractCommitedFiles()
+    {
+        $output = array();
+        $rc = 0;
+
+        exec('git rev-parse --verify HEAD 2> /dev/null', $output, $rc);
+
+        $against = self::ORIGINAL_COMMIT;
+        if ($rc == 0) {
+            $against = 'HEAD';
+        }
+
+        exec("git diff-index --cached --name-status $against | egrep '^(A|M)' | awk '{print $2;}'", $output);
+
+        $cleanOutput = array();
+        foreach($output as $file)
+        {
+            $cleanOutput[] = $file;
+        }
+
+        return $cleanOutput;
+    }
+
+    private function phpLint($files)
+    {
+        $needle = '/(\.php)|(\.inc)$/';
+        $succeed = true;
+
+        foreach ($files as $file) {
+            if (!preg_match($needle, $file)) {
+                continue;
+            }
+
+            $processBuilder = new ProcessBuilder(array('php', '-l', $file));
+            $process = $processBuilder->getProcess();
+            $process->run();
+
+            if (!$process->isSuccessful()) {
+                $this->output->writeln($file);
+                $this->output->writeln(sprintf('<error>%s</error>', trim($process->getErrorOutput())));
+
+                if ($succeed) {
+                    $succeed = false;
+                }
+            }
+        }
+
+        return $succeed;
+    }
+
+    private function twigLint($files)
+    {
+        $needle = '/(\.twig)$/';
+        $succeed = true;
+
+        foreach ($files as $file) {
+            if (!preg_match($needle, $file)) {
+                continue;
+            }
+
+            $processBuilder = new ProcessBuilder(array('app/console', 'twig:lint', $file));
+            $process = $processBuilder->getProcess();
+            $process->run();
+
+            if (!$process->isSuccessful()) {
+                $this->output->writeln($file);
+                $this->output->writeln(sprintf('<error>%s</error>', trim($process->getErrorOutput())));
+
+                if ($succeed) {
+                    $succeed = false;
+                }
+            }
+        }
+
+        return $succeed;
+    }
+
+    private function phPmd($files)
+    {
+        $needle = self::PHP_FILES_IN_SRC;
+        $succeed = true;
+        $rootPath = realpath(__DIR__ . '/../');
+
+        foreach ($files as $file) {
+            if (!preg_match($needle, $file)) {
+                continue;
+            }
+
+            $processBuilder = new ProcessBuilder(['php', 'bin/phpmd', $file, 'text', 'controversial,unusedcode']);
+            $processBuilder->setWorkingDirectory($rootPath);
+            $process = $processBuilder->getProcess();
+            $process->run();
+
+            if (!$process->isSuccessful()) {
+                $this->output->writeln(sprintf('<error>%s</error>', trim($process->getOutput())));
+                if ($succeed) {
+                    $succeed = false;
+                }
+            }
+        }
+
+        return $succeed;
+    }
+
+    private function unitTests()
+    {
+        $processBuilder = new ProcessBuilder(array('php','../bin/phpunit'));
+        $processBuilder->setWorkingDirectory(__DIR__ . '/../app');
+        $processBuilder->setTimeout(3600);
+        $phpunit = $processBuilder->getProcess();
+
+        $phpunit->run(function ($type, $buffer) {
+            $this->output->write($buffer);
+        });
+
+        return $phpunit->isSuccessful();
+    }
+
+    private function codeStyle(array $files)
+    {
+        foreach ($files as $file) {
+            $srcFile = preg_match(self::PHP_FILES_IN_SRC, $file);
+
+            if (!$srcFile) {
+                continue;
+            }
+
+            $processBuilder = new ProcessBuilder(array('php', 'bin/php-cs-fixer','--verbose', 'fix', $file));
+            $processBuilder->setWorkingDirectory(__DIR__ . '../');
+            $phpCsFixer = $processBuilder->getProcess();
+            $phpCsFixer->setTimeout(3600);
+            $phpCsFixer->run();
+
+            if (!$phpCsFixer->isSuccessful()) {
+                $this->output->writeln(sprintf('<fg=yellow>%s</fg=yellow>', trim($phpCsFixer->getOutput())));
+            }
+        }
+    }
+
+    private function codeStylePsr(array $files)
+    {
+        $needle = self::PHP_FILES_IN_SRC;
+
+        foreach ($files as $file) {
+            if (!preg_match($needle, $file)) {
+                continue;
+            }
+
+            $processBuilder = new ProcessBuilder(array('php', 'bin/phpcbf', '--standard=PSR2','-v','--encoding=utf-8', $file));
+            $processBuilder->setWorkingDirectory(__DIR__ . '../');
+            $phpCsFixer = $processBuilder->getProcess();
+            $phpCsFixer->run();
+
+            if (!$phpCsFixer->isSuccessful()) {
+                $this->output->writeln(sprintf('<fg=yellow>%s</fg=yellow>', trim($phpCsFixer->getOutput())));
+            }
+        }
+    }
+
+    private function gitAdd(array $files)
+    {
+        foreach($files as $file)
+        {
+            $processBuilder = new ProcessBuilder(array('git', 'add', $file));
+            $process = $processBuilder->getProcess();
+            $process->run();
+        }
+    }
+}
+
+$console = new CodeQualityTool();
+$console->run();

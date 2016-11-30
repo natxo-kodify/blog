@@ -4,7 +4,7 @@ namespace Kodify\BlogBundle\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class BaseFunctionalTest extends WebTestCase
+abstract class BaseFunctionalTest extends WebTestCase
 {
     protected $entityManager;
     protected $client;
@@ -12,6 +12,7 @@ class BaseFunctionalTest extends WebTestCase
     public function setUp()
     {
         $this->client = static::createClient();
+        $this->client->followRedirects();
         $this->cleanDb();
     }
 
@@ -24,6 +25,7 @@ class BaseFunctionalTest extends WebTestCase
     {
         $this->clearTableByName('Author');
         $this->clearTableByName('Post');
+        $this->clearTableByName('PostRating');
     }
 
     protected function entityManager()
@@ -58,7 +60,7 @@ class BaseFunctionalTest extends WebTestCase
         }
         $this->assertSame(
             $times,
-            $crawler->filter('html:contains("' . $text . '")')->count(),
+            $crawler->filter('html:contains("'.$text.'")')->count(),
             $message
         );
     }

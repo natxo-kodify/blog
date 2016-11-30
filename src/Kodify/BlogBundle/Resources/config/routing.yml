@@ -1,5 +1,8 @@
 home:
     path:     /
+    defaults: { _controller: KodifyBlogBundle:Posts:index, sort: 1 }
+sorted_home:
+    path:     /sort/{sort}
     defaults: { _controller: KodifyBlogBundle:Posts:index }
 authors:
     path:     /authors
