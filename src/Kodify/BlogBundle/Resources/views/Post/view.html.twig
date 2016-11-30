@@ -10,4 +10,11 @@
             {{ post.content }}
         </div>
     </div>
+
+    <a href="{{ path('comment_post',{'id': post.id}) }}">Create Comment</a>
+    {% if comments %}
+        {% include 'KodifyBlogBundle:Comment:List/index.html.twig' %}
+    {% else %}
+        {% include 'KodifyBlogBundle:Comment:List/empty.html.twig' %}
+    {% endif %}
 {% endblock %}

@@ -1,0 +1,12 @@
+<h3>Comments</h3>
+{% for comment in comments %}
+    <div class="panel panel-default col-md-6">
+        <div class="panel-heading">
+            Comment {{ loop.index }}
+            <span class="pull-right">by: {{ comment.author.name }} on: {{ comment.createdAt|date("m/d/Y") }}</span>
+        </div>
+        <div class="panel-body">
+            {{ comment.content }}
+        </div>
+    </div>
+{% endfor %}
