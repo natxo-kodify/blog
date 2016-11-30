@@ -5,9 +5,20 @@ label {
     height: 50px;
     vertical-align: middle;
 }
-.bg-primary {
+
+.bg-primary, .bg-success, .bg-danger {
     padding: 4px;
     margin-bottom: 10px;
+}
+
+.bg-success {
+    background-color: #6b9311;
+    color: white;
+}
+
+.bg-danger {
+    background-color: darkred;
+    color: white;
 }
 
 .navbar-nav li.active {
@@ -16,4 +27,17 @@ label {
 
 .thumbnail img {
     height: 200px;
+}
+
+.rate-title, .sort-title {
+
+    margin-right: 10px;
+}
+
+.sort-title {
+    margin-top: 10px;
+}
+
+.sort-pills {
+    margin-bottom: 5px;
 }

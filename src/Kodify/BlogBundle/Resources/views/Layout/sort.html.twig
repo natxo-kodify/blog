@@ -1,0 +1,12 @@
+<div class="row">
+    <div class="col-xs-12 pull-right">
+
+        <ul class="nav nav-pills pull-right sort-pills">
+            <li {% if app.request.get('_route') == 'home' %} class="active"{% endif %}>
+                <a href="{{ path('home') }}">order by date</a>
+            </li>
+            <li {% if app.request.get('_route') == 'sort' %} class="active"{% endif %}>
+                <a href="{{ path('sort',{sort: "rated"}) }}">order by rating</a></li>
+        </ul>
+    </div>
+</div>

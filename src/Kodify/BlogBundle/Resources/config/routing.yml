@@ -1,6 +1,13 @@
 home:
     path:     /
     defaults: { _controller: KodifyBlogBundle:Posts:index }
+
+sort:
+    path:     /sort/{sort}
+    defaults: { _controller: KodifyBlogBundle:Posts:index }
+sort_index:
+    path:     /sort
+    defaults: { _controller: KodifyBlogBundle:Posts:index }
 authors:
     path:     /authors
     defaults: { _controller: KodifyBlogBundle:Authors:index }
@@ -10,6 +17,9 @@ create_post:
 view_post:
     path:     /posts/{id}
     defaults: { _controller: KodifyBlogBundle:Posts:view }
+rate_post:
+    path:     /posts/{id}/rate/{star}
+    defaults: { _controller: KodifyBlogBundle:Posts:rate }
 create_author:
     path:     /authors/create
     defaults: { _controller: KodifyBlogBundle:Authors:create }

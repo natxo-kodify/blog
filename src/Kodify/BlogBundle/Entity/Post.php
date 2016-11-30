@@ -47,6 +47,42 @@ class Post extends AbstractBaseEntity
     protected $author;
 
     /**
+     * Max rate value
+     */
+    const MAXRATE = 5;
+
+    /**
+     * Min rate value
+     */
+    const MINRATE = 0;
+
+    /**
+     * @var integer
+     * @Assert\GreaterThanOrEqual(value = 0)
+     * @Assert\LessThanOrEqual(value = 5)
+     * @Assert\NotBlank()
+     * @ORM\Column(name="rate", type="integer")
+     */
+    private $rate = 0;
+
+    /**
+     * @var integer
+     * @Assert\GreaterThanOrEqual(value = 0)
+     * @Assert\NotBlank()
+     * @ORM\Column(name="rate_clicks", type="integer")
+     */
+    private $rate_clicks = 0;
+
+    /**
+     * @var integer
+     * @Assert\GreaterThanOrEqual(value = 0)
+     * @Assert\NotBlank()
+     * @ORM\Column(name="rate_total", type="integer")
+     */
+    private $rate_total = 0;
+
+
+    /**
      * Get id
      *
      * @return integer
@@ -124,4 +160,76 @@ class Post extends AbstractBaseEntity
     {
         return $this->author;
     }
+
+
+    /**
+     * Set rate
+     *
+     * @param integer $rate
+     * @return Post
+     */
+    public function setRate($rate)
+    {
+        $this->rate = $rate;
+
+        return $this;
+    }
+
+    /**
+     * Get rate
+     *
+     * @return integer
+     */
+    public function getRate()
+    {
+        return $this->rate;
+    }
+
+    /**
+     * Set rate_clicks
+     *
+     * @param integer $rateClicks
+     * @return Post
+     */
+    public function setRateClicks($rateClicks)
+    {
+        $this->rate_clicks = $rateClicks;
+
+        return $this;
+    }
+
+    /**
+     * Get rate_clicks
+     *
+     * @return integer
+     */
+    public function getRateClicks()
+    {
+        return $this->rate_clicks;
+    }
+
+
+    /**
+     * Set rate_total
+     *
+     * @param integer $rateTotal
+     * @return Post
+     */
+    public function setRateTotal($rateTotal)
+    {
+        $this->rate_total = $rateTotal;
+
+        return $this;
+    }
+
+    /**
+     * Get rate_total
+     *
+     * @return integer
+     */
+    public function getRateTotal()
+    {
+        return $this->rate_total;
+    }
+
 }

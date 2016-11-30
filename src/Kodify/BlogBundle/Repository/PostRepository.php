@@ -2,6 +2,8 @@
 
 namespace Kodify\BlogBundle\Repository;
 
+use Kodify\BlogBundle\Entity\Post;
+
 /**
  * PostRepository
  *
@@ -10,4 +12,107 @@ namespace Kodify\BlogBundle\Repository;
  */
 class PostRepository extends AbstractBaseRepository
 {
+
+    /**
+     * Updates Rate Value
+     *
+     * @param $id post id
+     * @param $star number of stars
+     *
+     * @return bool true if everything is ok, false if it's not
+     */
+    public function setRate($id, $star)
+    {
+        $post = $this->getEntityManager()->getRepository("KodifyBlogBundle:Post")->find($id);
+        $rated = false;
+        if (Post::MINRATE <= $star && Post::MAXRATE >= $star) {
+            $post->setRateClicks($post->getRateClicks() + 1);
+            $post->setRateTotal($post->getRateTotal() + $star);
+            $post->setRate(floor($post->getRateTotal() / $post->getRateClicks()));
+            $this->getEntityManager()->flush($post);
+            $rated = true;
+        }
+
+        return $rated;
+    }
+
+    /**
+     * Returns posts ordered by Rate
+     *
+     * @param null $limit limit of posts per page
+     * @param int $offset number of post to start with.
+     *
+     * @return array of post objects
+     */
+    public function sortRated($limit = null, $offset = 0)
+    {
+        if (is_null($limit)) {
+            $limit = static::LIST_DEFAULT_LIMIT;
+        }
+
+        return $this->findBy([], ['rate' => 'DESC'], $limit, $offset);
+    }
+
+    /**
+     * Search the post adding Author's name filtering
+     *
+     * @param $title
+     * @param $content
+     * @param $author
+     *
+     * @return array
+     */
+    public function searchWithAuthor($title, $content, $author)
+    {
+
+        $query = $this->getEntityManager()->createQuery(
+            "
+            SELECT p
+            FROM KodifyBlogBundle:Post p
+            JOIN  KodifyBlogBundle:Author a
+            WHERE p.title = :title
+            AND p.content = :content
+            AND a.name = :author
+            "
+        )
+            ->setParameter("title", $title)
+            ->setParameter("content", $content)
+            ->setParameter("author", $author);
+
+        return $query->getOneOrNullResult();
+    }
+
+    /**
+     * sort by latest
+     */
+    const SORT_LATEST = "latest";
+    /**
+     * sort by rate
+     */
+    const SORT_RATE = "rated";
+
+    /**
+     * Sort Selector
+     *
+     * @param string $sort sort type
+     * @param null $limit limit of posts
+     * @param int $offset first post to start
+     *
+     * @return array posts
+     */
+    public function sortPostsBy($sort = self::SORT_LATEST, $limit = null, $offset = 0)
+    {
+        switch ($sort) {
+            case self::SORT_RATE:
+                $posts = $this->sortRated($limit, $offset);
+                break;
+            default:
+            case self::SORT_LATEST:
+                $posts = $this->latest($limit, $offset);
+                break;
+        }
+
+        return $posts;
+    }
+
 }

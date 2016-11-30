@@ -1,13 +1,55 @@
 {% extends 'KodifyBlogBundle::base.html.twig' %}
 
 {% block content %}
+
+    {% for flashMessage in app.session.flashbag.get('success') %}
+        <div class="bg-success">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('danger') %}
+        <div class="bg-danger">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
     <div class="panel panel-default">
         <div class="panel-heading">
             <a href="{{ path('view_post',{id: post.id}) }}">{{ post.title }}</a>
             <span class="pull-right">by: {{ post.author.name }} on: {{ post.createdAt|date("m/d/Y") }}</span>
         </div>
         <div class="panel-body">
-            {{ post.content }}
+            <div class="row">
+                <div class="col-xs-12 col-sm-8">
+                    {{ post.content }}
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    {% if not post.rateClicks %}
+                        there are no ratings
+                    {% endif %}
+                    <ul class="stars list-inline pull-right" data-default-stars="{{ post.rate }}">
+                        {% for i in 1..5 %}
+                            <li>
+                                <a id="star{{ i }}" href="{{ path('rate_post', {'id':post.id, 'star': i}) }}"
+                                   data-star="{{ i }}">
+                                    <i class="fa{% if i <= post.rate %} fa-star{% else %} fa-star-o{% endif %}"></i>
+                                </a>
+                            </li>
+
+                        {% endfor %}
+                    </ul>
+                    <div class="pull-right rate-title">Rate it!</div>
+                </div>
+            </div>
+
         </div>
+
     </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@KodifyBlogBundle/Resources/public/js/*' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
