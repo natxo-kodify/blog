@@ -17,3 +17,24 @@ label {
 .thumbnail img {
     height: 200px;
 }
+
+/**
+ * We clearfix the panel list (IE8+).
+ */ 
+.panel-list:before,
+.panel-list:after {
+    content:"";
+    display:table;
+}
+.panel-list:after {
+    content:"";
+    clear:both;
+}
+
+.panel-list .panel {
+	width:49%;
+	float:left;
+}
+.panel-list .panel:nth-child(even) {
+	float:right;
+}
