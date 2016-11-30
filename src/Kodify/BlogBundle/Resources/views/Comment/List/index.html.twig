@@ -1,0 +1,14 @@
+{% for comment in comments %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Comment #{{ loop.index }}
+            <span class="pull-right">by: {{ comment.author.name }} on: {{ comment.createdAt|date("m/d/Y H:i:s") }}</span>
+        </div>
+        <div class="panel-body">
+            {{ comment.text }}
+        </div>
+    </div>
+{% else %}
+    {% include 'KodifyBlogBundle::Comment/List/empty.html.twig' %}
+{% endfor %}
+<a href="{{ path('create_comment',{post: post.id}) }}">Create Comment</a>

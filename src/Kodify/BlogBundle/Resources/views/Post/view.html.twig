@@ -10,4 +10,8 @@
             {{ post.content }}
         </div>
     </div>
-{% endblock %}
+
+    {% block comment_list %}
+        {% include 'KodifyBlogBundle::Comment/List/index.html.twig' %}
+    {% endblock comment_list %}
+{% endblock content %}
