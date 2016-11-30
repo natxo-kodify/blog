@@ -10,4 +10,21 @@
             {{ post.content }}
         </div>
     </div>
+    <a href="{{ path('create_comment',{'id': post.id}) }}">Create Comment</a>
+    {% if comments %}
+        {% for comment in comments %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Comment by: {{ comment.author.name }} on: {{ comment.createdAt|date("m/d/Y") }}
+            </div>
+            <div class="panel-body">
+                {{ comment.text }}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="panel panel-default">
+            There are no comments
+        </div>
+    {% endif %}
 {% endblock %}
